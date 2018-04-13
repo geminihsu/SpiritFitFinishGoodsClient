@@ -408,7 +408,10 @@ public class ItemsPannel {
 
 					}
 
-					checkItemExits(items);
+					if (type == RECEVING)
+						checkReceiveItemExits(items);
+					else if (type == MOVING)
+						checkMoveItemExits(items);
 
 				}
 			}
@@ -712,7 +715,10 @@ public class ItemsPannel {
 
 					}
 
-					checkItemExits(items);
+					if (assignType == RECEVING)
+						checkReceiveItemExits(items);
+					else if (assignType == MOVING)
+						checkMoveItemExits(items);
 
 				}
 			}
@@ -869,6 +875,9 @@ public class ItemsPannel {
 					if (assignType == MOVING) {
 						JOptionPane.showMessageDialog(null, "Update Data Success!");
 
+					} else if (assignType == RECEVING) {
+						JOptionPane.showMessageDialog(null, "Add Data Success!");
+
 					}
 
 					if (scanResultFrame != null) {
@@ -881,85 +890,89 @@ public class ItemsPannel {
 						dialogFrame.setVisible(false);
 					}
 
-					if (assignType == RECEVING) {
-
-						List<Containerbean> updateContainer = new ArrayList<Containerbean>();
-						for(Containerbean container : containers) 
-						{
-							container.Close = true;
-							updateContainer.add(container);
-							
-						}
-						updateContainerStatus(updateContainer);
-					}
+					/*
+					 * if (assignType == RECEVING) {
+					 * 
+					 * List<Containerbean> updateContainer = new ArrayList<Containerbean>();
+					 * for(Containerbean container : containers) { container.Close = true;
+					 * updateContainer.add(container);
+					 * 
+					 * } updateContainerStatus(updateContainer); }
+					 */
 
 				}
-			}
-
-			@Override
-			public void checkInventoryItems(List<Itembean> items) {
-				loadingframe.setVisible(false);
-				loadingframe.dispose();
-
-				if (assignType == RECEVING) {
-
-					String[] scanItem = inputSN.getText().toString().split("\n");
-
-					if (items.size() != scanItem.length) {
-						JOptionPane.showMessageDialog(null, "Items already exist.");
-
-						if (scanResultFrame != null) {
-							String updateTxt = "";
-							for (Itembean i : items) {
-								updateTxt += i.SN + "\n";
-							}
-							if (modelScanCurMap.isEmpty())
-								ltotal.setText("Total : " + items.size());
-							else {
-								set.clear();
-								modelScanCurMap.clear();
-								for (Itembean s : items) {
-									set.add(s.SN);
-
-									String modelNo = s.SN.substring(0, 10);
-									if (!modelScanCurMap.containsKey(modelNo))
-										modelScanCurMap.put(modelNo, 1);
-									else
-										modelScanCurMap.put(modelNo, modelScanCurMap.get(modelNo) + 1);
-
-								}
-								ltotal.setText(setModelScanCountLabel(set.size()));
-
-							}
-							inputSN.setText(updateTxt);
-							scanResultFrame.setVisible(true);
-						}
-						if (dialogFrame != null) {
-							dialogFrame.dispose();
-							dialogFrame.setVisible(false);
-						}
-					} else
-						ZoneMenu.getInstance(containers, inputSN.getText().toString(), assignType);
-
-				} else if (assignType == MOVING) {
-
-					// JOptionPane.showMessageDialog(null, "Update Data Success!");
-					if (items.size() == 0) {
-
-						// ZoneMenu window = new ZoneMenu(inputSN.getText().toString(), MOVING);
-						// window.frame.setVisible(true);
-						ZoneMenu.getInstance(inputSN.getText().toString(), assignType);
-					} else {
-
-						checkScanResultFrame(items);
-					}
-				}
-
 			}
 
 			@Override
 			public void checkInventoryZone2Items(int result, List<Itembean> items) {
 				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void checkMoveItems(List<Itembean> items) {
+				// JOptionPane.showMessageDialog(null, "Update Data Success!");
+				
+
+				if (loadingframe != null) {
+					loadingframe.setVisible(false);
+					loadingframe.dispose();
+				}
+				
+				if (items.size() == 0) {
+
+					// ZoneMenu window = new ZoneMenu(inputSN.getText().toString(), MOVING);
+					// window.frame.setVisible(true);
+					ZoneMenu.getInstance(inputSN.getText().toString(), assignType);
+				} else {
+
+					checkScanResultFrame(items);
+				}
+
+			}
+
+			@Override
+			public void checkReceiveItem(List<Itembean> items) {
+				String[] scanItem = inputSN.getText().toString().split("\n");
+				if (loadingframe != null) {
+					loadingframe.setVisible(false);
+					loadingframe.dispose();
+				}
+				if (items.size() != scanItem.length) {
+					JOptionPane.showMessageDialog(null, "Items already exist.");
+
+					if (scanResultFrame != null) {
+						String updateTxt = "";
+						for (Itembean i : items) {
+							updateTxt += i.SN + "\n";
+						}
+						if (modelScanCurMap.isEmpty())
+							ltotal.setText("Total : " + items.size());
+						else {
+							set.clear();
+							modelScanCurMap.clear();
+							for (Itembean s : items) {
+								set.add(s.SN);
+
+								String modelNo = s.SN.substring(0, 10);
+								if (!modelScanCurMap.containsKey(modelNo))
+									modelScanCurMap.put(modelNo, 1);
+								else
+									modelScanCurMap.put(modelNo, modelScanCurMap.get(modelNo) + 1);
+
+							}
+							ltotal.setText(setModelScanCountLabel(set.size()));
+
+						}
+						inputSN.setText(updateTxt);
+						scanResultFrame.setVisible(true);
+					}
+					if (dialogFrame != null) {
+						dialogFrame.dispose();
+						dialogFrame.setVisible(false);
+					}
+				} else
+					ZoneMenu.getInstance(containers, inputSN.getText().toString(), assignType);
 
 			}
 		});
@@ -991,7 +1004,7 @@ public class ItemsPannel {
 			@Override
 			public void deleteContainerIteam(boolean result) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 
@@ -1147,13 +1160,16 @@ public class ItemsPannel {
 		if (LocationHelper.MapZoneCode(location) == 2) {
 			String model = itemList[0].substring(0, 6);
 			modelMapZone2 = Constrant.modelZone2.get(model);
-
-			String[] loc = modelMapZone2.Zone2Code.split(",");
-
 			HashMap<String, String> mapZone2Code = new HashMap<String, String>();
 
-			for (String s : loc) {
-				mapZone2Code.put(s, modelMapZone2.Model);
+			String[] loc = null;
+			if (modelMapZone2 != null) {
+
+				loc = modelMapZone2.Zone2Code.split(",");
+
+				for (String s : loc) {
+					mapZone2Code.put(s, modelMapZone2.Model);
+				}
 			}
 
 			if (modelMapZone2 == null) {
@@ -1491,9 +1507,18 @@ public class ItemsPannel {
 
 	}
 
-	private void checkItemExits(List<Itembean> items) {
+	private void checkReceiveItemExits(List<Itembean> items) {
 		try {
-			fgRepository.getItemsLocationBySNList(items);
+			fgRepository.getReceiveItemBySNList(items);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void checkMoveItemExits(List<Itembean> items) {
+		try {
+			fgRepository.getMoveItemBySNList(items);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

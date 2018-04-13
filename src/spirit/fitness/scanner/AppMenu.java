@@ -191,8 +191,8 @@ public class AppMenu implements ActionListener {
 
 		if (!InstanceUtil.isExits()) {
 			if (e.getSource() == btnRecving) {
-				//ItemsPannel.getInstance("", ItemsPannel.RECEVING);
-				ContainerPannel.getInstance();
+				ItemsPannel.getInstance("", ItemsPannel.RECEVING);
+				//ContainerPannel.getInstance();
 			} else if (e.getSource() == btnMoving) {
 				// ItemsPannel window = new ItemsPannel(ItemsPannel.MOVING);
 				// window.frame.setVisible(true);

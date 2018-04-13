@@ -1232,11 +1232,7 @@ public class ShippingConfirm {
 
 			}
 
-			@Override
-			public void checkInventoryItems(List<Itembean> items) {
-				// TODO Auto-generated method stub
-
-			}
+			
 
 			@Override
 			public void checkInventoryZone2Items(int result, List<Itembean> items) {
@@ -1256,6 +1252,18 @@ public class ShippingConfirm {
 					restoreScanPannel(items);
 				}
 
+			}
+
+			@Override
+			public void checkMoveItems(List<Itembean> items) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void checkReceiveItem(List<Itembean> items) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 

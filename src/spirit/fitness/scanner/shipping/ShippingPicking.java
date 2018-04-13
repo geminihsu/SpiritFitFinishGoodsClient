@@ -580,14 +580,22 @@ public class ShippingPicking {
 				}
 			}
 
+		
+
 			@Override
-			public void checkInventoryItems(List<Itembean> items) {
+			public void checkInventoryZone2Items(int result,List<Itembean> items) {
 				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
-			public void checkInventoryZone2Items(int result,List<Itembean> items) {
+			public void checkMoveItems(List<Itembean> items) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void checkReceiveItem(List<Itembean> items) {
 				// TODO Auto-generated method stub
 				
 			}
