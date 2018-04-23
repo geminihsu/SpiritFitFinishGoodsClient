@@ -101,6 +101,7 @@ public class ItemsPannel {
 	private int assignType;
 	private int orderTotalCount;
 	private boolean repMove = false;
+	private boolean isDefaultZone = false;
 	private HashSet<String> set;
 	private List<Containerbean> containers;
 
@@ -356,6 +357,7 @@ public class ItemsPannel {
 		defaultButton.setBounds(35, 600, 125, 50);
 		defaultButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				isDefaultZone = true;
 
 				if (inputSN.getText().isEmpty())
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
@@ -363,7 +365,40 @@ public class ItemsPannel {
 					scanResultFrame.setVisible(false);
 					scanResultFrame.dispose();
 					instance = null;
-					displayScanResultFrame(inputSN.getText().toString(), "000", type);
+
+					items = inputSN.getText().toString();
+					scanResultFrame.setVisible(false);
+					scanResultFrame.dispose();
+					instance = null;
+					// if (type == MOVING) {
+					loadingframe = new LoadingFrameHelper("Checking data...");
+					loading = loadingframe.loadingSample("Checking data...");
+
+					String[] itemList = items.split("\n");
+
+					if (itemList.length == 0 && !inputSN.getText().toString().equals("")) {
+						itemList = new String[0];
+						itemList[0] = inputSN.getText().toString();
+					}
+
+					List<Itembean> items = new ArrayList<Itembean>();
+
+					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+							.format(Calendar.getInstance().getTime());
+					for (String item : itemList) {
+						Itembean _item = new Itembean();
+
+						_item.SN = item;
+						_item.ModelNo = item.substring(0, 6);
+						items.add(_item);
+
+					}
+					// displayScanResultFrame(inputSN.getText().toString(), "000", type);
+					if (type == RECEVING)
+						checkReceiveItemExits(items);
+					else if (type == MOVING)
+						checkMoveItemExits(items);
+
 				}
 			}
 		});
@@ -376,6 +411,8 @@ public class ItemsPannel {
 		locateButton.setBounds(175, 600, 125, 50);
 		locateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				isDefaultZone = false;
+
 				if (inputSN.getText().isEmpty())
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
 				else {
@@ -872,14 +909,6 @@ public class ItemsPannel {
 					loadingframe.setVisible(false);
 					loadingframe.dispose();
 
-					if (assignType == MOVING) {
-						JOptionPane.showMessageDialog(null, "Update Data Success!");
-
-					} else if (assignType == RECEVING) {
-						JOptionPane.showMessageDialog(null, "Add Data Success!");
-
-					}
-
 					if (scanResultFrame != null) {
 						scanResultFrame.dispose();
 						scanResultFrame.setVisible(false);
@@ -888,6 +917,14 @@ public class ItemsPannel {
 					if (dialogFrame != null) {
 						dialogFrame.dispose();
 						dialogFrame.setVisible(false);
+					}
+
+					if (assignType == MOVING) {
+						JOptionPane.showMessageDialog(null, "Update Data Success!");
+
+					} else if (assignType == RECEVING) {
+						JOptionPane.showMessageDialog(null, "Add Data Success!");
+
 					}
 
 					/*
@@ -912,21 +949,23 @@ public class ItemsPannel {
 			@Override
 			public void checkMoveItems(List<Itembean> items) {
 				// JOptionPane.showMessageDialog(null, "Update Data Success!");
-				
 
 				if (loadingframe != null) {
 					loadingframe.setVisible(false);
 					loadingframe.dispose();
 				}
-				
+
 				if (items.size() == 0) {
 
 					// ZoneMenu window = new ZoneMenu(inputSN.getText().toString(), MOVING);
 					// window.frame.setVisible(true);
-					ZoneMenu.getInstance(inputSN.getText().toString(), assignType);
+					if (isDefaultZone)
+						displayScanResultFrame(inputSN.getText().toString(), "000", assignType);
+					else
+						ZoneMenu.getInstance(inputSN.getText().toString(), assignType);
 				} else {
 
-					checkScanResultFrame(items);
+					checkScanResultFrame(items, true);
 				}
 
 			}
@@ -938,42 +977,36 @@ public class ItemsPannel {
 					loadingframe.setVisible(false);
 					loadingframe.dispose();
 				}
-				if (items.size() != scanItem.length) {
+
+				if (items.size() == 0) {
+					if (isDefaultZone)
+						displayScanResultFrame(inputSN.getText().toString(), "000", assignType);
+					else
+						ZoneMenu.getInstance(containers, inputSN.getText().toString(), assignType);
+				} else if (items.size() > 0) {
 					JOptionPane.showMessageDialog(null, "Items already exist.");
 
-					if (scanResultFrame != null) {
-						String updateTxt = "";
-						for (Itembean i : items) {
-							updateTxt += i.SN + "\n";
-						}
-						if (modelScanCurMap.isEmpty())
-							ltotal.setText("Total : " + items.size());
-						else {
-							set.clear();
-							modelScanCurMap.clear();
-							for (Itembean s : items) {
-								set.add(s.SN);
+					if (items.size() > 0)
+						checkScanResultFrame(items, false);
+					/*
+					 * if (scanResultFrame != null) { String updateTxt = ""; for (Itembean i :
+					 * items) { updateTxt += i.SN + "\n"; } if (modelScanCurMap.isEmpty())
+					 * ltotal.setText("Total : " + items.size()); else { set.clear();
+					 * modelScanCurMap.clear(); for (Itembean s : items) { set.add(s.SN);
+					 * 
+					 * String modelNo = s.SN.substring(0, 10); if
+					 * (!modelScanCurMap.containsKey(modelNo)) modelScanCurMap.put(modelNo, 1); else
+					 * modelScanCurMap.put(modelNo, modelScanCurMap.get(modelNo) + 1);
+					 * 
+					 * } ltotal.setText(setModelScanCountLabel(set.size()));
+					 * 
+					 * } inputSN.setText(updateTxt); scanResultFrame.setVisible(true); } if
+					 * (dialogFrame != null) { dialogFrame.dispose(); dialogFrame.setVisible(false);
+					 * } } else ZoneMenu.getInstance(containers, inputSN.getText().toString(),
+					 * assignType);
+					 */
 
-								String modelNo = s.SN.substring(0, 10);
-								if (!modelScanCurMap.containsKey(modelNo))
-									modelScanCurMap.put(modelNo, 1);
-								else
-									modelScanCurMap.put(modelNo, modelScanCurMap.get(modelNo) + 1);
-
-							}
-							ltotal.setText(setModelScanCountLabel(set.size()));
-
-						}
-						inputSN.setText(updateTxt);
-						scanResultFrame.setVisible(true);
-					}
-					if (dialogFrame != null) {
-						dialogFrame.dispose();
-						dialogFrame.setVisible(false);
-					}
-				} else
-					ZoneMenu.getInstance(containers, inputSN.getText().toString(), assignType);
-
+				} 
 			}
 		});
 
@@ -1376,8 +1409,8 @@ public class ItemsPannel {
 		}
 	}
 
-	private void checkScanResultFrame(List<Itembean> _items) {
-
+	private void checkScanResultFrame(List<Itembean> _items, boolean isMoveCheck) {
+		set.clear();
 		JFrame dialogFrame = new JFrame("Check Serial number");
 		// Setting the width and height of frame
 		dialogFrame.setSize(600, 400);
@@ -1402,8 +1435,13 @@ public class ItemsPannel {
 
 		}
 
+		String title = "";
+		if (isMoveCheck)
+			title = "<html>The all serial number do not exist :" + " <br/>";
+		else
+			title = "<html>The all serial number exist :" + " <br/>";
 		// Creating JLabel
-		JLabel Info = new JLabel("<html>The all serial number do not exist :" + " <br/>");
+		JLabel Info = new JLabel(title);
 		Info.setBounds(40, 0, 500, 50);
 		Info.setFont(font);
 		panel.add(Info);
@@ -1429,13 +1467,14 @@ public class ItemsPannel {
 		ok.setBounds(200, 330, 200, 50);
 		ok.setFont(font);
 		panel.add(ok);
-		String[] errorItem = content.split("</br>");
-		if (errorItem.length == 1) {
-			errorItem[0] = errorItem[0].substring(0, 16);
-		}
+
+		String contentTxt = content;
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				String[] errorItem = contentTxt.split("<br/>");
+				if (errorItem.length == 1) {
+					errorItem[0] = errorItem[0].substring(0, 16);
+				}
 				dialogFrame.setVisible(false);
 				dialogFrame.dispose();
 				set.clear();
@@ -1443,20 +1482,26 @@ public class ItemsPannel {
 					String[] checkItem = items.split("\n");
 
 					String updateTxt = "";
-					for (String s : checkItem) {
-						for (String p : errorItem) {
-							if (s.equals(p))
-								continue;
-							updateTxt += s + "\n";
-							set.add(s);
+					HashSet<String> itemError = new HashSet<String>();
+					for (String s : errorItem) {
+						itemError.add(s);
+					}
+					
+
+					for (String p : checkItem) {
+						if (!itemError.contains(p)) {
+							set.add(p);
+							updateTxt += p + "\n";
 						}
 					}
 					String[] item = updateTxt.split("\n");
-
 					inputSN.setText(updateTxt);
-					if (!repMove)
-						ltotal.setText("Total : " + item.length);
-					else {
+					if (!repMove) {
+						if(item.length == 1 && item[0].equals(""))
+							ltotal.setText("Total : 0");
+						else
+							ltotal.setText("Total : " + item.length);
+					}else {
 						modelzone2 = Constrant.modelZone2.get(item[0].substring(0, 6));
 						destination.setText("Destination : " + modelzone2.Zone2Code + (" (Zone 2)"));
 						ltotal.setText("Total: " + item.length + "/" + modelzone2.Z2CurtQty);

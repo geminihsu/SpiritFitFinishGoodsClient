@@ -533,7 +533,7 @@ public class QueryResult {
 			for (Map.Entry<String, List<Itembean>> location : map.entrySet()) {
 				for (int j = 0; j < 2; j++) {
 
-					String modelTitle = Constrant.models.get(location.getKey()).Desc;
+					//String modelTitle = Constrant.models.get(location.getKey()).Desc;
 
 					if (!isQueryRepeat)
 						rowData[rowIndex][0] = "<html>" + "<span style=\"color: blue;\"> <u>"

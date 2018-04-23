@@ -208,7 +208,7 @@ public class ModelZone2Report {
 		modelNo.setPreferredWidth(20);
 		modelNo.setCellRenderer(leftRenderer);
 		TableColumn modelTitle = table.getColumnModel().getColumn(1);
-		modelTitle.setPreferredWidth(200);
+		modelTitle.setPreferredWidth(250);
 		modelTitle.setCellRenderer(leftRenderer);
 		TableColumn qtycolumn = table.getColumnModel().getColumn(2);
 		qtycolumn.setPreferredWidth(10);
