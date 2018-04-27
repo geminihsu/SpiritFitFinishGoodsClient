@@ -244,7 +244,16 @@ public class ModelZone2Report {
 			public void actionPerformed(ActionEvent e) {
 
 				// printer();
-				printer(table, frame);
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							printer(table, frame);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+				
 			}
 		});
 		panel.add(btnDone);

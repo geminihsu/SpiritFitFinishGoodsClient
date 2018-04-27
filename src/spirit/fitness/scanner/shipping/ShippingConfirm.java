@@ -380,7 +380,7 @@ public class ShippingConfirm {
 
 		frame = new JFrame("Query Pannel");
 		// Setting the width and height of frame
-		frame.setSize(700, 400);
+		frame.setSize(700, 600);
 		frame.setLocationRelativeTo(null);
 		frame.setUndecorated(true);
 		frame.setResizable(false);
@@ -617,7 +617,16 @@ public class ShippingConfirm {
 					String shipToAddress = billToTitle + "\n              " + shippToAdddress + "\n              "
 							+ shippToCity + "  " + shippToState + "\n              " + shippToZip + "    "
 							+ shippToCountry;
-					printer(salesOrder, date, billToTitle, shipToAddress, historyItemsInfo);
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								printer(salesOrder, date, billToTitle, shipToAddress, historyItemsInfo);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+					
 				}
 			});
 
@@ -1162,7 +1171,19 @@ public class ShippingConfirm {
 						items.add(_item);
 
 					}
-					checkItemExitsZone2(items);
+
+					if (loadingframe != null) {
+						loadingframe.updateTitle("Report Data...");
+						loading.setValue(80);
+						loadingframe.setVisible(true);
+					}
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+
+							checkItemExitsZone2(items);
+						}
+					});
+					
 
 				}
 			}
@@ -1237,6 +1258,10 @@ public class ShippingConfirm {
 			@Override
 			public void checkInventoryZone2Items(int result, List<Itembean> items) {
 
+				if (loadingframe != null) {
+					loadingframe.setVisible(false);
+					loadingframe.dispose();
+				}
 				prevContent = inputSN.getText().toString();
 				if (result == HttpRequestCode.HTTP_REQUEST_OK) {
 					String[] scanItems = inputSN.getText().toString().split("\n");
@@ -1458,7 +1483,7 @@ public class ShippingConfirm {
 		}
 
 		// String result = PrintTableUtil.printReport(headersList, rowsList);
-		String result = PrintTableUtil.printReport(headersList, rowsList);
+		String result = PrintTableUtil.noBorad(headersList, rowsList);
 		content += result + itemsInfo;
 		System.out.println(content);
 

@@ -239,9 +239,11 @@ public class ContainerPannel implements ActionListener {
 				List<Containerbean> list = location.getValue();
 
 				int qty = 0;
+
+				
 				for (int s = 0; s < list.size(); s++) {
-					qty += Integer.valueOf(list.get(0).SNEnd.substring(10, 16))
-							- Integer.valueOf(list.get(0).SNBegin.substring(10, 16));
+					qty += Integer.valueOf(list.get(s).SNEnd.substring(10, 16))
+							- Integer.valueOf(list.get(s).SNBegin.substring(10, 16));
 				}
 
 				for (int j = 0; j < 3; j++) {
@@ -250,7 +252,7 @@ public class ContainerPannel implements ActionListener {
 
 					containerItems[rowIndex][1] = location.getKey();
 
-					containerItems[rowIndex][2] = qty;
+					containerItems[rowIndex][2] = qty + 1;
 
 				}
 

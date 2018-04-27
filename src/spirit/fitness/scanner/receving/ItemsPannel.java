@@ -98,6 +98,8 @@ public class ItemsPannel {
 	private String result;
 	private String scanContent;
 	private String containerNo;
+	private String scannedDate;
+	private String scannedModel;
 	private int assignType;
 	private int orderTotalCount;
 	private boolean repMove = false;
@@ -382,14 +384,13 @@ public class ItemsPannel {
 					}
 
 					List<Itembean> items = new ArrayList<Itembean>();
-
-					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-							.format(Calendar.getInstance().getTime());
+					scannedModel = itemList[0].substring(0, 6);
+					scannedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
 					for (String item : itemList) {
 						Itembean _item = new Itembean();
 
 						_item.SN = item;
-						_item.ModelNo = item.substring(0, 6);
+						_item.ModelNo = scannedModel;
 						items.add(_item);
 
 					}
@@ -433,14 +434,13 @@ public class ItemsPannel {
 					}
 
 					List<Itembean> items = new ArrayList<Itembean>();
-
-					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-							.format(Calendar.getInstance().getTime());
+					scannedModel = itemList[0].substring(0, 6);
+					scannedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
 					for (String item : itemList) {
 						Itembean _item = new Itembean();
 
 						_item.SN = item;
-						_item.ModelNo = item.substring(0, 6);
+						_item.ModelNo = scannedModel;
 						items.add(_item);
 
 					}
@@ -505,9 +505,9 @@ public class ItemsPannel {
 		shippingLabel.setFont(font);
 		panel.add(shippingLabel);
 
-		String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-		JLabel shippingDate = new JLabel(timeStamp);
-		shippingDate.setText(timeStamp);
+		scannedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+		JLabel shippingDate = new JLabel(scannedDate);
+		shippingDate.setText(scannedDate);
 		shippingDate.setFont(font);
 		shippingDate.setBounds(320, 20, 250, 50);
 		panel.add(shippingDate);
@@ -517,9 +517,9 @@ public class ItemsPannel {
 		orderTotalCount = 0;
 		for (Containerbean item : containers) {
 			orderTotalCount += Integer.valueOf(item.SNEnd.substring(10, 16))
-					- Integer.valueOf(item.SNBegin.substring(10, 16));
-			modelTotalCurMap.put(item.SNBegin.substring(0, 10),
-					Integer.valueOf(item.SNEnd.substring(10, 16)) - Integer.valueOf(item.SNBegin.substring(10, 16)));
+					- Integer.valueOf(item.SNBegin.substring(10, 16)) + 1;
+			modelTotalCurMap.put(item.SNBegin.substring(0, 10), Integer.valueOf(item.SNEnd.substring(10, 16))
+					- Integer.valueOf(item.SNBegin.substring(10, 16)) + 1);
 			modelScanCurMap.put(item.SNBegin.substring(0, 10), 0);
 		}
 
@@ -555,7 +555,7 @@ public class ItemsPannel {
 			sample += "8508451802001" + String.valueOf(i) + "\n";
 		}
 
-		prevTxt = sample;
+		// prevTxt = sample;
 		inputSN = new JTextArea(20, 15);
 		String content = "";
 		inputSN.setText(prevTxt);
@@ -692,7 +692,7 @@ public class ItemsPannel {
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				String[] item = inputSN.getText().toString().split("\n");
+				isDefaultZone = true;
 
 				if (inputSN.getText().isEmpty())
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
@@ -702,7 +702,40 @@ public class ItemsPannel {
 					scanResultFrame.setVisible(false);
 					scanResultFrame.dispose();
 					instance = null;
-					displayScanResultFrame(inputSN.getText().toString(), "000", RECEVING);
+
+					items = inputSN.getText().toString();
+					scanResultFrame.setVisible(false);
+					scanResultFrame.dispose();
+					instance = null;
+					// if (type == MOVING) {
+					loadingframe = new LoadingFrameHelper("Checking data...");
+					loading = loadingframe.loadingSample("Checking data...");
+
+					String[] itemList = items.split("\n");
+
+					if (itemList.length == 0 && !inputSN.getText().toString().equals("")) {
+						itemList = new String[0];
+						itemList[0] = inputSN.getText().toString();
+					}
+
+					List<Itembean> items = new ArrayList<Itembean>();
+					scannedModel = itemList[0].substring(0, 6);
+					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+							.format(Calendar.getInstance().getTime());
+					for (String item : itemList) {
+						Itembean _item = new Itembean();
+
+						_item.SN = item;
+						_item.ModelNo = scannedModel;
+						items.add(_item);
+
+					}
+					// displayScanResultFrame(inputSN.getText().toString(), "000", type);
+					if (assignType == RECEVING)
+						checkReceiveItemExits(items);
+					else if (assignType == MOVING)
+						checkMoveItemExits(items);
+
 				}
 			}
 		});
@@ -740,14 +773,14 @@ public class ItemsPannel {
 					}
 
 					List<Itembean> items = new ArrayList<Itembean>();
-
+					scannedModel = itemList[0].substring(0, 6);
 					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 							.format(Calendar.getInstance().getTime());
 					for (String item : itemList) {
 						Itembean _item = new Itembean();
 
 						_item.SN = item;
-						_item.ModelNo = item.substring(0, 6);
+						_item.ModelNo = scannedModel;
 						items.add(_item);
 
 					}
@@ -928,10 +961,9 @@ public class ItemsPannel {
 					}
 
 					/*
-					 * if (assignType == RECEVING) {
-					 * 
-					 * List<Containerbean> updateContainer = new ArrayList<Containerbean>();
-					 * for(Containerbean container : containers) { container.Close = true;
+					 * if (assignType == RECEVING) { // Modify container close to true
+					 * List<Containerbean> updateContainer = new ArrayList<Containerbean>(); for
+					 * (Containerbean container : containers) { container.Close = true;
 					 * updateContainer.add(container);
 					 * 
 					 * } updateContainerStatus(updateContainer); }
@@ -1006,7 +1038,7 @@ public class ItemsPannel {
 					 * assignType);
 					 */
 
-				} 
+				}
 			}
 		});
 
@@ -1029,7 +1061,7 @@ public class ItemsPannel {
 			public void getContainerItems(List<Containerbean> items) {
 				if (!items.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
-					EmailHelper.sendMail(scanContent);
+					EmailHelper.sendMail(scannedDate, containers.get(0), scannedModel, scanContent);
 				}
 
 			}
@@ -1124,7 +1156,7 @@ public class ItemsPannel {
 				// 0, 100);
 
 				List<Itembean> items = new ArrayList<Itembean>();
-
+				scannedModel = itemList[0].substring(0, 6);
 				String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
 				for (String item : itemList) {
 					Itembean _item = new Itembean();
@@ -1132,7 +1164,7 @@ public class ItemsPannel {
 					_item.SN = item;
 					_item.date = timeStamp;
 					_item.Location = location;
-					_item.ModelNo = item.substring(0, 6);
+					_item.ModelNo = scannedModel;
 					items.add(_item);
 
 				}
@@ -1324,16 +1356,15 @@ public class ItemsPannel {
 					// 0, 100);
 
 					List<Itembean> items = new ArrayList<Itembean>();
-
-					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-							.format(Calendar.getInstance().getTime());
+					scannedModel = itemList[0].substring(0, 6);
+					scannedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
 					for (String item : itemList) {
 						Itembean _item = new Itembean();
 
 						_item.SN = item;
-						_item.date = timeStamp;
+						_item.date = scannedDate;
 						_item.Location = location;
-						_item.ModelNo = item.substring(0, 6);
+						_item.ModelNo = scannedModel;
 						_item.ContainerNo = containerNo;
 						items.add(_item);
 
@@ -1468,6 +1499,11 @@ public class ItemsPannel {
 		ok.setFont(font);
 		panel.add(ok);
 
+		/*
+		 * JButton delete = new JButton("Delete"); delete.setBounds(410, 330, 200, 50);
+		 * delete.setFont(font); panel.add(delete);
+		 */
+
 		String contentTxt = content;
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1486,7 +1522,6 @@ public class ItemsPannel {
 					for (String s : errorItem) {
 						itemError.add(s);
 					}
-					
 
 					for (String p : checkItem) {
 						if (!itemError.contains(p)) {
@@ -1497,11 +1532,11 @@ public class ItemsPannel {
 					String[] item = updateTxt.split("\n");
 					inputSN.setText(updateTxt);
 					if (!repMove) {
-						if(item.length == 1 && item[0].equals(""))
+						if (item.length == 1 && item[0].equals(""))
 							ltotal.setText("Total : 0");
 						else
 							ltotal.setText("Total : " + item.length);
-					}else {
+					} else {
 						modelzone2 = Constrant.modelZone2.get(item[0].substring(0, 6));
 						destination.setText("Destination : " + modelzone2.Zone2Code + (" (Zone 2)"));
 						ltotal.setText("Total: " + item.length + "/" + modelzone2.Z2CurtQty);
@@ -1513,6 +1548,13 @@ public class ItemsPannel {
 			}
 		});
 
+		/*
+		 * delete.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { EventQueue.invokeLater(new Runnable() {
+		 * public void run() {
+		 * 
+		 * deleteItems(_items); } }); } });
+		 */
 		// frame.setUndecorated(true);
 		// frame.getRootPane().setWindowDecorationStyle(JRootPane.COLOR_CHOOSER_DIALOG);
 		dialogFrame.setBackground(Color.WHITE);
@@ -1544,6 +1586,18 @@ public class ItemsPannel {
 			} else if (type == MOVING) {
 				fgRepository.updateItem(items);
 			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	private void deleteItems(List<Itembean> items) {
+		String fg;
+		try {
+			fgRepository.deleteItem(items);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
