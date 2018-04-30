@@ -84,18 +84,18 @@ public class ReturnLocation implements ActionListener {
 		btnReturn1.setFont(font);
 		btnReturn2 = new JButton("891");
 		btnReturn2.setFont(font);
-		btnReturn3 = new JButton("901");
-		btnReturn3.setFont(font);
+		/*btnReturn3 = new JButton("901");
+		btnReturn3.setFont(font);*/
 
 		btnReturn1.setMnemonic('O');
 		btnReturn2.setMnemonic('C');
-		btnReturn3.setMnemonic('Q');
+		//btnReturn3.setMnemonic('Q');
 		btnReturn1.addActionListener(this);
 		btnReturn2.addActionListener(this);
-		btnReturn3.addActionListener(this);
+		//btnReturn3.addActionListener(this);
 		cp.add(btnReturn1);
 		cp.add(btnReturn2);
-		cp.add(btnReturn3);
+		//cp.add(btnReturn3);
 
 		JPanel exitControl = new JPanel();
 		exitControl.setLayout(new GridLayout(0, 5));

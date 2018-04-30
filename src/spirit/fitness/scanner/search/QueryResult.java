@@ -143,8 +143,10 @@ public class QueryResult {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Constrant.FRAME_BORDER_BACKGROUN_COLOR));
 		panel.setBackground(Constrant.BACKGROUN_COLOR);
+
 		// adding panel to frame
-		colFrame.add(panel);
+        colFrame.add(panel);
+
 
 		// set up model panel
 		if (queryType == QUERY_MODEL)
@@ -330,10 +332,10 @@ public class QueryResult {
 		if (zone1Data != null) {
 
 			zone1.setText("Zone 1 : " + zoneCount.get(1));
-			
+
 			int height = 50 * zone1Data.length + 20;
-			
-			if( 50 * zone1Data.length + 20 > 100)
+
+			if (50 * zone1Data.length + 20 > 100)
 				height = 100;
 			scrollZone1Pane.setBounds(33, 250, 700, height);
 			scrollZone1Pane.setBackground(Constrant.BACKGROUN_COLOR);
@@ -366,10 +368,10 @@ public class QueryResult {
 
 		if (zone2Data != null) {
 			zone2.setText("Zone 2 : " + zoneCount.get(2));
-			
+
 			int height = 50 * zone2Data.length + 20;
-			
-			if( 50 * zone2Data.length + 20 > 100)
+
+			if (50 * zone2Data.length + 20 > 100)
 				height = 100;
 			scrollZone2Pane.setBounds(33, 91, 700, height);
 			scrollZone2Pane.setBackground(Constrant.TABLE_COLOR);
@@ -391,10 +393,10 @@ public class QueryResult {
 
 		if (zone3Data != null) {
 			zone3.setText("Return : " + zoneCount.get(3));
-			
-			int height =50 *  zone3Data.length + 20;
-			
-			if( 50 * zone3Data.length + 20 > 100)
+
+			int height = 50 * zone3Data.length + 20;
+
+			if (50 * zone3Data.length + 20 > 100)
 				height = 100;
 			scrollZone3Pane.setBounds(33, 420, 700, height);
 			scrollZone3Pane.setBackground(Constrant.TABLE_COLOR);
@@ -533,7 +535,7 @@ public class QueryResult {
 			for (Map.Entry<String, List<Itembean>> location : map.entrySet()) {
 				for (int j = 0; j < 2; j++) {
 
-					//String modelTitle = Constrant.models.get(location.getKey()).Desc;
+					// String modelTitle = Constrant.models.get(location.getKey()).Desc;
 
 					if (!isQueryRepeat)
 						rowData[rowIndex][0] = "<html>" + "<span style=\"color: blue;\"> <u>"
@@ -677,7 +679,6 @@ public class QueryResult {
 			String key = String.valueOf(bean.ZoneCode);
 			if (key.trim().equals(""))
 				continue;
-			
 
 			if (zoneMap.containsKey(bean.ZoneCode)) {
 				LinkedHashMap<String, List<Itembean>> items = zoneMap.get(bean.ZoneCode);
@@ -741,24 +742,22 @@ public class QueryResult {
 				}
 			}
 
-		
-
 			@Override
-			public void checkInventoryZone2Items(int result,List<Itembean> items) {
+			public void checkInventoryZone2Items(int result, List<Itembean> items) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void checkMoveItems(List<Itembean> items) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void checkReceiveItem(List<Itembean> items) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 

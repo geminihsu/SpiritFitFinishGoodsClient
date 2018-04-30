@@ -34,7 +34,7 @@ public class ZoneMenu implements ActionListener {
 	 * Create the application.
 	 */
 	private static ZoneMenu instance = null;
-	private JButton btnZone1, btnZone2, btnReturn, btnDisplayRoom, btnScrapped, btnRework, btnQC;
+	private JButton btnZone1, btnZone2, btnReturn, btnDisplayRoom, btnScrapped, btnRework, btnQC, btnRTS;
 	public JFrame frame;
 	private String items;
 	private int assignType;
@@ -118,6 +118,10 @@ public class ZoneMenu implements ActionListener {
 
 		btnQC = new JButton("QC");
 		btnQC.setFont(font);
+		
+
+		btnRTS = new JButton("RTS");
+		btnRTS.setFont(font);
 
 		btnZone1.setMnemonic('O');
 		btnZone2.setMnemonic('C');
@@ -129,6 +133,8 @@ public class ZoneMenu implements ActionListener {
 		btnScrapped.addActionListener(this);
 		btnRework.addActionListener(this);
 		btnQC.addActionListener(this);
+		btnRTS.addActionListener(this);
+
 
 		if (assignType == ItemsPannel.MOVING) {
 			cp.add(btnZone1);
@@ -138,6 +144,7 @@ public class ZoneMenu implements ActionListener {
 			cp.add(btnScrapped);
 			cp.add(btnRework);
 			cp.add(btnQC);
+			cp.add(btnRTS);
 		}else if (assignType == ItemsPannel.RECEVING) 
 		{
 			cp.add(btnZone1);
@@ -150,6 +157,10 @@ public class ZoneMenu implements ActionListener {
 			cp.add(btnZone2);
 			cp.add(btnReturn);
 			cp.add(btnDisplayRoom);
+			cp.add(btnScrapped);
+			cp.add(btnRework);
+			cp.add(btnQC);
+			cp.add(btnRTS);
 		}
 
 		JPanel exitControl = new JPanel();
@@ -326,6 +337,21 @@ public class ZoneMenu implements ActionListener {
 				ItemsPannel.getInstance(items, "777", assignType);
 			}
 
+		}else if (e.getSource() == btnRTS) {
+			instance = null;
+			if (rtsCodeCallbackFunction != null) {
+				this.frame.setVisible(false);
+				this.frame.dispose();
+				rtsCodeCallbackFunction.getZoneCode("901");
+			} else {
+				this.frame.setVisible(false);
+				this.frame.dispose();
+
+				//ItemsPannel window = new ItemsPannel(items, "777", assignType);
+				//window.dialogFrame.setVisible(true);
+				ItemsPannel.getInstance(items, "901", assignType);
+			}
+
 		}
 
 	}
@@ -354,7 +380,7 @@ public class ZoneMenu implements ActionListener {
 	// retrieve return code number
 	public static ReworkCodeCallBackFunction reworkCodeCallBackFunction;
 
-	public void setShowRoomCodeCallBackFunction(ReworkCodeCallBackFunction _reworkCodeCallBackFunction) {
+	public void setReworkCodeCallBackFunction(ReworkCodeCallBackFunction _reworkCodeCallBackFunction) {
 		reworkCodeCallBackFunction = _reworkCodeCallBackFunction;
 
 	}
@@ -372,7 +398,7 @@ public class ZoneMenu implements ActionListener {
 
 	}
 	
-	// retrieve return code number
+	// retrieve QC code number
 	public static QCCodeCallBackFunction qcCodeCallBackFunction;
 
 	public void setQCCodeCallBackFunction(QCCodeCallBackFunction _qcCodeCallBackFunction) {
@@ -393,10 +419,10 @@ public class ZoneMenu implements ActionListener {
 
 	}
 	
-	// retrieve return code number
+	// retrieve scrapped code number
 	public static ScrappedCodeCallBackFunction scrappedCodeCallbackFunction;
 
-	public void setQCCodeCallBackFunction(ScrappedCodeCallBackFunction _scrappedCodeCallbackFunction) {
+	public void setScrappedCodeCallBackFunction(ScrappedCodeCallBackFunction _scrappedCodeCallbackFunction) {
 		scrappedCodeCallbackFunction = _scrappedCodeCallbackFunction;
 
 	}
@@ -414,5 +440,27 @@ public class ZoneMenu implements ActionListener {
 
 	}
 
+	// retrieve rts code number
+		public static RTSCodeCallBackFunction rtsCodeCallbackFunction;
+
+		public void setRTSCodeCallBackFunction(RTSCodeCallBackFunction _rtsCodeCallbackFunction) {
+			rtsCodeCallbackFunction = _rtsCodeCallbackFunction;
+
+		}
+
+		public RTSCodeCallBackFunction getRTSCall() {
+			return rtsCodeCallbackFunction;
+		}
+
+		public void clearRTSCodeCallBackFunction() {
+			rtsCodeCallbackFunction = null;
+		}
+
+		public interface RTSCodeCallBackFunction {
+			public void getZoneCode(String code);
+
+		}
+	
+	
 
 }

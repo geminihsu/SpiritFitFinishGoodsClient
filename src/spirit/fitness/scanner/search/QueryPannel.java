@@ -53,10 +53,10 @@ import spirit.fitness.scanner.zonepannel.Zone2Location;
 import spirit.fitness.scanner.zonepannel.ZoneMenu;
 import spirit.fitness.scanner.zonepannel.ReturnLocation.ZoneCodeReturnCallBackFunction;
 
-public class QueryPannel implements ActionListener{
-	
+public class QueryPannel implements ActionListener {
+
 	private static QueryPannel queryPannel = null;
-	
+
 	public final static int INQUIRY = 3;
 	public JFrame frame;
 	private JTextField locationText;
@@ -64,166 +64,204 @@ public class QueryPannel implements ActionListener{
 	private Zone1Location zone1Location;
 	private Zone2Location zone2Location;
 	private ZoneMenu showRoom;
-	//private ZoneMenu window;
-	
+	private ZoneMenu qcArea;
+	private ZoneMenu reWork;
+	private ZoneMenu scrapped;
+	private ZoneMenu rts;
+	// private ZoneMenu window;
+
 	private int queryType;
-	
+
 	private FGRepositoryImplRetrofit fgRepository;
 
-	
 	public static QueryPannel getInstance() {
 		if (queryPannel == null) {
 			queryPannel = new QueryPannel();
 		}
 		return queryPannel;
 	}
-	
-	public static boolean isExit() 
-	 {
-		 return queryPannel != null;
-	 }
-	
-	public static void destory() 
-	{
+
+	public static boolean isExit() {
+		return queryPannel != null;
+	}
+
+	public static void destory() {
 		queryPannel = null;
 	}
-	
+
 	public QueryPannel() {
 		QueryResult.isQueryRepeat = false;
 		initialZoneCodeCallback();
 		initialize();
 
 	}
-	
-	public void initialZoneCodeCallback() 
-	{
+
+	public void initialZoneCodeCallback() {
 		fgRepository = new FGRepositoryImplRetrofit();
 		fgRepository.setinventoryServiceCallBackFunction(new InventoryCallBackFunction() {
 
 			@Override
 			public void resultCode(int code) {
-			
+
 			}
 
 			@Override
 			public void getInventoryItems(List<Itembean> items) {
-			   if(items.isEmpty()) 
-			   {
+				if (items.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "No Items");
-			   }else 
-			   {
-				   clearZoneCodeCallback();
-				   frame.dispose();
-				   frame.setVisible(false);
-				   
-				   QueryResult window = new QueryResult();
-				   if (queryType == QueryResult.QUERY_LOCATION)
+				} else {
+					clearZoneCodeCallback();
+					frame.dispose();
+					frame.setVisible(false);
+
+					QueryResult window = new QueryResult();
+					if (queryType == QueryResult.QUERY_LOCATION)
 						window.setContent(QueryResult.QUERY_LOCATION, items);
-					else 
+					else
 						window.setContent(QueryResult.QUERY_MODEL, items);
 
-				    if(window.resultFrame != null)
-				    	window.resultFrame.setVisible(true);
-				   
-			   }
+					if (window.resultFrame != null)
+						window.resultFrame.setVisible(true);
+
+				}
 			}
 
-		
-
 			@Override
-			public void checkInventoryZone2Items(int result,List<Itembean> items) {
+			public void checkInventoryZone2Items(int result, List<Itembean> items) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void checkMoveItems(List<Itembean> items) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void checkReceiveItem(List<Itembean> items) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
-		zoneCodeReturn = new ReturnLocation(null,-1);
+		zoneCodeReturn = new ReturnLocation(null, -1);
 		zoneCodeReturn.setZoneCodeReturnCallBackFunction(new ReturnLocation.ZoneCodeReturnCallBackFunction() {
-			
+
 			@Override
 			public void getZoneCode(String code) {
 				System.out.println(code);
 				locationText.setText(code);
 			}
 		});
-		
-		zone1Location = new Zone1Location(null,-1);
+
+		zone1Location = new Zone1Location(null, -1);
 		zone1Location.setZone1CodeCallBackFunction(new Zone1Location.Zone1CodeCallBackFunction() {
-			
+
 			@Override
 			public void getZoneCode(String code) {
 				System.out.println(code);
 				locationText.setText(code);
 			}
 		});
-		
-		zone2Location = new Zone2Location(null,-1);
+
+		zone2Location = new Zone2Location(null, -1);
 		zone2Location.setZone2CodeCallBackFunction(new Zone2Location.Zone2CodeCallBackFunction() {
-			
+
 			@Override
 			public void getZoneCode(String code) {
 				System.out.println(code);
 				locationText.setText(code);
 			}
 		});
-		
-		showRoom = new ZoneMenu(null,-1);
+
+		showRoom = new ZoneMenu(null, -1);
 		showRoom.setShowRoomCodeCallBackFunction(new ZoneMenu.ShowRoomCodeCallBackFunction() {
+
+			@Override
+			public void getZoneCode(String code) {
+				System.out.println(code);
+				locationText.setText("ShowRoom");
+			}
+		});
+
+		qcArea = new ZoneMenu(null, -1);
+		qcArea.setQCCodeCallBackFunction(new ZoneMenu.QCCodeCallBackFunction() {
+
+			@Override
+			public void getZoneCode(String code) {
+				System.out.println(code);
+				locationText.setText("QC");
+
+			}
+		});
+
+		reWork = new ZoneMenu(null, -1);
+		reWork.setReworkCodeCallBackFunction(new ZoneMenu.ReworkCodeCallBackFunction() {
+
+			@Override
+			public void getZoneCode(String code) {
+				System.out.println(code);
+				locationText.setText("ReWork");
+
+			}
+		});
+
+		scrapped = new ZoneMenu(null, -1);
+		scrapped.setScrappedCodeCallBackFunction(new ZoneMenu.ScrappedCodeCallBackFunction() {
+
+			@Override
+			public void getZoneCode(String code) {
+				System.out.println(code);
+				locationText.setText("Scrapped");
+			}
+		});
+		
+		
+		rts = new ZoneMenu(null, -1);
+		rts.setRTSCodeCallBackFunction(new ZoneMenu.RTSCodeCallBackFunction() {
 			
 			@Override
 			public void getZoneCode(String code) {
 				System.out.println(code);
-				locationText.setText(code);
+				locationText.setText("RTS");
 			}
 		});
-		
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	public void initialize() {
-		
-		//JFrame.setDefaultLookAndFeelDecorated(false);
-		//JDialog.setDefaultLookAndFeelDecorated(false);
+
+		// JFrame.setDefaultLookAndFeelDecorated(false);
+		// JDialog.setDefaultLookAndFeelDecorated(false);
 		frame = new JFrame("Query Pannel");
 		// Setting the width and height of frame
 		frame.setSize(600, 400);
 		frame.setLocationRelativeTo(null);
 		frame.setLocationRelativeTo(null);
-		frame.setUndecorated (true);
-		frame.setResizable(false); 
-		
+		frame.setUndecorated(true);
+		frame.setResizable(false);
+
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Constrant.FRAME_BORDER_BACKGROUN_COLOR));
-		
+
 		panel.setBackground(Constrant.BACKGROUN_COLOR);
 		// adding panel to frame
 		frame.add(panel);
-		
+
 		placeComponents(panel);
 
-		//frame.setUndecorated(true);
-		//frame.getRootPane().setWindowDecorationStyle(JRootPane.COLOR_CHOOSER_DIALOG);
+		// frame.setUndecorated(true);
+		// frame.getRootPane().setWindowDecorationStyle(JRootPane.COLOR_CHOOSER_DIALOG);
 		frame.setBackground(Color.WHITE);
 		frame.setVisible(true);
-       // frame.setDefaultLookAndFeelDecorated(true);
+		// frame.setDefaultLookAndFeelDecorated(true);
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				clearZoneCodeCallback();
-				
+
 				frame.dispose();
 				frame.setVisible(false);
 			}
@@ -255,7 +293,7 @@ public class QueryPannel implements ActionListener{
 		modelLabel.setBounds(100, 100, 200, 25);
 		modelLabel.setFont(font);
 		panel.add(modelLabel);
-		
+
 		JLabel ltotal = new JLabel("");
 		ltotal.setFont(font);
 		ltotal.setBounds(230, 150, 250, 50);
@@ -274,7 +312,7 @@ public class QueryPannel implements ActionListener{
 				System.out.println(modelText.getText().toString());
 
 				if (modelText.getText().toString().length() >= 6) {
-					String modelNo = modelText.getText().toString().substring(0,6);
+					String modelNo = modelText.getText().toString().substring(0, 6);
 					Modelbean model = Constrant.models.get(modelNo);
 					if (model != null)
 						ltotal.setText(model.Desc);
@@ -305,10 +343,8 @@ public class QueryPannel implements ActionListener{
 		locationText = new JTextField(20);
 		locationText.setFont(font);
 		locationText.setBounds(230, 200, 250, 50);
-		
+
 		panel.add(locationText);
-		
-		
 
 		// Creating Map button
 		JButton MapButton = new JButton("Map");
@@ -317,8 +353,8 @@ public class QueryPannel implements ActionListener{
 
 		MapButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//window = new ZoneMenu(null, INQUIRY);
-				//window.frame.setVisible(true);
+				// window = new ZoneMenu(null, INQUIRY);
+				// window.frame.setVisible(true);
 				ZoneMenu.getInstance(null, INQUIRY);
 			}
 		});
@@ -338,8 +374,17 @@ public class QueryPannel implements ActionListener{
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							try {
-
-								passQueryResult(modelText.getText().toString(), locationText.getText().toString());
+								int location = 0;
+								if (locationText.getText().toString().equals("ShowRoom")
+										|| locationText.getText().toString().equals("QC")
+										|| locationText.getText().toString().equals("ReWork")
+										|| locationText.getText().toString().equals("Scrapped")
+										|| locationText.getText().toString().equals("RTS")
+										)
+									location = covertLocationCode(locationText.getText().toString());
+								else if(!locationText.getText().toString().equals(""))
+									location = Integer.valueOf(locationText.getText().toString());
+								passQueryResult(modelText.getText().toString(), String.valueOf(location));
 
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -366,8 +411,7 @@ public class QueryPannel implements ActionListener{
 		});
 
 		panel.add(resetButton);
-		
-		
+
 		// Creating Query button
 		JButton exitButton = new JButton("Exit");
 		exitButton.setFont(font);
@@ -375,10 +419,10 @@ public class QueryPannel implements ActionListener{
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				clearZoneCodeCallback();
-				//if(window != null && window.frame != null)
-				//	window.frame.setVisible(false);
+				// if(window != null && window.frame != null)
+				// window.frame.setVisible(false);
 				ZoneMenu.destory();
-				
+
 				queryPannel = null;
 				frame.dispose();
 				frame.setVisible(false);
@@ -389,10 +433,10 @@ public class QueryPannel implements ActionListener{
 	}
 
 	private void passQueryResult(String modelNo, String Location) {
-		if ((!modelNo.equals("") && !Location.equals("")))
+		if ((!modelNo.equals("") && !Location.equals("0")))
 			queryType = QueryResult.QUERY_MODEL_LOCATION;
 		else
-			queryType = (modelNo.equals("") && !Location.equals("")) ? QueryResult.QUERY_LOCATION
+			queryType = (modelNo.equals("") && !Location.equals("0")) ? QueryResult.QUERY_LOCATION
 					: QueryResult.QUERY_MODEL;
 
 		if (queryType == QueryResult.QUERY_MODEL_LOCATION) {
@@ -401,8 +445,8 @@ public class QueryPannel implements ActionListener{
 					// from scanner
 					modelNo = modelNo.substring(0, 6);
 				}
-				
-				fgRepository.getItemsByModelAndLocation(modelNo,Integer.valueOf(Location));
+
+				fgRepository.getItemsByModelAndLocation(modelNo, Integer.valueOf(Location));
 
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
@@ -415,6 +459,7 @@ public class QueryPannel implements ActionListener{
 		} else if (queryType == QueryResult.QUERY_LOCATION) {
 
 			try {
+
 				fgRepository.getItemsByLocation(Integer.valueOf(Location));
 
 			} catch (NumberFormatException e) {
@@ -449,7 +494,9 @@ public class QueryPannel implements ActionListener{
 	private boolean verifyText(String model, String location) {
 		if (model.equals("") && location.equals(""))
 			return false;
-
+		if (location.equals("ShowRoom") || location.equals("QC") || location.equals("ReWork")
+				|| location.equals("Scrapped")|| location.equals("RTS"))
+			return true;
 		else if (model.equals("")) {
 			if (location.length() != 3)
 				return false;
@@ -459,9 +506,9 @@ public class QueryPannel implements ActionListener{
 		} else if (location.equals("")) {
 			if ((model.length() != 16) && (model.length() != 6))
 				return false;
-      
-			if(model.length() == 16)
-				model = model.substring(0,6);
+
+			if (model.length() == 16)
+				model = model.substring(0, 6);
 			Modelbean map = Constrant.models.get(model);
 			if (map == null)
 				return false;
@@ -469,32 +516,45 @@ public class QueryPannel implements ActionListener{
 
 		return true;
 	}
-	
-	
-	private void clearZoneCodeCallback() 
-	{
-		
-		if(zone1Location.getZone1CodeCallBackFunction()!=null)
-			zone1Location.clearZone1CodeCallBackFunction();
-		if(zone2Location.getZone2CodeCallBackFunction()!=null)
-			zone2Location.clearZone2CodeCallBackFunction();
-		if(zoneCodeReturn.getZoneCodeReturnCallBackFunction()!=null)
-			zoneCodeReturn.clearZoneCodeReturnCallBackFunction();
-		if(showRoom.getShowRoomCodeCallBackFunction()!=null)
-			showRoom.clearShowRoomCodeCallBackFunction();
-		
-		if(ZoneMenu.showRoomCodeCallBackFunction != null)
-			ZoneMenu.showRoomCodeCallBackFunction = null;
-		
-		if(ZoneMenu.qcCodeCallBackFunction != null)
-			ZoneMenu.qcCodeCallBackFunction = null;
-		
-		if(ZoneMenu.reworkCodeCallBackFunction != null)
-			ZoneMenu.reworkCodeCallBackFunction = null;
-		
-		if(ZoneMenu.scrappedCodeCallbackFunction != null)
-			ZoneMenu.scrappedCodeCallbackFunction = null;
-		
+
+	private int covertLocationCode(String location) {
+		if (location.equals("QC")) {
+			return 666;
+		} else if (location.equals("ReWork")) {
+			return 555;
+		} else if (location.equals("Scrapped")) {
+			return 777;
+		} else if (location.equals("ShowRoom")) {
+			return 888;
+		}else if (location.equals("RTS")) {
+			return 901;
+		} else
+			return Integer.valueOf(location);
 	}
-	
+
+	private void clearZoneCodeCallback() {
+
+		if (zone1Location.getZone1CodeCallBackFunction() != null)
+			zone1Location.clearZone1CodeCallBackFunction();
+		if (zone2Location.getZone2CodeCallBackFunction() != null)
+			zone2Location.clearZone2CodeCallBackFunction();
+		if (zoneCodeReturn.getZoneCodeReturnCallBackFunction() != null)
+			zoneCodeReturn.clearZoneCodeReturnCallBackFunction();
+		if (showRoom.getShowRoomCodeCallBackFunction() != null)
+			showRoom.clearShowRoomCodeCallBackFunction();
+
+		if (ZoneMenu.showRoomCodeCallBackFunction != null)
+			ZoneMenu.showRoomCodeCallBackFunction = null;
+
+		if (ZoneMenu.qcCodeCallBackFunction != null)
+			ZoneMenu.qcCodeCallBackFunction = null;
+
+		if (ZoneMenu.reworkCodeCallBackFunction != null)
+			ZoneMenu.reworkCodeCallBackFunction = null;
+
+		if (ZoneMenu.scrappedCodeCallbackFunction != null)
+			ZoneMenu.scrappedCodeCallbackFunction = null;
+
+	}
+
 }
