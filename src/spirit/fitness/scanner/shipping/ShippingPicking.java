@@ -623,7 +623,7 @@ public class ShippingPicking {
 							if (map.containsKey(item.ItemID)) {
 
 								if (!item.ItemID.contains("PL") && item.ItemID.length() == 6
-										&& !WeightPlateUtil.isWeightPlate(item.ItemID)) {
+										&& !WeightPlateUtil.isWeightPlate(item.ItemID) && !WeightPlateUtil.isCalfSupport(item.ItemID)) {
 									count += map.get(item.ItemID);
 									map.put(item.ItemID, count);
 									orderTotalCount += count;
@@ -631,7 +631,7 @@ public class ShippingPicking {
 							} else {
 
 								if (!item.ItemID.contains("PL") && item.ItemID.length() == 6
-										&& !WeightPlateUtil.isWeightPlate(item.ItemID)) {
+										&& !WeightPlateUtil.isWeightPlate(item.ItemID)&& !WeightPlateUtil.isCalfSupport(item.ItemID)) {
 									orderTotalCount += count;
 									map.put(item.ItemID, count);
 									OrderModelmap.put(item.ItemID, item.description);

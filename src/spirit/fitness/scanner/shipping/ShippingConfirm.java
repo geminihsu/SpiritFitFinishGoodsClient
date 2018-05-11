@@ -132,6 +132,7 @@ public class ShippingConfirm {
 	private LoadingFrameHelper loadingframe;
 	private JTextArea inputSN;
 	private JLabel lCount;
+	private JLabel lModelError;
 
 	private FGRepositoryImplRetrofit fgRepositoryImplRetrofit;
 	private OrdersRepositoryImplRetrofit ordersRepositoryImplRetrofit;
@@ -380,7 +381,7 @@ public class ShippingConfirm {
 
 		frame = new JFrame("Query Pannel");
 		// Setting the width and height of frame
-		frame.setSize(700, 600);
+		frame.setSize(700, 400);
 		frame.setLocationRelativeTo(null);
 		frame.setUndecorated(true);
 		frame.setResizable(false);
@@ -915,7 +916,8 @@ public class ShippingConfirm {
 				String shippToZip = salesOrderList.get(0).shipToZipCode;
 				String shippToVia = salesOrderList.get(0).shipVia;
 
-				String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+				String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+				
 				for (String item : itemList) {
 					Historybean _item = new Historybean();
 
@@ -1064,6 +1066,12 @@ public class ShippingConfirm {
 
 		}
 
+		lModelError= new JLabel("");
+
+		lModelError.setBounds(50, 150, 200, 400);
+		lModelError.setFont(font);
+		panel.add(lModelError);
+		
 		// Creating JLabel
 		lCount = new JLabel("");
 
@@ -1073,6 +1081,7 @@ public class ShippingConfirm {
 		lCount.setFont(font);
 		panel.add(lCount);
 
+		
 		JScrollPane scrollPanel1 = new JScrollPane(inputSN);
 		scrollPanel1.setBounds(250, 150, 250, 500);
 		inputSN.setFont(font);
@@ -1104,10 +1113,16 @@ public class ShippingConfirm {
 						curModelCnt = modelScanCurMap.get(model);
 				}
 
+				if(!map.containsKey(model)) 
+				{
+					lModelError.setForeground(Color.RED);
+					lModelError.setText("Model Error.");
+				}
+				
 				if (!snRepeatSet.contains(item[item.length - 1]) && item[item.length - 1].length() == 16
 						&& snRepeatSet.size() <= orderTotalCount && map.containsKey(model) && curModelCnt < map.get(model)
 						&& !lenError) {
-
+					lModelError.setText("");
 					modelScanCurMap.put(model, modelScanCurMap.get(model) + 1);
 					snRepeatSet.add(item[item.length - 1]);
 				} else {
@@ -1115,6 +1130,7 @@ public class ShippingConfirm {
 					prev = prev.substring(0, prev.length() - (item[item.length - 1].length()) - 1);
 
 				}
+			
 
 				if (lenError) {
 
@@ -1335,7 +1351,7 @@ public class ShippingConfirm {
 						// System.out.println("item.ItemID:" + item.ItemID);
 
 						if (item.ItemID != null && !item.ItemID.contains("PL") && item.ItemID.length() == 6
-								&& !WeightPlateUtil.isWeightPlate(item.ItemID)) {
+								&& !WeightPlateUtil.isWeightPlate(item.ItemID)&& !WeightPlateUtil.isCalfSupport(item.ItemID)) {
 							salesOrderList.add(item);
 							if (map.containsKey(item.ItemID)) {
 
@@ -1470,7 +1486,7 @@ public class ShippingConfirm {
 		return modelQty;
 	}
 
-	private void printer(String saleOrder, String date, String billTo, String shipTo, String itemsInfo) {
+	/*private void printer(String saleOrder, String date, String billTo, String shipTo, String itemsInfo) {
 
 		String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " + date + "\n" + "Bill To : "
 				+ billTo + "\n" + "Ship To : " + shipTo + "\n";
@@ -1490,8 +1506,85 @@ public class ShippingConfirm {
 		PrinterHelper print = new PrinterHelper();
 		print.printTable(content);
 
-	}
+	}*/
 
+	private void printer(String saleOrder, String date, String billTo, String shipTo, String itemsInfo) {
+
+		String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " + date + "\n" + "Bill To : "
+				+ billTo + "\n" + "Ship To : " + shipTo + "\n";
+		//List<String> headersList = Arrays.asList("Qty", "Item", "Model", "PRO#");
+
+		/*List<List<String>> rowsList = new ArrayList<List<String>>();
+		for (String s : resultModelItem) {
+			String[] rowdata = s.split("\n");
+			rowsList.add(Arrays.asList(rowdata));
+		}*/
+		
+		String header = " ____________________________________________________________________________________________\n";
+		String title = " | Qty |    Item   |                     Model                          |                            PRO                    \n";
+		String bolder = " ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n";
+		
+		String items = "";
+		
+		int modelTitleLen = 0;
+		//int limitLen = 38;
+		for (String s : resultModelItem) {
+			String[] rowdata = s.split("\n");
+			String line = "";
+			
+			int spaceModelPrefixLen = 0;
+		
+			String spaceModelPrefix = "";
+			String spaceModelSuffix = "";
+			if(rowdata[2].length()<38)
+				spaceModelPrefixLen = (38 - rowdata[2].length());
+			
+			
+			if(modelTitleLen < rowdata[2].length())
+				modelTitleLen = spaceModelPrefixLen - rowdata[2].length();
+			
+			spaceModelPrefixLen += Math.abs(modelTitleLen);
+			
+			while(spaceModelPrefixLen != 0) 
+			{
+				spaceModelPrefix +=" ";
+				spaceModelSuffix +=" ";
+				spaceModelPrefixLen --;
+			}
+		
+
+			for(int i =0; i <rowdata.length ; i++) 
+			{
+				String modelTitle = rowdata[2] + spaceModelPrefix;
+				if(i == 2) 
+				{
+					line += rowdata[i] + spaceModelPrefix;
+				}
+				else if(i == 3) {
+					
+					line += rowdata[i];
+				
+				}else
+					line += "   "+rowdata[i] +"    "; 
+			}
+			
+			items += line +"\n";
+		}
+		
+		items += bolder;
+		// String result = PrintTableUtil.printReport(headersList, rowsList);
+		//String result = PrintTableUtil.noBorad(headersList, rowsList);
+		content += header + title + bolder + items +itemsInfo;
+	
+		System.out.println(content);
+
+		PrinterHelper print = new PrinterHelper();
+		print.printTable(content);
+
+	}
+	
+	
+	
 	private void restoreScanPannel(List<Itembean> items) {
 
 		if (scanResultFrame != null)

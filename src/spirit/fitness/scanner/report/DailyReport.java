@@ -29,6 +29,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -85,6 +86,11 @@ public class DailyReport {
 
 	private LoadingFrameHelper loadingframe;
 	private JProgressBar loading;
+	private JTextField date;
+	
+	private JFileChooser chooser;
+	private String choosertitle;
+
 
 	public static DailyReport getInstance(HashMap<String,ModelDailyReportbean> data) {
 		if (dailyReport == null) {
@@ -102,8 +108,10 @@ public class DailyReport {
 
 		loadingframe = new LoadingFrameHelper("Loading Data from Server...");
 		loading = loadingframe.loadingSample("Loading Data from Server...");
+		date = new JTextField(20);
 		intialCallback();
-		loadModelZone2Map();
+		String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+		loadModelZone2Map(timeStamp);
 
 	}
 
@@ -158,7 +166,7 @@ public class DailyReport {
 
 		String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
-		Object rowDataReport[][] = new Object[data.size()][12];
+		Object rowDataReport[][] = new Object[data.size()][9];
 		System.out.println(data.size());
 
 		int prevTotal = 0;
@@ -183,20 +191,20 @@ public class DailyReport {
 			 * rowDataReport[i][8] = showroom; rowDataReport[i][9] = reworkTotal;
 			 * rowDataReport[i][10] = qcTotal; rowDataReport[i][11] = Total; } } else {
 			 */
-			for (int j = 0; j < 12; j++) {
+			for (int j = 0; j < 9; j++) {
 				rowDataReport[i][0] = " " + data.get(i).ModelNo;
 				rowDataReport[i][1] = data.get(i).ModelFG;
 				rowDataReport[i][2] = data.get(i).Previous;
 				rowDataReport[i][3] = data.get(i).Shipped;
 				rowDataReport[i][4] = data.get(i).Received;
-				rowDataReport[i][5] = data.get(i).Scrapped;
-				rowDataReport[i][6] = data.get(i).OnHand;
-				rowDataReport[i][7] = data.get(i).ReturnItem;
+				//rowDataReport[i][5] = data.get(i).Scrapped;
+				rowDataReport[i][5] = data.get(i).OnHand;
+				rowDataReport[i][6] = data.get(i).ReturnItem +  data.get(i).Rework + data.get(i).QC;
 
-				rowDataReport[i][8] = data.get(i).ShowRoom;
-				rowDataReport[i][9] = data.get(i).Rework;
-				rowDataReport[i][10] = data.get(i).QC;
-				rowDataReport[i][11] = data.get(i).Total;
+				rowDataReport[i][7] = data.get(i).ShowRoom;
+				//rowDataReport[i][9] = data.get(i).Rework;
+				//rowDataReport[i][10] = data.get(i).QC;
+				rowDataReport[i][8] = data.get(i).Total;
 
 				// }
 			}
@@ -204,22 +212,20 @@ public class DailyReport {
 			prevTotal += data.get(i).Previous;
 			shippedTotal += data.get(i).Shipped;
 			receivedTotal += data.get(i).Received;
-			scrappedTotal += data.get(i).Scrapped;
+			//scrappedTotal += data.get(i).Scrapped;
 			shippableOnHandTotal += data.get(i).OnHand;
-			returnUnshippableTotal += data.get(i).ReturnItem;
+			returnUnshippableTotal += data.get(i).ReturnItem + data.get(i).Rework + data.get(i).QC;
 			showroom += data.get(i).ShowRoom;
-			reworkTotal += data.get(i).Rework;
-			qcTotal += data.get(i).QC;
 			Total += data.get(i).Total;
 		}
 
 		String zone = "";
 
-		Object columnNames[] = { "Model#", "FG", "Previous", "Shipped", "Received", "Scrapped", "Shippable/On Hand",
-				"Return/Unshippable", "ShowRoom", "Rework", "QC", "Total" };
+		Object columnNames[] = { "Model#", "FG", "Previous", "Shipped", "Received", "Shippable/On Hand",
+				"Unshippable", "ShowRoom", "Total" };
 		Font font = new Font("Verdana", Font.BOLD, 15);
-		final Class[] columnClass = new Class[] { String.class, String.class, Integer.class, Integer.class,
-				Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, Integer.class,
+		final Class[] columnClass = new Class[] { String.class, String.class, Integer.class,
+				Integer.class, Integer.class, Integer.class,Integer.class, Integer.class,
 				Integer.class };
 
 		DefaultTableModel model = new DefaultTableModel(rowDataReport, columnNames) {
@@ -244,24 +250,26 @@ public class DailyReport {
 		TableColumn modelNo = table.getColumnModel().getColumn(0);
 		modelNo.setPreferredWidth(90);
 		TableColumn modelTitle = table.getColumnModel().getColumn(1);
-		modelTitle.setPreferredWidth(180);
+		modelTitle.setPreferredWidth(200);
 		TableColumn prevCcolumn = table.getColumnModel().getColumn(2);
 		prevCcolumn.setPreferredWidth(90);
-		TableColumn shippingColumn = table.getColumnModel().getColumn(3);
-		shippingColumn.setPreferredWidth(90);
-		TableColumn receivedColumn = table.getColumnModel().getColumn(4);
-		receivedColumn.setPreferredWidth(100);
-		TableColumn scrappedColumn = table.getColumnModel().getColumn(5);
+		//TableColumn shippingColumn = table.getColumnModel().getColumn(3);
+		//shippingColumn.setPreferredWidth(90);
+		TableColumn receivedColumn = table.getColumnModel().getColumn(3);
+		receivedColumn.setPreferredWidth(90);
+		TableColumn scrappedColumn = table.getColumnModel().getColumn(4);
 		scrappedColumn.setPreferredWidth(100);
-		TableColumn onHand = table.getColumnModel().getColumn(6);
-		onHand.setPreferredWidth(200);
-		TableColumn returnQty = table.getColumnModel().getColumn(7);
-		returnQty.setPreferredWidth(200);
-		TableColumn column = table.getColumnModel().getColumn(8);
-		column.setPreferredWidth(120);
+		TableColumn onHand = table.getColumnModel().getColumn(5);
+		onHand.setPreferredWidth(180);
+		//TableColumn returnQty = table.getColumnModel().getColumn(7);
+		//returnQty.setPreferredWidth(200);
+		//TableColumn column = table.getColumnModel().getColumn(8);
+		//column.setPreferredWidth(120);
 
-		TableColumn qCcolumn = table.getColumnModel().getColumn(10);
-		qCcolumn.setPreferredWidth(50);
+		TableColumn qCcolumn = table.getColumnModel().getColumn(6);
+		qCcolumn.setPreferredWidth(90);
+		TableColumn showroomcolumn = table.getColumnModel().getColumn(7);
+		showroomcolumn.setPreferredWidth(90);
 		table.setCellSelectionEnabled(false);
 		table.setColumnSelectionAllowed(false);
 		table.setEnabled(false);
@@ -277,48 +285,82 @@ public class DailyReport {
 		scrollZonePane.setViewportView(table);
 
 		panel.add(scrollZonePane);
-
-		// Border border = LineBorder.createBlackLineBorder();
-
-		/*
-		 * JLabel modelLabel = new
-		 * JLabel(" Total                                                  "
-		 * +prevTotal+"            "+shippedTotal+"        "
-		 * +receivedTotal+"                 "+scrappedTotal+"                       "
-		 * +shippableOnHandTotal+"                                "
-		 * +returnUnshippableTotal+"                   "+showroom +
-		 * "           "+reworkTotal+"        "+qcTotal+ "   "+Total);
-		 * 
-		 * modelLabel.setBounds(5, 418, 1190, 50); modelLabel.setOpaque(true);
-		 * modelLabel.setBackground(Constrant.DISPALY_ITEMS_TABLE_COLOR);
-		 * modelLabel.setFont(font); modelLabel.setBorder(border);
-		 * panel.add(modelLabel);
-		 */
-
+		
 		Font btnFont = new Font("Verdana", Font.BOLD, 18);
+		Font txtFont = new Font("Verdana", Font.BOLD, 22);
+		
+
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e) {
+				date.requestFocus();
+			}
+		});
+		
+		date.setFont(txtFont);
+		date.setBounds(5, 640, 200, 50);
+		panel.add(date);
+		
+		JButton Search = new JButton("Find");
+		Search.setFont(btnFont);
+		Search.setBounds(220, 640, 200, 50);
+
+		Search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(loadingframe != null)
+					loadingframe.setVisible(true);
+				
+				loadModelZone2Map(date.getText().toString());
+				frame.dispose();
+				frame.setVisible(false);
+			}
+		});
+		panel.add(Search);
+		
 		btnDone = new JButton("Export To Excel");
 		btnDone.setFont(btnFont);
-		btnDone.setBounds(5, 640, 200, 50);
+		btnDone.setBounds(780, 640, 200, 50);
 
 		btnDone.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							ExcelHelper exp = new ExcelHelper();
+							
 
-							exp.fillData(table,
-									new File("C:\\Users\\geminih\\Downloads\\" + timeStamp + "_report.xls"));
+							chooser = new JFileChooser(); 
+						    chooser.setCurrentDirectory(new java.io.File("."));
+						    chooser.setDialogTitle(choosertitle);
+						    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+						    //
+						    // disable the "All files" option.
+						    //
+						    chooser.setAcceptAllFileFilterUsed(false);
+						    //    
+						    if (chooser.showOpenDialog(btnDone) == JFileChooser.APPROVE_OPTION) { 
+						      System.out.println("getCurrentDirectory(): " 
+						         +  chooser.getCurrentDirectory());
+						      System.out.println("getSelectedFile() : " 
+						         +  chooser.getSelectedFile());
+						      ExcelHelper exp = new ExcelHelper();
 
-							JOptionPane.showMessageDialog(null, "Export " + timeStamp + ".xls' successfully", "Message",
-									JOptionPane.INFORMATION_MESSAGE);
+								exp.fillData(table,
+										new File(chooser.getSelectedFile() +"\\"+date.getText().toString() + "_report.xls"));
 
+								JOptionPane.showMessageDialog(null, "Export " + date.getText().toString() + ".xls' successfully", "Message",
+										JOptionPane.INFORMATION_MESSAGE);
+						      }
+						    else {
+						      System.out.println("No Selection ");
+						      }
+							
+							
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
 				});
+				
 				// HttpRestApi.postData(result);
 			}
 		});
@@ -326,7 +368,7 @@ public class DailyReport {
 
 		JButton exitDone = new JButton("Exit");
 		exitDone.setFont(btnFont);
-		exitDone.setBounds(220, 640, 200, 50);
+		exitDone.setBounds(995, 640, 200, 50);
 
 		exitDone.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -336,6 +378,9 @@ public class DailyReport {
 			}
 		});
 		panel.add(exitDone);
+		
+		
+		
 	}
 
 	private void intialCallback() {
@@ -388,13 +433,13 @@ public class DailyReport {
 	}
 
 	// Loading Models data from Server
-	private void loadModelZone2Map() {
+	private void loadModelZone2Map(String timeStamp) {
 
 		// loading model and location information from Server
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+					date.setText(timeStamp);
 				    //fgModelZone2.getAllItems("2018-02-23");
 					fgModelZone2.getAllItems(timeStamp);
 
