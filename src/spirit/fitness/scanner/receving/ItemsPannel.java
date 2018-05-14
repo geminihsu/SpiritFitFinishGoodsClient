@@ -96,7 +96,7 @@ public class ItemsPannel {
 	private JLabel destination;
 	private String items;
 	private String result;
-	private String scanContent;
+	private String scanContent = "";
 	private String containerNo;
 	private String scannedDate;
 	private String scannedModel;
@@ -955,19 +955,22 @@ public class ItemsPannel {
 					if (assignType == MOVING) {
 						JOptionPane.showMessageDialog(null, "Update Data Success!");
 
-					} else if (assignType == RECEVING) {
-						JOptionPane.showMessageDialog(null, "Add Data Success!");
+					} /*
+						 * else if (assignType == RECEVING) { JOptionPane.showMessageDialog(null,
+						 * "Add Data Success!");
+						 * 
+						 * }
+						 */
 
+					if (assignType == RECEVING) { // Modify container close to true
+						List<Containerbean> updateContainer = new ArrayList<Containerbean>();
+						for (Containerbean container : containers) {
+							container.Close = true;
+							updateContainer.add(container);
+
+						}
+						updateContainerStatus(updateContainer);
 					}
-
-					/*
-					 * if (assignType == RECEVING) { // Modify container close to true
-					 * List<Containerbean> updateContainer = new ArrayList<Containerbean>(); for
-					 * (Containerbean container : containers) { container.Close = true;
-					 * updateContainer.add(container);
-					 * 
-					 * } updateContainerStatus(updateContainer); }
-					 */
 
 				}
 			}
@@ -1061,7 +1064,7 @@ public class ItemsPannel {
 			public void getContainerItems(List<Containerbean> items) {
 				if (!items.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
-					EmailHelper.sendMail(scannedDate, containers.get(0), scannedModel, scanContent);
+					EmailHelper.sendMail(scannedDate, containers, scanContent);
 				}
 
 			}
@@ -1213,13 +1216,16 @@ public class ItemsPannel {
 	private void displayScanResultFrame(String content, String location, int type) {
 
 		String[] itemList = content.split("\n");
+
+		Arrays.sort(itemList);
+
 		HashSet<String> set = new HashSet<String>();
 
 		for (String s : itemList) {
+			scanContent += s + "\n";
 			set.add(s);
 		}
 
-		scanContent = content;
 		ModelZone2bean modelMapZone2 = null;
 		boolean isMoveZone2 = false;
 		if (LocationHelper.MapZoneCode(location) == 2) {
@@ -1523,9 +1529,15 @@ public class ItemsPannel {
 						itemError.add(s);
 					}
 
+					modelScanCurMap.clear();
+
 					for (String p : checkItem) {
 						if (!itemError.contains(p)) {
 							set.add(p);
+							if (modelScanCurMap.get(p.substring(0, 10)) == null)
+								modelScanCurMap.put(p.substring(0, 10), 1);
+							else
+								modelScanCurMap.put(p.substring(0, 10), modelScanCurMap.get(p.substring(0, 10))+1);
 							updateTxt += p + "\n";
 						}
 					}
@@ -1535,7 +1547,7 @@ public class ItemsPannel {
 						if (item.length == 1 && item[0].equals(""))
 							ltotal.setText("Total : 0");
 						else
-							ltotal.setText("Total : " + item.length);
+							ltotal.setText(setModelScanCountLabel(set.size()));
 					} else {
 						modelzone2 = Constrant.modelZone2.get(item[0].substring(0, 6));
 						destination.setText("Destination : " + modelzone2.Zone2Code + (" (Zone 2)"));

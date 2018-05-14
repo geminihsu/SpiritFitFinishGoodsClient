@@ -12,20 +12,27 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
@@ -184,6 +191,62 @@ public class AppMenu implements ActionListener {
 		});
 
 	}
+	
+	private void receiviedMenu() 
+	{
+		
+		JFrame frame = new JFrame("FG Inventory App");
+		frame.setSize(300, 300);
+		frame.setLocationRelativeTo(null);
+		frame.setUndecorated(true);
+		frame.setResizable(false);
+		
+		Container cp = frame.getContentPane();
+		cp.setLayout(new GridLayout(0, 1));
+
+		Font font = new Font("Verdana", Font.BOLD, 30);
+		
+		JButton btnNew = new JButton(new AbstractAction("New") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				frame.setVisible(false);
+				ContainerPannel.getInstance();
+			}
+		});
+		btnNew.setFont(font);
+		
+		JButton btnReturn = new JButton(new AbstractAction("Return") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				frame.setVisible(false);
+				ItemsPannel.getInstance("", ItemsPannel.RECEVING);
+			}
+		});
+		
+		btnReturn.setFont(font);
+		JButton exit = new JButton(new AbstractAction("Exit") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ItemsPannel.destory();
+				frame.dispose();
+				frame.setVisible(false);
+			}
+		});
+		exit.setFont(font);
+		
+		
+		cp.add(btnNew);
+		cp.add(btnReturn);
+		cp.add(exit);
+	
+		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		frame.setVisible(true);
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -191,8 +254,9 @@ public class AppMenu implements ActionListener {
 
 		if (!InstanceUtil.isExits()) {
 			if (e.getSource() == btnRecving) {
-				ItemsPannel.getInstance("", ItemsPannel.RECEVING);
+				//ItemsPannel.getInstance("", ItemsPannel.RECEVING);
 				//ContainerPannel.getInstance();
+				receiviedMenu();
 			} else if (e.getSource() == btnMoving) {
 				// ItemsPannel window = new ItemsPannel(ItemsPannel.MOVING);
 				// window.frame.setVisible(true);
