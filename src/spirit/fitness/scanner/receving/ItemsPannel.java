@@ -1064,7 +1064,8 @@ public class ItemsPannel {
 			public void getContainerItems(List<Containerbean> items) {
 				if (!items.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
-					EmailHelper.sendMail(scannedDate, containers, scanContent);
+					EmailHelper.sendMail(scannedDate, containers, scanContent,"geminih@spiritfitness.com");
+					//EmailHelper.sendMail(scannedDate, containers, scanContent,"vickie@spiritfitness.com");
 				}
 
 			}

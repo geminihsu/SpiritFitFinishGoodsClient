@@ -49,6 +49,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
@@ -68,6 +69,7 @@ import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.search.QueryResult;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
 import spirit.fitness.scanner.util.PrintTableUtil;
+import spirit.fitness.scanner.util.PrintUIWindow;
 import spirit.fitness.scanner.util.PrinterHelper;
 import spirit.fitness.scanner.util.PrinterHelper.PrintTable;
 import spirit.fitness.scanner.util.WeightPlateUtil;
@@ -76,6 +78,7 @@ import spirit.fitness.scanner.model.Historybean;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.PickingItem;
+import spirit.fitness.scanner.model.ShippedPrintItem;
 
 public class ShippingConfirm {
 
@@ -127,7 +130,7 @@ public class ShippingConfirm {
 	private List<Historybean> items;
 	private List<Historybean> scanItems;
 	private List<String> resultModelItem = new ArrayList<String>();
-
+ 	
 	private JProgressBar loading;
 	private LoadingFrameHelper loadingframe;
 	private JTextArea inputSN;
@@ -622,6 +625,7 @@ public class ShippingConfirm {
 						public void run() {
 							try {
 								printer(salesOrder, date, billToTitle, shipToAddress, historyItemsInfo);
+								
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -685,19 +689,21 @@ public class ShippingConfirm {
 					historyItemsInfo += h.SN + "\n";
 				}
 				rowIndex = 0;
-				for (Map.Entry<String, Integer> location : map.entrySet()) {
-					// orderItemsInfo += location.getValue() +" " +
-					// salesOrderList.get(rowIndex).ItemID +" "+
-					// salesOrderList.get(rowIndex).description + " "+ items.get(0).trackingNo
-					// +"\n";
+				
+                for (Map.Entry<String, Integer> location : map.entrySet()) {
+                    // orderItemsInfo += location.getValue() +" " +
+                    // salesOrderList.get(rowIndex).ItemID +" "+
+                    // salesOrderList.get(rowIndex).description + " "+ items.get(0).trackingNo
+                    // +"\n";
 
-					String trackingNo = items.get(0).trackingNo;
-					if (trackingNo.equals(""))
-						trackingNo += " ";
-					resultModelItem.add(location.getValue() + "\n" + salesOrderList.get(rowIndex).ItemID + "\n"
-							+ salesOrderList.get(rowIndex).description + "\n" + trackingNo + "\n");
-					rowIndex++;
-				}
+                    String trackingNo = items.get(0).trackingNo;
+                    if (trackingNo.equals(""))
+                        trackingNo += " ";
+                    resultModelItem.add(location.getValue() + "\n" + salesOrderList.get(rowIndex).ItemID + "\n"
+                            + salesOrderList.get(rowIndex).description + "\n" + trackingNo + "\n");
+                    rowIndex++;
+                }
+
 
 			}
 		}
@@ -1526,9 +1532,7 @@ public class ShippingConfirm {
 		
 		String items = "";
 		
-		int modelTitleLen = 0;
-		//int limitLen = 38;
-		for (String s : resultModelItem) {
+	for (String s : resultModelItem) {
 			String[] rowdata = s.split("\n");
 			String line = "";
 			
@@ -1540,18 +1544,12 @@ public class ShippingConfirm {
 				spaceModelPrefixLen = (38 - rowdata[2].length());
 			
 			
-			if(modelTitleLen < rowdata[2].length())
-				modelTitleLen = spaceModelPrefixLen - rowdata[2].length();
+			//if(modelTitleLen < rowdata[2].length())
+			//	modelTitleLen = spaceModelPrefixLen - rowdata[2].length();
 			
-			spaceModelPrefixLen += Math.abs(modelTitleLen);
+			//spaceModelPrefixLen += Math.abs(modelTitleLen);
 			
-			while(spaceModelPrefixLen != 0) 
-			{
-				spaceModelPrefix +=" ";
-				spaceModelSuffix +=" ";
-				spaceModelPrefixLen --;
-			}
-		
+			
 
 			for(int i =0; i <rowdata.length ; i++) 
 			{
@@ -1571,6 +1569,8 @@ public class ShippingConfirm {
 			items += line +"\n";
 		}
 		
+		
+		
 		items += bolder;
 		// String result = PrintTableUtil.printReport(headersList, rowsList);
 		//String result = PrintTableUtil.noBorad(headersList, rowsList);
@@ -1582,7 +1582,6 @@ public class ShippingConfirm {
 		print.printTable(content);
 
 	}
-	
 	
 	
 	private void restoreScanPannel(List<Itembean> items) {
