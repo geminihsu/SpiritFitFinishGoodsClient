@@ -45,12 +45,14 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import spirit.fitness.scanner.common.Constrant;
 import spirit.fitness.scanner.common.HttpRequestCode;
+import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.moved.ItemPannelMovedViewDelegate;
+import spirit.fitness.scanner.delegate.received.ItemPannelReturnViewDelegate;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.Modelbean;
-import spirit.fitness.scanner.receving.ItemsPannel;
 import spirit.fitness.scanner.receving.ContainerPannel;
 import spirit.fitness.scanner.report.DailyReport;
 import spirit.fitness.scanner.report.ModelZone2Report;
@@ -76,6 +78,7 @@ public class AppMenu implements ActionListener {
 	private JButton btnRecving, btnMoving, btnInQuiry, btnShipping, btnReport, btnModelQuantity, btnPickingList,
 			btnReplenishment, btnConfiguration;
 	private JFrame frame;
+	private JFrame receivedFrame;
 
 	private JProgressBar loading;
 	private LoadingFrameHelper loadingframe;
@@ -83,7 +86,10 @@ public class AppMenu implements ActionListener {
 	private ModelZoneMapRepositoryImplRetrofit fgModelZone2;
 	private ModelRepositoryImplRetrofit fgModels;
 	private LocationRepositoryImplRetrofit localModels;
+	private ItemPannelBaseViewDelegate itemPannelBaseViewDelegate;
 
+	public static boolean isExistInstance = false;
+	
 	public AppMenu() {
 		// EmailHelper.sendMail();
 		// JOptionPane.showMessageDialog(null, "Model 15516 less than 50. Please move
@@ -195,13 +201,13 @@ public class AppMenu implements ActionListener {
 	private void receiviedMenu() 
 	{
 		
-		JFrame frame = new JFrame("FG Inventory App");
-		frame.setSize(300, 300);
-		frame.setLocationRelativeTo(null);
-		frame.setUndecorated(true);
-		frame.setResizable(false);
+		JFrame receivedFrame = new JFrame("FG Inventory App");
+		receivedFrame.setSize(300, 300);
+		receivedFrame.setLocationRelativeTo(null);
+		receivedFrame.setUndecorated(true);
+		receivedFrame.setResizable(false);
 		
-		Container cp = frame.getContentPane();
+		Container cp = receivedFrame.getContentPane();
 		cp.setLayout(new GridLayout(0, 1));
 
 		Font font = new Font("Verdana", Font.BOLD, 30);
@@ -210,8 +216,9 @@ public class AppMenu implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				frame.setVisible(false);
+				isExistInstance = false;
+				receivedFrame.dispose();
+				receivedFrame.setVisible(false);
 				ContainerPannel.getInstance();
 			}
 		});
@@ -221,9 +228,13 @@ public class AppMenu implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				frame.setVisible(false);
-				ItemsPannel.getInstance("", ItemsPannel.RECEVING);
+				isExistInstance = false;
+				receivedFrame.dispose();
+				receivedFrame.setVisible(false);
+				//ItemsPannel.getInstance("", ItemsPannel.RECEVING);
+				itemPannelBaseViewDelegate = new ItemPannelReturnViewDelegate("");
+				
+			
 			}
 		});
 		
@@ -232,9 +243,9 @@ public class AppMenu implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ItemsPannel.destory();
-				frame.dispose();
-				frame.setVisible(false);
+				isExistInstance = false;
+				receivedFrame.dispose();
+				receivedFrame.setVisible(false);
 			}
 		});
 		exit.setFont(font);
@@ -244,8 +255,8 @@ public class AppMenu implements ActionListener {
 		cp.add(btnReturn);
 		cp.add(exit);
 	
-		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		frame.setVisible(true);
+		receivedFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		receivedFrame.setVisible(true);
 	}
 
 	@Override
@@ -254,35 +265,26 @@ public class AppMenu implements ActionListener {
 
 		if (!InstanceUtil.isExits()) {
 			if (e.getSource() == btnRecving) {
-				//ItemsPannel.getInstance("", ItemsPannel.RECEVING);
-				//ContainerPannel.getInstance();
+				isExistInstance = true;
 				receiviedMenu();
 			} else if (e.getSource() == btnMoving) {
-				// ItemsPannel window = new ItemsPannel(ItemsPannel.MOVING);
-				// window.frame.setVisible(true);
-				ItemsPannel.getInstance("", ItemsPannel.MOVING);
+				
+				itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate("");
+				
 			} else if (e.getSource() == btnInQuiry) {
-				// QueryPannel window = new QueryPannel();
-				// window.frame.setVisible(true);
+				
 				QueryPannel.getInstance();
 			} else if (e.getSource() == btnShipping) {
-				// ShippingConfirm window = new ShippingConfirm();
-				// window.frame.setVisible(true);
-
+				
 				ShippingConfirm.getInstance();
 			} else if (e.getSource() == btnReport) {
 
-				// JOptionPane.showMessageDialog(null, "Model 15516 less than 50. Please move
-				// more item from Zone 1.");
-
-				// DailyReport window = new DailyReport(Constrant.dailyReport);
-				// window.frame.setVisible(true);
+				
 				DailyReport.getInstance(Constrant.dailyReport);
 
 			} else if (e.getSource() == btnPickingList) {
 
-				// ShippingPicking window = new ShippingPicking();
-				// window.frame.setVisible(true);
+				
 				ShippingPicking.getInstance();
 			} else if (e.getSource() == btnReplenishment) {
 

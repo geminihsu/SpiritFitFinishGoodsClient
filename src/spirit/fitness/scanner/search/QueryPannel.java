@@ -43,30 +43,30 @@ import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.Modelbean;
-import spirit.fitness.scanner.receving.ItemsPannel;
 import spirit.fitness.scanner.report.ModelZone2Report;
 import spirit.fitness.scanner.restful.FGRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
-import spirit.fitness.scanner.zonepannel.ReturnLocation;
+import spirit.fitness.scanner.zonepannel.RTSLocation;
 import spirit.fitness.scanner.zonepannel.Zone1Location;
 import spirit.fitness.scanner.zonepannel.Zone2Location;
 import spirit.fitness.scanner.zonepannel.ZoneMenu;
-import spirit.fitness.scanner.zonepannel.ReturnLocation.ZoneCodeReturnCallBackFunction;
+import spirit.fitness.scanner.zonepannel.RTSLocation.ZoneCodeReturnCallBackFunction;
 
 public class QueryPannel implements ActionListener {
 
 	private static QueryPannel queryPannel = null;
 
-	public final static int INQUIRY = 3;
+	
 	public JFrame frame;
 	private JTextField locationText;
-	private ReturnLocation zoneCodeReturn;
+	private RTSLocation zoneCodeReturn;
 	private Zone1Location zone1Location;
 	private Zone2Location zone2Location;
 	private ZoneMenu showRoom;
-	private ZoneMenu qcArea;
-	private ZoneMenu reWork;
-	private ZoneMenu scrapped;
+	private ZoneMenu unshippableArea;
+	
+	//private ZoneMenu reWork;
+	//private ZoneMenu scrapped;
 	private ZoneMenu rts;
 	// private ZoneMenu window;
 
@@ -144,8 +144,8 @@ public class QueryPannel implements ActionListener {
 
 			}
 		});
-		zoneCodeReturn = new ReturnLocation(null, -1);
-		zoneCodeReturn.setZoneCodeReturnCallBackFunction(new ReturnLocation.ZoneCodeReturnCallBackFunction() {
+		zoneCodeReturn = new RTSLocation(null, -1);
+		zoneCodeReturn.setZoneCodeReturnCallBackFunction(new RTSLocation.ZoneCodeReturnCallBackFunction() {
 
 			@Override
 			public void getZoneCode(String code) {
@@ -184,18 +184,18 @@ public class QueryPannel implements ActionListener {
 			}
 		});
 
-		qcArea = new ZoneMenu(null, -1);
-		qcArea.setQCCodeCallBackFunction(new ZoneMenu.QCCodeCallBackFunction() {
-
+		unshippableArea = new ZoneMenu(null, -1);
+		unshippableArea.setUnshippableCodeCallBackFunction(new ZoneMenu.UnshippableCallBackFunction() {
+			
 			@Override
 			public void getZoneCode(String code) {
 				System.out.println(code);
-				locationText.setText("QC");
-
+				locationText.setText("Unshippable");
+				
 			}
 		});
 
-		reWork = new ZoneMenu(null, -1);
+		/*reWork = new ZoneMenu(null, -1);
 		reWork.setReworkCodeCallBackFunction(new ZoneMenu.ReworkCodeCallBackFunction() {
 
 			@Override
@@ -215,7 +215,7 @@ public class QueryPannel implements ActionListener {
 				locationText.setText("Scrapped");
 			}
 		});
-		
+		*/
 		
 		rts = new ZoneMenu(null, -1);
 		rts.setRTSCodeCallBackFunction(new ZoneMenu.RTSCodeCallBackFunction() {
@@ -355,7 +355,7 @@ public class QueryPannel implements ActionListener {
 			public void actionPerformed(ActionEvent arg0) {
 				// window = new ZoneMenu(null, INQUIRY);
 				// window.frame.setVisible(true);
-				ZoneMenu.getInstance(null, INQUIRY);
+				ZoneMenu.getInstance(null, ZoneMenu.INQUIRY);
 			}
 		});
 		panel.add(MapButton);
@@ -376,7 +376,7 @@ public class QueryPannel implements ActionListener {
 							try {
 								int location = 0;
 								if (locationText.getText().toString().equals("ShowRoom")
-										|| locationText.getText().toString().equals("QC")
+										|| locationText.getText().toString().equals("Unshippable")
 										|| locationText.getText().toString().equals("ReWork")
 										|| locationText.getText().toString().equals("Scrapped")
 										|| locationText.getText().toString().equals("RTS")
@@ -494,7 +494,7 @@ public class QueryPannel implements ActionListener {
 	private boolean verifyText(String model, String location) {
 		if (model.equals("") && location.equals(""))
 			return false;
-		if (location.equals("ShowRoom") || location.equals("QC") || location.equals("ReWork")
+		if (location.equals("ShowRoom") || location.equals("Unshippable") || location.equals("ReWork")
 				|| location.equals("Scrapped")|| location.equals("RTS"))
 			return true;
 		else if (model.equals("")) {
@@ -518,7 +518,7 @@ public class QueryPannel implements ActionListener {
 	}
 
 	private int covertLocationCode(String location) {
-		if (location.equals("QC")) {
+		if (location.equals("Unshippable")) {
 			return 666;
 		} else if (location.equals("ReWork")) {
 			return 555;
@@ -546,14 +546,14 @@ public class QueryPannel implements ActionListener {
 		if (ZoneMenu.showRoomCodeCallBackFunction != null)
 			ZoneMenu.showRoomCodeCallBackFunction = null;
 
-		if (ZoneMenu.qcCodeCallBackFunction != null)
-			ZoneMenu.qcCodeCallBackFunction = null;
+		if (ZoneMenu.unshippableCodeCallBackFunction != null)
+			ZoneMenu.unshippableCodeCallBackFunction = null;
 
-		if (ZoneMenu.reworkCodeCallBackFunction != null)
+		/*if (ZoneMenu.reworkCodeCallBackFunction != null)
 			ZoneMenu.reworkCodeCallBackFunction = null;
 
 		if (ZoneMenu.scrappedCodeCallbackFunction != null)
-			ZoneMenu.scrappedCodeCallbackFunction = null;
+			ZoneMenu.scrappedCodeCallbackFunction = null;*/
 
 	}
 

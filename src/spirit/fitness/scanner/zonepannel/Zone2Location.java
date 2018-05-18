@@ -20,10 +20,12 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import spirit.fitness.scanner.common.Constrant;
-import spirit.fitness.scanner.receving.ItemsPannel;
+import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.moved.ItemPannelMovedViewDelegate;
+
 import spirit.fitness.scanner.zonepannel.Zone1Location.Zone1CodeCallBackFunction;
 
-public class Zone2Location implements ActionListener {
+public class Zone2Location {
 
 	/**
 	 * Create the application.
@@ -77,7 +79,7 @@ public class Zone2Location implements ActionListener {
 
 			btn = new JButton(String.valueOf(index));
 			btn.setFont(font);
-			btn.addActionListener(this);
+			
 			cp.add(btn);
 
 			final String content = String.valueOf(index);
@@ -97,7 +99,8 @@ public class Zone2Location implements ActionListener {
 
 						//ItemsPannel window = new ItemsPannel(items, content, assignType);
 						//window.frame.setVisible(true);
-						ItemsPannel.getInstance(items, content, assignType);
+						//ItemsPannel.getInstance(items, content, assignType);
+						ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, content);
 					}
 				}
 			});
@@ -121,13 +124,14 @@ public class Zone2Location implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ItemsPannel.destory();
+				
 				frame.dispose();
 				frame.setVisible(false);
 				
 				//ZoneMenu window = new ZoneMenu(items, assignType);
 				//window.frame.setVisible(true);
-				ZoneMenu.getInstance(items, assignType);
+				//ZoneMenu.getInstance(items, assignType);
+				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items);
 			}
 		});
 		
@@ -166,33 +170,7 @@ public class Zone2Location implements ActionListener {
 
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String btn = "";
-
-		if (e.getSource() == btnZoneCode) {
-
-			ItemsPannel window = new ItemsPannel(items, "Return(" + btnZoneCode[0].getText().toString() + ")",
-					assignType);
-			window.frame.setVisible(true);
-		} else if (e.getSource() == btnZoneCode[1]) {
-			ItemsPannel window = new ItemsPannel(items, "Return(" + btnZoneCode[1].getText().toString() + ")",
-					assignType);
-			window.frame.setVisible(true);
-
-		} else if (e.getSource() == btnZoneCode[2]) {
-			ItemsPannel window = new ItemsPannel(items, "Return(" + btnZoneCode[2].getText().toString() + ")",
-					assignType);
-			window.frame.setVisible(true);
-
-		}
-
-		/*
-		 * JOptionPane.showMessageDialog(f, "the" + btn,
-		 * "problem",JOptionPane.INFORMATION_MESSAGE);
-		 */
-
-	}
+	
 
 	// retrieve return code number
 	private static Zone2CodeCallBackFunction zone2CodeCallBackFunction;

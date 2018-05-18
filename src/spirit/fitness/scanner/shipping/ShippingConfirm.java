@@ -69,7 +69,7 @@ import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.search.QueryResult;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
 import spirit.fitness.scanner.util.PrintTableUtil;
-import spirit.fitness.scanner.util.PrintUIWindow;
+
 import spirit.fitness.scanner.util.PrinterHelper;
 import spirit.fitness.scanner.util.PrinterHelper.PrintTable;
 import spirit.fitness.scanner.util.WeightPlateUtil;
@@ -78,7 +78,7 @@ import spirit.fitness.scanner.model.Historybean;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.PickingItem;
-import spirit.fitness.scanner.model.ShippedPrintItem;
+
 
 public class ShippingConfirm {
 

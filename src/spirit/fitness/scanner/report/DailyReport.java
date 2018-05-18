@@ -68,7 +68,7 @@ import spirit.fitness.scanner.zonepannel.ZoneMenu;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
-import spirit.fitness.scanner.receving.ItemsPannel;
+
 
 public class DailyReport {
 
@@ -198,8 +198,8 @@ public class DailyReport {
 				rowDataReport[i][3] = data.get(i).Shipped;
 				rowDataReport[i][4] = data.get(i).Received;
 				//rowDataReport[i][5] = data.get(i).Scrapped;
-				rowDataReport[i][5] = data.get(i).OnHand;
-				rowDataReport[i][6] = data.get(i).ReturnItem +  data.get(i).Rework + data.get(i).QC;
+				rowDataReport[i][5] = data.get(i).OnHand +data.get(i).ReturnItem ;
+				rowDataReport[i][6] = data.get(i).Rework + data.get(i).QC;
 
 				rowDataReport[i][7] = data.get(i).ShowRoom;
 				//rowDataReport[i][9] = data.get(i).Rework;

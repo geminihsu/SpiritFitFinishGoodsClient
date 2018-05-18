@@ -23,8 +23,10 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import spirit.fitness.scanner.common.Constrant;
+import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.moved.ItemPannelMovedViewDelegate;
+import spirit.fitness.scanner.delegate.received.ItemPannelReturnViewDelegate;
 import spirit.fitness.scanner.model.Containerbean;
-import spirit.fitness.scanner.receving.ItemsPannel;
 import spirit.fitness.scanner.search.QueryPannel;
 import spirit.fitness.scanner.zonepannel.Zone2Location.Zone2CodeCallBackFunction;
 
@@ -33,8 +35,12 @@ public class ZoneMenu implements ActionListener {
 	/**
 	 * Create the application.
 	 */
+	public final static int RECEIVE = 0;
+	public final static int MOVE = 1;
+	public final static int INQUIRY = 3;
+	
 	private static ZoneMenu instance = null;
-	private JButton btnZone1, btnZone2, btnReturn, btnDisplayRoom, btnScrapped, btnRework, btnQC, btnRTS;
+	private JButton btnZone1, btnZone2, btnUnshippable, btnDisplayRoom, /*btnScrapped, btnRework, btnQC,*/ btnRTS;
 	public JFrame frame;
 	private String items;
 	private int assignType;
@@ -105,19 +111,19 @@ public class ZoneMenu implements ActionListener {
 		btnZone1.setFont(font);
 		btnZone2 = new JButton("Zone 2");
 		btnZone2.setFont(font);
-		btnReturn = new JButton("Return");
-		btnReturn.setFont(font);
+		btnUnshippable = new JButton("Unshippable");
+		btnUnshippable.setFont(font);
 		btnDisplayRoom = new JButton("Show Room");
 		btnDisplayRoom.setFont(font);
 
-		btnScrapped = new JButton("Scrapped");
+		/*btnScrapped = new JButton("Scrapped");
 		btnScrapped.setFont(font);
 
 		btnRework = new JButton("Rework");
 		btnRework.setFont(font);
 
 		btnQC = new JButton("QC");
-		btnQC.setFont(font);
+		btnQC.setFont(font);*/
 		
 
 		btnRTS = new JButton("RTS");
@@ -125,44 +131,24 @@ public class ZoneMenu implements ActionListener {
 
 		btnZone1.setMnemonic('O');
 		btnZone2.setMnemonic('C');
-		btnReturn.setMnemonic('Q');
+		btnUnshippable.setMnemonic('Q');
 		btnZone1.addActionListener(this);
 		btnZone2.addActionListener(this);
-		btnReturn.addActionListener(this);
+		btnUnshippable.addActionListener(this);
 		btnDisplayRoom.addActionListener(this);
-		btnScrapped.addActionListener(this);
-		btnRework.addActionListener(this);
-		btnQC.addActionListener(this);
+		//btnScrapped.addActionListener(this);
+		//btnRework.addActionListener(this);
+		//btnQC.addActionListener(this);
 		btnRTS.addActionListener(this);
 
 
-		if (assignType == ItemsPannel.MOVING) {
+	
 			cp.add(btnZone1);
 			cp.add(btnZone2);
-			cp.add(btnReturn);
 			cp.add(btnDisplayRoom);
-			cp.add(btnScrapped);
-			cp.add(btnRework);
-			cp.add(btnQC);
+			cp.add(btnUnshippable);
 			cp.add(btnRTS);
-		}else if (assignType == ItemsPannel.RECEVING) 
-		{
-			cp.add(btnZone1);
-			cp.add(btnReturn);
-			
-		}
-		else 
-		{
-			cp.add(btnZone1);
-			cp.add(btnZone2);
-			cp.add(btnReturn);
-			cp.add(btnDisplayRoom);
-			cp.add(btnScrapped);
-			cp.add(btnRework);
-			cp.add(btnQC);
-			cp.add(btnRTS);
-		}
-
+		
 		JPanel exitControl = new JPanel();
 		exitControl.setLayout(new GridLayout(0, 2));
 		JButton exit = new JButton(new AbstractAction("Back") {
@@ -172,26 +158,11 @@ public class ZoneMenu implements ActionListener {
 				frame.dispose();
 				frame.setVisible(false);
 				instance = null;
-				if(assignType == ItemsPannel.RECEVING) 
-				{
-					//ItemsPannel window = new ItemsPannel(ItemsPannel.RECEVING);
-					//window.frame.setVisible(true);
-					
-					if(containers != null)
-						ItemsPannel.getInstance(containers,content,ItemsPannel.RECEVING);
-					else
-						ItemsPannel.getInstance(content,ItemsPannel.RECEVING);
-					
-				}else if(assignType == ItemsPannel.MOVING) 
-				{
+				
 					//ItemsPannel window = new ItemsPannel(ItemsPannel.MOVING);
 					//window.frame.setVisible(true);
-					ItemsPannel.getInstance(content,ItemsPannel.MOVING);
-				}else if(assignType == QueryPannel.INQUIRY) 
-				{
-					//QueryPannel window = new QueryPannel();
-					//window.frame.setVisible(true);
-				}
+					//ItemsPannel.getInstance(content,ItemsPannel.MOVING);
+				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(content);
 				
 			}
 		});
@@ -201,7 +172,7 @@ public class ZoneMenu implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				instance = null;
-				ItemsPannel.destory();
+				
 				frame.dispose();
 				frame.setVisible(false);
 			}
@@ -249,12 +220,8 @@ public class ZoneMenu implements ActionListener {
 			this.frame.setVisible(false);
 			this.frame.dispose();
 
-			Zone1Location window = null;
-			if(containers == null) {
-				window = new Zone1Location(items, assignType);
-			}else
-				window = new Zone1Location(containers,items, assignType);
-				window.frame.setVisible(true);
+			Zone1Location window  = new Zone1Location(items, 1);
+			window.frame.setVisible(true);
 
 		} else if (e.getSource() == btnZone2) {
 			instance = null;
@@ -264,9 +231,9 @@ public class ZoneMenu implements ActionListener {
 			Zone2Location window = new Zone2Location(items, assignType);
 			window.frame.setVisible(true);
 
-		} else if (e.getSource() == btnReturn) {
-			
-			instance = null;
+		} else if (e.getSource() == btnUnshippable) {
+			//Removed return part
+			/*instance = null;
 			this.frame.setVisible(false);
 			this.frame.dispose();
 
@@ -275,7 +242,22 @@ public class ZoneMenu implements ActionListener {
 				window = new ReturnLocation(items, assignType);
 			else
 				window = new ReturnLocation(containers,items, assignType);
-			window.frame.setVisible(true);
+			window.frame.setVisible(true);*/
+			
+			instance = null;
+			if (unshippableCodeCallBackFunction != null) {
+				this.frame.setVisible(false);
+				this.frame.dispose();
+				unshippableCodeCallBackFunction.getZoneCode("555");
+			} else {
+				this.frame.setVisible(false);
+				this.frame.dispose();
+
+				
+				//ItemsPannel.getInstance(items, "555", assignType);
+				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, "555");
+			}
+			
 
 		} else if (e.getSource() == btnDisplayRoom) {
 			instance = null;
@@ -289,10 +271,11 @@ public class ZoneMenu implements ActionListener {
 
 				//ItemsPannel window = new ItemsPannel(items, "888", assignType);
 				//window.dialogFrame.setVisible(true);
-				ItemsPannel.getInstance(items, "888", assignType);
+				//ItemsPannel.getInstance(items, "888", assignType);
+				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, "888");
 			}
 
-		}else if (e.getSource() == btnRework) {
+		}/*else if (e.getSource() == btnRework) {
 			instance = null;
 			if (reworkCodeCallBackFunction != null) {
 				this.frame.setVisible(false);
@@ -337,20 +320,18 @@ public class ZoneMenu implements ActionListener {
 				ItemsPannel.getInstance(items, "777", assignType);
 			}
 
-		}else if (e.getSource() == btnRTS) {
+		}*/else if (e.getSource() == btnRTS) {
 			instance = null;
-			if (rtsCodeCallbackFunction != null) {
-				this.frame.setVisible(false);
-				this.frame.dispose();
-				rtsCodeCallbackFunction.getZoneCode("901");
-			} else {
-				this.frame.setVisible(false);
-				this.frame.dispose();
-
-				//ItemsPannel window = new ItemsPannel(items, "777", assignType);
-				//window.dialogFrame.setVisible(true);
-				ItemsPannel.getInstance(items, "901", assignType);
-			}
+			
+			this.frame.setVisible(false);
+			this.frame.dispose();
+			
+			RTSLocation window =null;
+			if(containers == null) 
+				window = new RTSLocation(items, assignType);
+			else
+				window = new RTSLocation(containers,items, assignType);
+			window.frame.setVisible(true);
 
 		}
 
@@ -378,7 +359,7 @@ public class ZoneMenu implements ActionListener {
 	}
 
 	// retrieve return code number
-	public static ReworkCodeCallBackFunction reworkCodeCallBackFunction;
+/*	public static ReworkCodeCallBackFunction reworkCodeCallBackFunction;
 
 	public void setReworkCodeCallBackFunction(ReworkCodeCallBackFunction _reworkCodeCallBackFunction) {
 		reworkCodeCallBackFunction = _reworkCodeCallBackFunction;
@@ -438,8 +419,27 @@ public class ZoneMenu implements ActionListener {
 	public interface ScrappedCodeCallBackFunction {
 		public void getZoneCode(String code);
 
-	}
+	}*/
+	// retrieve return code number
+	public static UnshippableCallBackFunction unshippableCodeCallBackFunction;
 
+		public void setUnshippableCodeCallBackFunction(UnshippableCallBackFunction _unshippableCallBackFunction) {
+			unshippableCodeCallBackFunction = _unshippableCallBackFunction;
+
+		}
+
+		public UnshippableCallBackFunction getUnshippableCodeCallBackFunction() {
+			return unshippableCodeCallBackFunction;
+		}
+
+		public void clearUnshippableCallBackFunction() {
+			unshippableCodeCallBackFunction = null;
+		}
+
+		public interface UnshippableCallBackFunction {
+			public void getZoneCode(String code);
+
+		}
 	// retrieve rts code number
 		public static RTSCodeCallBackFunction rtsCodeCallbackFunction;
 

@@ -50,13 +50,14 @@ import javax.swing.text.NumberFormatter;
 
 import spirit.fitness.scanner.common.Constrant;
 import spirit.fitness.scanner.common.HttpRequestCode;
+import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.received.ItemPannelReceivedViewDelegate;
 import spirit.fitness.scanner.model.Containerbean;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.Modelbean;
 import spirit.fitness.scanner.model.PickingItem;
-import spirit.fitness.scanner.receving.ItemsPannel;
 import spirit.fitness.scanner.report.ModelZone2Report;
 import spirit.fitness.scanner.restful.ContainerRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.FGRepositoryImplRetrofit;
@@ -68,11 +69,11 @@ import spirit.fitness.scanner.search.QueryPannel;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
 import spirit.fitness.scanner.util.LocationHelper;
 import spirit.fitness.scanner.util.WeightPlateUtil;
-import spirit.fitness.scanner.zonepannel.ReturnLocation;
+import spirit.fitness.scanner.zonepannel.RTSLocation;
 import spirit.fitness.scanner.zonepannel.Zone1Location;
 import spirit.fitness.scanner.zonepannel.Zone2Location;
 import spirit.fitness.scanner.zonepannel.ZoneMenu;
-import spirit.fitness.scanner.zonepannel.ReturnLocation.ZoneCodeReturnCallBackFunction;
+import spirit.fitness.scanner.zonepannel.RTSLocation.ZoneCodeReturnCallBackFunction;
 
 public class ContainerPannel implements ActionListener {
 
@@ -88,6 +89,8 @@ public class ContainerPannel implements ActionListener {
 	private ContainerRepositoryImplRetrofit containerRepositoryImplRetrofit;
 
 	private List<Containerbean> curContainers;
+	
+	private ItemPannelBaseViewDelegate itemPannelBaseViewDelegate;
 
 	public static ContainerPannel getInstance() {
 		if (receivingPannel == null) {
@@ -315,7 +318,9 @@ public class ContainerPannel implements ActionListener {
 					frame.dispose();
 					frame.setVisible(false);
 					receivingPannel = null;
-					ItemsPannel.getInstance(curContainers, "",ItemsPannel.RECEVING);
+					//ItemsPannel.getInstance(curContainers, "",ItemsPannel.RECEVING);
+					itemPannelBaseViewDelegate = new ItemPannelReceivedViewDelegate(curContainers,"");
+
 				}else
 					JOptionPane.showMessageDialog(null, "Please select one container before scan.");
 
@@ -332,13 +337,7 @@ public class ContainerPannel implements ActionListener {
 			}
 		});
 
-		JButton prev = new JButton(new AbstractAction("Back") {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
+		
 
 		JButton exit = new JButton(new AbstractAction("Exit") {
 
@@ -353,18 +352,15 @@ public class ContainerPannel implements ActionListener {
 
 		scan.setFont(font);
 		add.setFont(font);
-		prev.setFont(font);
 		exit.setFont(font);
 
 		scan.setBounds(33, 520, 200, 50);
 		//add.setBounds(250, 520, 200, 50);
 		//prev.setBounds(460, 520, 130, 50);
 		//exit.setBounds(600, 520, 130, 50);
-		prev.setBounds(250, 520, 200, 50);
 		exit.setBounds(460, 520, 200, 50);
 		panel.add(scan);
 		//panel.add(add);
-		panel.add(prev);
 		panel.add(exit);
 	}
 

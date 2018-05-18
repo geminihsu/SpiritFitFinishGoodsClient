@@ -21,12 +21,13 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import spirit.fitness.scanner.common.Constrant;
+import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.moved.ItemPannelMovedViewDelegate;
 import spirit.fitness.scanner.model.Containerbean;
-import spirit.fitness.scanner.receving.ItemsPannel;
 import spirit.fitness.scanner.zonepannel.Zone1Location.Zone1CodeCallBackFunction;
 import spirit.fitness.scanner.zonepannel.Zone2Location.Zone2CodeCallBackFunction;
 
-public class ReturnLocation implements ActionListener {
+public class RTSLocation implements ActionListener {
 
 	/**
 	 * Create the application.
@@ -38,14 +39,14 @@ public class ReturnLocation implements ActionListener {
 	private int assignType = 0;
 	private List<Containerbean> containers;
 
-	public ReturnLocation(String content, int type) {
+	public RTSLocation(String content, int type) {
 		items = content;
 		assignType = type;
 		if (assignType != -1)
 			initialize();
 	}
 
-	public ReturnLocation(List<Containerbean> _containers, String content, int type) {
+	public RTSLocation(List<Containerbean> _containers, String content, int type) {
 		items = content;
 		assignType = type;
 		containers = _containers;
@@ -84,18 +85,18 @@ public class ReturnLocation implements ActionListener {
 		btnReturn1.setFont(font);
 		btnReturn2 = new JButton("891");
 		btnReturn2.setFont(font);
-		/*btnReturn3 = new JButton("901");
-		btnReturn3.setFont(font);*/
+		btnReturn3 = new JButton("901");
+		btnReturn3.setFont(font);
 
 		btnReturn1.setMnemonic('O');
 		btnReturn2.setMnemonic('C');
-		//btnReturn3.setMnemonic('Q');
+		btnReturn3.setMnemonic('Q');
 		btnReturn1.addActionListener(this);
 		btnReturn2.addActionListener(this);
-		//btnReturn3.addActionListener(this);
+		btnReturn3.addActionListener(this);
 		cp.add(btnReturn1);
 		cp.add(btnReturn2);
-		//cp.add(btnReturn3);
+		cp.add(btnReturn3);
 
 		JPanel exitControl = new JPanel();
 		exitControl.setLayout(new GridLayout(0, 5));
@@ -106,12 +107,8 @@ public class ReturnLocation implements ActionListener {
 				frame.dispose();
 				frame.setVisible(false);
 
-				// ZoneMenu window = new ZoneMenu(items, assignType);
-				// window.frame.setVisible(true);
-				if (containers == null)
-					ZoneMenu.getInstance(items, assignType);
-				else
-					ZoneMenu.getInstance(containers, items, assignType);
+				
+				ZoneMenu.getInstance(items, ZoneMenu.MOVE);
 			}
 		});
 
@@ -119,7 +116,7 @@ public class ReturnLocation implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ItemsPannel.destory();
+				
 				frame.dispose();
 				frame.setVisible(false);
 			}
@@ -168,10 +165,7 @@ public class ReturnLocation implements ActionListener {
 				// assignType);
 				// window.frame.setVisible(true);
 
-				if (containers == null)
-					ItemsPannel.getInstance(items, btnReturn1.getText().toString(), assignType);
-				else
-					ItemsPannel.getInstance(containers, items, btnReturn1.getText().toString(), assignType);
+				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, btnReturn1.getText().toString());
 			}
 		} else if (e.getSource() == btnReturn2) {
 			if (zoneCodeReturnCallBackFunction != null) {
@@ -180,10 +174,7 @@ public class ReturnLocation implements ActionListener {
 				// ItemsPannel window = new ItemsPannel(items, btnReturn2.getText().toString(),
 				// assignType);
 				// window.frame.setVisible(true);
-				if (containers == null)
-					ItemsPannel.getInstance(items, btnReturn2.getText().toString(), assignType);
-				else
-					ItemsPannel.getInstance(containers, items, btnReturn2.getText().toString(), assignType);
+				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, btnReturn2.getText().toString());
 			}
 
 		} else if (e.getSource() == btnReturn3) {
@@ -193,10 +184,7 @@ public class ReturnLocation implements ActionListener {
 				// ItemsPannel window = new ItemsPannel(items, btnReturn3.getText().toString(),
 				// assignType);
 				// window.frame.setVisible(true);
-				if (containers == null)
-					ItemsPannel.getInstance(items, btnReturn3.getText().toString(), assignType);
-				else
-					ItemsPannel.getInstance(containers, items, btnReturn3.getText().toString(), assignType);
+				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, btnReturn3.getText().toString());
 			}
 		}
 

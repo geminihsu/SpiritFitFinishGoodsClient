@@ -94,7 +94,6 @@ import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.PickingItem;
-import spirit.fitness.scanner.receving.ItemsPannel;
 import spirit.fitness.scanner.report.ModelZone2Report;
 
 public class ShippingPicking {
