@@ -69,7 +69,6 @@ import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.search.QueryResult;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
 import spirit.fitness.scanner.util.PrintTableUtil;
-
 import spirit.fitness.scanner.util.PrinterHelper;
 import spirit.fitness.scanner.util.PrinterHelper.PrintTable;
 import spirit.fitness.scanner.util.WeightPlateUtil;
@@ -130,7 +129,7 @@ public class ShippingConfirm {
 	private List<Historybean> items;
 	private List<Historybean> scanItems;
 	private List<String> resultModelItem = new ArrayList<String>();
- 	
+
 	private JProgressBar loading;
 	private LoadingFrameHelper loadingframe;
 	private JTextArea inputSN;
@@ -624,14 +623,14 @@ public class ShippingConfirm {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							try {
-								printer(salesOrder, date, billToTitle, shipToAddress, historyItemsInfo);
-								
+								 printer(salesOrder, date, billToTitle, shipToAddress, historyItemsInfo);
+								//printShippingTable();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
 						}
 					});
-					
+
 				}
 			});
 
@@ -689,7 +688,22 @@ public class ShippingConfirm {
 					historyItemsInfo += h.SN + "\n";
 				}
 				rowIndex = 0;
-				
+
+				/*
+				 * for (Map.Entry<String, Integer> location : map.entrySet()) { //
+				 * orderItemsInfo += location.getValue() +" " + //
+				 * salesOrderList.get(rowIndex).ItemID +" "+ //
+				 * salesOrderList.get(rowIndex).description + " "+ items.get(0).trackingNo //
+				 * +"\n";
+				 * 
+				 * String trackingNo = items.get(0).trackingNo; if (trackingNo.equals(""))
+				 * trackingNo += " "; resultModelItem.add(location.getValue() + "\n" +
+				 * salesOrderList.get(rowIndex).ItemID + "\n" +
+				 * salesOrderList.get(rowIndex).description + "\n" + trackingNo + "\n");
+				 * rowIndex++; }
+				 */
+
+                
                 for (Map.Entry<String, Integer> location : map.entrySet()) {
                     // orderItemsInfo += location.getValue() +" " +
                     // salesOrderList.get(rowIndex).ItemID +" "+
@@ -923,7 +937,7 @@ public class ShippingConfirm {
 				String shippToVia = salesOrderList.get(0).shipVia;
 
 				String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-				
+
 				for (String item : itemList) {
 					Historybean _item = new Historybean();
 
@@ -1072,12 +1086,12 @@ public class ShippingConfirm {
 
 		}
 
-		lModelError= new JLabel("");
+		lModelError = new JLabel("");
 
 		lModelError.setBounds(50, 150, 200, 400);
 		lModelError.setFont(font);
 		panel.add(lModelError);
-		
+
 		// Creating JLabel
 		lCount = new JLabel("");
 
@@ -1087,7 +1101,6 @@ public class ShippingConfirm {
 		lCount.setFont(font);
 		panel.add(lCount);
 
-		
 		JScrollPane scrollPanel1 = new JScrollPane(inputSN);
 		scrollPanel1.setBounds(250, 150, 250, 500);
 		inputSN.setFont(font);
@@ -1119,15 +1132,14 @@ public class ShippingConfirm {
 						curModelCnt = modelScanCurMap.get(model);
 				}
 
-				if(!map.containsKey(model)) 
-				{
+				if (!map.containsKey(model)) {
 					lModelError.setForeground(Color.RED);
 					lModelError.setText("Model Error.");
 				}
-				
+
 				if (!snRepeatSet.contains(item[item.length - 1]) && item[item.length - 1].length() == 16
-						&& snRepeatSet.size() <= orderTotalCount && map.containsKey(model) && curModelCnt < map.get(model)
-						&& !lenError) {
+						&& snRepeatSet.size() <= orderTotalCount && map.containsKey(model)
+						&& curModelCnt < map.get(model) && !lenError) {
 					lModelError.setText("");
 					modelScanCurMap.put(model, modelScanCurMap.get(model) + 1);
 					snRepeatSet.add(item[item.length - 1]);
@@ -1136,7 +1148,6 @@ public class ShippingConfirm {
 					prev = prev.substring(0, prev.length() - (item[item.length - 1].length()) - 1);
 
 				}
-			
 
 				if (lenError) {
 
@@ -1205,7 +1216,6 @@ public class ShippingConfirm {
 							checkItemExitsZone2(items);
 						}
 					});
-					
 
 				}
 			}
@@ -1275,8 +1285,6 @@ public class ShippingConfirm {
 
 			}
 
-			
-
 			@Override
 			public void checkInventoryZone2Items(int result, List<Itembean> items) {
 
@@ -1304,13 +1312,13 @@ public class ShippingConfirm {
 			@Override
 			public void checkMoveItems(List<Itembean> items) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void checkReceiveItem(List<Itembean> items) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 
@@ -1357,7 +1365,8 @@ public class ShippingConfirm {
 						// System.out.println("item.ItemID:" + item.ItemID);
 
 						if (item.ItemID != null && !item.ItemID.contains("PL") && item.ItemID.length() == 6
-								&& !WeightPlateUtil.isWeightPlate(item.ItemID)&& !WeightPlateUtil.isCalfSupport(item.ItemID)) {
+								&& !WeightPlateUtil.isWeightPlate(item.ItemID)
+								&& !WeightPlateUtil.isCalfSupport(item.ItemID)) {
 							salesOrderList.add(item);
 							if (map.containsKey(item.ItemID)) {
 
@@ -1492,120 +1501,107 @@ public class ShippingConfirm {
 		return modelQty;
 	}
 
-	/*private void printer(String saleOrder, String date, String billTo, String shipTo, String itemsInfo) {
+	/*
+	 * private void printer(String saleOrder, String date, String billTo, String
+	 * shipTo, String itemsInfo) {
+	 * 
+	 * String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " +
+	 * date + "\n" + "Bill To : " + billTo + "\n" + "Ship To : " + shipTo + "\n";
+	 * List<String> headersList = Arrays.asList("Qty", "Item", "Model", "PRO#");
+	 * 
+	 * List<List<String>> rowsList = new ArrayList<List<String>>(); for (String s :
+	 * resultModelItem) { String[] rowdata = s.split("\n");
+	 * rowsList.add(Arrays.asList(rowdata)); }
+	 * 
+	 * // String result = PrintTableUtil.printReport(headersList, rowsList); String
+	 * result = PrintTableUtil.noBorad(headersList, rowsList); content += result +
+	 * itemsInfo; System.out.println(content);
+	 * 
+	 * PrinterHelper print = new PrinterHelper(); print.printTable(content);
+	 * 
+	 * }
+	 */
 
-		String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " + date + "\n" + "Bill To : "
-				+ billTo + "\n" + "Ship To : " + shipTo + "\n";
-		List<String> headersList = Arrays.asList("Qty", "Item", "Model", "PRO#");
-
-		List<List<String>> rowsList = new ArrayList<List<String>>();
-		for (String s : resultModelItem) {
-			String[] rowdata = s.split("\n");
-			rowsList.add(Arrays.asList(rowdata));
-		}
-
-		// String result = PrintTableUtil.printReport(headersList, rowsList);
-		String result = PrintTableUtil.noBorad(headersList, rowsList);
-		content += result + itemsInfo;
-		System.out.println(content);
-
-		PrinterHelper print = new PrinterHelper();
-		print.printTable(content);
-
-	}*/
-
-	private void printer(String saleOrder, String date, String billTo, String shipTo, String itemsInfo) {
-
-		String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " + date + "\n" + "Bill To : "
-				+ billTo + "\n" + "Ship To : " + shipTo + "\n";
-		//List<String> headersList = Arrays.asList("Qty", "Item", "Model", "PRO#");
-
-		/*List<List<String>> rowsList = new ArrayList<List<String>>();
-		for (String s : resultModelItem) {
-			String[] rowdata = s.split("\n");
-			rowsList.add(Arrays.asList(rowdata));
-		}*/
-		
-		String header = " ____________________________________________________________________________________________\n";
-		String title = " | Qty |    Item   |                     Model                          |                            PRO                    \n";
-		String bolder = " ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n";
-		
-		String items = "";
-		
-	for (String s : resultModelItem) {
-			String[] rowdata = s.split("\n");
-			String line = "";
-			
-			int spaceModelPrefixLen = 0;
-		
-			String spaceModelPrefix = "";
-			String spaceModelSuffix = "";
-			if(rowdata[2].length()<38)
-				spaceModelPrefixLen = (38 - rowdata[2].length());
-			
-			
-			//if(modelTitleLen < rowdata[2].length())
-			//	modelTitleLen = spaceModelPrefixLen - rowdata[2].length();
-			
-			//spaceModelPrefixLen += Math.abs(modelTitleLen);
-			
-			
-
-			for(int i =0; i <rowdata.length ; i++) 
-			{
-				String modelTitle = rowdata[2] + spaceModelPrefix;
-				if(i == 2) 
-				{
-					line += rowdata[i] + spaceModelPrefix;
-				}
-				else if(i == 3) {
-					
-					line += rowdata[i];
-				
-				}else
-					line += "   "+rowdata[i] +"    "; 
-			}
-			
-			items += line +"\n";
-		}
-		
-		
-		
-		items += bolder;
-		// String result = PrintTableUtil.printReport(headersList, rowsList);
-		//String result = PrintTableUtil.noBorad(headersList, rowsList);
-		content += header + title + bolder + items +itemsInfo;
 	
-		System.out.println(content);
+	 private void printer(String saleOrder, String date, String billTo, String
+	 shipTo, String itemsInfo) {
+	  
+	  String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " +
+	  date + "\n" + "Bill To : " + billTo + "\n" + "Ship To : " + shipTo + "\n";
+	  
+	  
+	  String header =
+	  " ____________________________________________________________________________________________\n"
+	  ; String title =
+	  " | Qty |    Item   |                     Model                          |                            PRO                    \n"
+	  ; String bolder =
+	  " ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n"
+	  ;
+	  
+	  String items = "";
+	  
+	  for (String s : resultModelItem) { String[] rowdata = s.split("\n"); String
+	  line = "";
+	  
+	  int spaceModelPrefixLen = 0;
+	  
+	 String spaceModelPrefix = ""; String spaceModelSuffix = "";
+	  if(rowdata[2].length()<38) spaceModelPrefixLen = (38 - rowdata[2].length());
+	  
+	  
+	  //if(modelTitleLen < rowdata[2].length()) // modelTitleLen =
+	  //spaceModelPrefixLen - rowdata[2].length();
+	  
+	  //spaceModelPrefixLen += Math.abs(modelTitleLen);
+	  
+	 
+	  
+	  for(int i =0; i <rowdata.length ; i++) { String modelTitle = rowdata[2] +
+	  spaceModelPrefix; if(i == 2) { line += rowdata[i] + spaceModelPrefix; } else
+	  if(i == 3) {
+	  
+	  line += rowdata[i];
+	  
+	  }else line += "   "+rowdata[i] +"    "; }
+	  
+	  items += line +"\n"; }
+	  
+	  
+	  
+	 items += bolder; // 
 
-		PrinterHelper print = new PrinterHelper();
-		print.printTable(content);
+	 //String result = PrintTableUtil.noBorad(headersList, rowsList);
+	  content += header + title + bolder + items +itemsInfo;
+	  
+	  System.out.println(content);
+	  
+	  PrinterHelper print = new PrinterHelper(); print.printTable(content);
+	  
+	  }
+	 
 
-	}
-	
 	
 	private void restoreScanPannel(List<Itembean> items) {
 
 		if (scanResultFrame != null)
 			scanResultFrame.setVisible(true);
-		
+
 		EventQueue.invokeLater(new Runnable() {
 
-			   @Override
-			     public void run() {
-				   inputSN.grabFocus();
-				   inputSN.requestFocus();//or inWindow
-			     }
-			});
+			@Override
+			public void run() {
+				inputSN.grabFocus();
+				inputSN.requestFocus();// or inWindow
+			}
+		});
 		// scan items not exits on Zone2
 		String updateTxt = "";
 		// modelScanCurMap.clear();
 
 		if (items == null) {
 			String[] item = prevContent.split("\n");
-			//modelScanCurMap.clear();
-			
-			
+			// modelScanCurMap.clear();
+
 			for (String s : item) {
 				updateTxt += s + "\n";
 
@@ -1618,11 +1614,10 @@ public class ShippingConfirm {
 			}
 			lCount.setText(setModelScanCountLabel(item.length));
 		} else {
-			//modelScanCurMap.clear();
-			
-			//initial modelScanCurMap model current count to 0
-			for (Map.Entry<String, Integer> location : modelScanCurMap.entrySet()) 
-			{
+			// modelScanCurMap.clear();
+
+			// initial modelScanCurMap model current count to 0
+			for (Map.Entry<String, Integer> location : modelScanCurMap.entrySet()) {
 				modelScanCurMap.put(location.getKey(), 0);
 			}
 			snRepeatSet.clear();
@@ -1643,11 +1638,10 @@ public class ShippingConfirm {
 				}
 
 			}
-			
-			
+
 			String[] itemSize = updateTxt.split("\n");
 			prevContent = updateTxt;
-			
+
 			if (!updateTxt.equals("")) {
 				for (String s : itemSize) {
 					String modelNo = s.substring(0, 6);
