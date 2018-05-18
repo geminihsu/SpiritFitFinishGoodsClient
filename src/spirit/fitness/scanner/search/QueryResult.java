@@ -179,7 +179,7 @@ public class QueryResult {
 
 		JLabel quantity = new JLabel("QUANTITY :" + 20);
 
-		quantity.setBounds(400, 0, 300, 50);
+		quantity.setBounds(500, 0, 300, 50);
 		quantity.setFont(font);
 		quantity.setBackground(Constrant.BACKGROUN_COLOR);
 		panel.add(quantity);
@@ -211,7 +211,7 @@ public class QueryResult {
 		// display Zone 4
 		JLabel zone4 = new JLabel("Show Room");
 
-		zone4.setBounds(30, 500, 300, 50);
+		zone4.setBounds(30, 505, 300, 50);
 		zone4.setFont(font);
 		zone4.setBackground(Constrant.BACKGROUN_COLOR);
 		panel.add(zone4);
@@ -256,6 +256,8 @@ public class QueryResult {
 					isQueryRepeat = true;
 					Object location = zone1Data[row][0];
 					queryType = QUERY_LOCATION;
+				
+					
 					queryLocation(String.valueOf(location).substring(37, 40));
 				}
 				return false;
@@ -298,7 +300,15 @@ public class QueryResult {
 					isQueryRepeat = true;
 					Object location = zone3Data[row][0];
 					queryType = QUERY_LOCATION;
-					queryLocation(String.valueOf(location).substring(37, 40));
+					
+					String locationCode = String.valueOf(location).substring(37, 40);
+					
+					if(locationCode.equals("RTS"))
+						locationCode = "881";
+					else if(locationCode.equals("Uns"))
+						locationCode = "555";
+					
+					queryLocation(locationCode);
 				}
 				return false;
 			}
@@ -318,7 +328,12 @@ public class QueryResult {
 					isQueryRepeat = true;
 					Object location = zone4Data[row][0];
 					queryType = QUERY_LOCATION;
-					queryLocation(String.valueOf(location).substring(37, 40));
+					
+					String locationCode = String.valueOf(location).substring(37, 40);
+					
+					if(locationCode.equals("Sho"))
+						locationCode = "888";
+					queryLocation(locationCode);
 				}
 				return false;
 			}
@@ -392,7 +407,7 @@ public class QueryResult {
 		}
 
 		if (zone3Data != null) {
-			zone3.setText("Return : " + zoneCount.get(3));
+			zone3.setText("Unshippable and RTS: " + zoneCount.get(5));
 
 			int height = 50 * zone3Data.length + 20;
 
@@ -698,19 +713,43 @@ public class QueryResult {
 	private Object putDataToTable(int code) {
 		LinkedHashMap<String, List<Itembean>> zoneData = zoneMap.get(code);
 
-		if (zoneData == null)
+	
+		if(code == 3) 
+		{
+			LinkedHashMap<String, List<Itembean>> rts = null;
+			if(zoneData == null)
+				zoneData = zoneMap.get(5);
+			else {
+				rts = zoneMap.get(5);
+				if(rts != null)
+					zoneData.putAll(rts);
+			}
+		}
+		
+		if(zoneData == null)
 			return null;
+		
 		Object rowData[][] = new Object[zoneData.size()][2];
 		int rowIndex = 0;
 
 		for (Map.Entry<String, List<Itembean>> location : zoneData.entrySet()) {
 
 			for (int j = 0; j < 2; j++) {
-				if (!isQueryRepeat)
-					rowData[rowIndex][0] = "<html>" + "<span style=\"color: blue;\"> <u>" + location.getKey()
+				if (!isQueryRepeat) {
+					String locationCode = location.getKey();
+					
+					if(locationCode.equals("888"))
+						locationCode = "Show Room";
+					else if(locationCode.equals("555"))
+						locationCode = "Unshippable";
+					else if(locationCode.equals("881")||locationCode.equals("891")||locationCode.equals("901"))
+						locationCode = "RTS";
+					
+					rowData[rowIndex][0] = "<html>" + "<span style=\"color: blue;\"> <u>" + locationCode
 							+ "</u></span> " + "</html>";
-				else
-					rowData[rowIndex][0] = location.getKey();
+				}else {
+						rowData[rowIndex][0] = location.getKey();
+				}
 
 				rowData[rowIndex][1] = location.getValue().size();
 
@@ -765,6 +804,8 @@ public class QueryResult {
 
 	private void queryLocation(String Location) {
 
+		
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

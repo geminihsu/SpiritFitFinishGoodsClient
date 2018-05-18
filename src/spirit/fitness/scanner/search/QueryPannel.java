@@ -377,8 +377,6 @@ public class QueryPannel implements ActionListener {
 								int location = 0;
 								if (locationText.getText().toString().equals("ShowRoom")
 										|| locationText.getText().toString().equals("Unshippable")
-										|| locationText.getText().toString().equals("ReWork")
-										|| locationText.getText().toString().equals("Scrapped")
 										|| locationText.getText().toString().equals("RTS")
 										)
 									location = covertLocationCode(locationText.getText().toString());
@@ -519,12 +517,8 @@ public class QueryPannel implements ActionListener {
 
 	private int covertLocationCode(String location) {
 		if (location.equals("Unshippable")) {
-			return 666;
-		} else if (location.equals("ReWork")) {
 			return 555;
-		} else if (location.equals("Scrapped")) {
-			return 777;
-		} else if (location.equals("ShowRoom")) {
+		}else if (location.equals("ShowRoom")) {
 			return 888;
 		}else if (location.equals("RTS")) {
 			return 901;
