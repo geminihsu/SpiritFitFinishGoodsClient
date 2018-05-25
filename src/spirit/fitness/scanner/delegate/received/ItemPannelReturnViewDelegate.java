@@ -88,7 +88,7 @@ public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
 		// adding panel to frame
 		scanResultFrame.add(panel);
 
-		scanPannel(panel, prevTxt);
+		scanPanel(panel, prevTxt);
 
 		scanResultFrame.setBackground(Color.WHITE);
 		scanResultFrame.setVisible(true);
@@ -104,7 +104,7 @@ public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
 	}
 
 	@Override
-	public void scanPannel(JPanel panel, String prevTxt) {
+	public void scanPanel(JPanel panel, String prevTxt) {
 		panel.setLayout(null);
 		Font font = new Font("Verdana", Font.BOLD, 18);
 

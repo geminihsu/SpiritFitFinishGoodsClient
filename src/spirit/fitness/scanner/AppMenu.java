@@ -69,6 +69,7 @@ import spirit.fitness.scanner.search.QueryResult;
 import spirit.fitness.scanner.shipping.ShippingConfirm;
 import spirit.fitness.scanner.shipping.ShippingPicking;
 import spirit.fitness.scanner.util.EmailHelper;
+import spirit.fitness.scanner.util.ExcelHelper;
 import spirit.fitness.scanner.util.InstanceUtil;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
 
@@ -94,6 +95,7 @@ public class AppMenu implements ActionListener {
 		// EmailHelper.sendMail();
 		// JOptionPane.showMessageDialog(null, "Model 15516 less than 50. Please move
 		// more item from Zone 1.");
+		//ExcelHelper.readCSVFile();
 		exceuteCallback();
 		loadingframe = new LoadingFrameHelper("Loading Data from Server...");
 		loading = loadingframe.loadingSample("Loading Data from Server...");

@@ -2,6 +2,7 @@ package spirit.fitness.scanner.report;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -49,6 +50,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 
@@ -221,7 +223,7 @@ public class DailyReport {
 
 		String zone = "";
 
-		Object columnNames[] = { "Model#", "FG", "Previous", "Shipped", "Received", "Shippable/On Hand",
+		Object columnNames[] = { "Model#", "FG", "Previous", "Shipped", "Received", "OnHand",
 				"Unshippable", "ShowRoom", "Total" };
 		Font font = new Font("Verdana", Font.BOLD, 15);
 		final Class[] columnClass = new Class[] { String.class, String.class, Integer.class,
@@ -450,5 +452,7 @@ public class DailyReport {
 		});
 
 	}
+	
+	
 
 }

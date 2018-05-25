@@ -1,6 +1,7 @@
 package spirit.fitness.scanner.shipping;
 
 import java.awt.BorderLayout;
+import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -9,6 +10,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -35,6 +38,7 @@ import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -78,8 +82,10 @@ import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.PickingItem;
 
+import spirit.fitness.scanner.util.PrintPreviewUitl;
 
 public class ShippingConfirm {
+	
 
 	private static ShippingConfirm shippingConfirm = null;
 
@@ -122,9 +128,12 @@ public class ShippingConfirm {
 	// Key:Location, value:quantity
 	private LinkedHashMap<String, LinkedHashMap<String, Integer>> locMap = new LinkedHashMap<String, LinkedHashMap<String, Integer>>();
 
+	
 	private int orderTotalCount = 0;
+	private int orderCurCount = 0;
 	// private List<CustOrderbean> salesOrderList;
 	private List<CustOrderbean> salesOrderList;
+	private List<CustOrderbean> checkedItemNoSN;
 	private List<PickingItem> pickingItems;
 	private List<Historybean> items;
 	private List<Historybean> scanItems;
@@ -566,7 +575,7 @@ public class ShippingConfirm {
 			TableColumn quantity = table.getColumnModel().getColumn(0);
 			quantity.setPreferredWidth(20);
 			TableColumn itemId = table.getColumnModel().getColumn(1);
-			itemId.setPreferredWidth(60);
+			itemId.setPreferredWidth(80);
 			TableColumn modelTitle = table.getColumnModel().getColumn(2);
 			modelTitle.setPreferredWidth(800);
 
@@ -689,36 +698,24 @@ public class ShippingConfirm {
 				}
 				rowIndex = 0;
 
-				/*
-				 * for (Map.Entry<String, Integer> location : map.entrySet()) { //
-				 * orderItemsInfo += location.getValue() +" " + //
-				 * salesOrderList.get(rowIndex).ItemID +" "+ //
-				 * salesOrderList.get(rowIndex).description + " "+ items.get(0).trackingNo //
-				 * +"\n";
-				 * 
-				 * String trackingNo = items.get(0).trackingNo; if (trackingNo.equals(""))
-				 * trackingNo += " "; resultModelItem.add(location.getValue() + "\n" +
-				 * salesOrderList.get(rowIndex).ItemID + "\n" +
-				 * salesOrderList.get(rowIndex).description + "\n" + trackingNo + "\n");
-				 * rowIndex++; }
-				 */
+				String orderItemsInfo = null;
+				 for (Map.Entry<String, Integer> location : map.entrySet()) { 
+					 
+				 orderItemsInfo += location.getValue() +" " + //
+				 salesOrderList.get(rowIndex).ItemID +" "+ //
+				  salesOrderList.get(rowIndex).description + " "+ items.get(0).trackingNo //
+				  +"\n";
+				  
+				 String trackingNo = items.get(0).trackingNo; 
+				 if (trackingNo.equals(""))
+				 trackingNo += " "; 
+				 resultModelItem.add(location.getValue() + "\n" +
+				 salesOrderList.get(rowIndex).ItemID + "\n" +
+				 salesOrderList.get(rowIndex).description + "\n" + trackingNo + "\n");
+				 rowIndex++; }
+				 
 
-                
-                for (Map.Entry<String, Integer> location : map.entrySet()) {
-                    // orderItemsInfo += location.getValue() +" " +
-                    // salesOrderList.get(rowIndex).ItemID +" "+
-                    // salesOrderList.get(rowIndex).description + " "+ items.get(0).trackingNo
-                    // +"\n";
-
-                    String trackingNo = items.get(0).trackingNo;
-                    if (trackingNo.equals(""))
-                        trackingNo += " ";
-                    resultModelItem.add(location.getValue() + "\n" + salesOrderList.get(rowIndex).ItemID + "\n"
-                            + salesOrderList.get(rowIndex).description + "\n" + trackingNo + "\n");
-                    rowIndex++;
-                }
-
-
+				
 			}
 		}
 
@@ -1095,12 +1092,57 @@ public class ShippingConfirm {
 		// Creating JLabel
 		lCount = new JLabel("");
 
-		lCount.setText(setModelScanCountLabel(len));
+		orderCurCount = len;
+		lCount.setText(setModelScanCountLabel(orderCurCount));
 
-		lCount.setBounds(50, 150, 200, 500);
+		lCount.setBounds(50, 70, 200, 500);
 		lCount.setFont(font);
 		panel.add(lCount);
 
+		JCheckBox unit = null;
+		int checkboxIdx = 540;
+		
+		JCheckBox[] checkBoxItems = new JCheckBox[checkedItemNoSN.size()];
+		if(checkedItemNoSN.size() > 0) 
+		{
+		
+			for(int i = 0; i < checkedItemNoSN.size() ; i++) 
+			{
+				CustOrderbean curCheckItem = checkedItemNoSN.get(i);
+				checkBoxItems[i] = new JCheckBox();
+				checkBoxItems[i].setFont(font);
+				checkBoxItems[i].setBackground(Constrant.BACKGROUN_COLOR);
+				checkBoxItems[i].setText(curCheckItem.ItemID + "(" + 0 + "/" + map.get(curCheckItem.ItemID) + ")");
+				checkBoxItems[i].setBounds(30, checkboxIdx, 200, 30);
+				panel.add(checkBoxItems[i]);
+				final int curIdex = i;
+				checkboxIdx += 27;
+			
+				checkBoxItems[i].addItemListener(new ItemListener() {
+			         public void itemStateChanged(ItemEvent e) {         
+			            if(e.getStateChange()==1) {
+			            	modelScanCurMap.put(curCheckItem.ItemID, map.get(curCheckItem.ItemID));
+			            	checkBoxItems[curIdex].setText(curCheckItem.ItemID + "(" + map.get(curCheckItem.ItemID) + "/" + map.get(curCheckItem.ItemID) + ")");
+			            	checkBoxItems[curIdex].setSelected(true);
+			            	orderCurCount += map.get(curCheckItem.ItemID);
+			            	lCount.setText(setModelScanCountLabel(orderCurCount));
+			            	//scanResultFrame.invalidate();
+			            	//scanResultFrame.validate();
+			            	//scanResultFrame.repaint();
+
+			            }else 
+			            {
+			            	modelScanCurMap.put(curCheckItem.ItemID, map.get(curCheckItem.ItemID));
+			            	checkBoxItems[curIdex].setText(curCheckItem.ItemID + "(" + 0 + "/" + map.get(curCheckItem.ItemID) + ")");
+			            	checkBoxItems[curIdex].setSelected(false);
+			            	orderCurCount -= map.get(curCheckItem.ItemID);
+			            	lCount.setText(setModelScanCountLabel(orderCurCount));
+			            }
+			         }           
+			      });
+			}
+		}
+		
 		JScrollPane scrollPanel1 = new JScrollPane(inputSN);
 		scrollPanel1.setBounds(250, 150, 250, 500);
 		inputSN.setFont(font);
@@ -1143,6 +1185,7 @@ public class ShippingConfirm {
 					lModelError.setText("");
 					modelScanCurMap.put(model, modelScanCurMap.get(model) + 1);
 					snRepeatSet.add(item[item.length - 1]);
+					orderCurCount++;
 				} else {
 					lenError = true;
 					prev = prev.substring(0, prev.length() - (item[item.length - 1].length()) - 1);
@@ -1155,7 +1198,7 @@ public class ShippingConfirm {
 				} else {
 
 					lCount.setForeground(Color.BLACK);
-					lCount.setText(setModelScanCountLabel(snRepeatSet.size()));
+					lCount.setText(setModelScanCountLabel(orderCurCount));
 
 				}
 			}
@@ -1356,6 +1399,7 @@ public class ShippingConfirm {
 					// if (isOrderClosed) {
 					pickingItems = new ArrayList<PickingItem>();
 					salesOrderList = new ArrayList<CustOrderbean>();
+					checkedItemNoSN = new ArrayList<CustOrderbean>();
 					map = new LinkedHashMap<String, Integer>();
 					modelScanCurMap = new LinkedHashMap<String, Integer>();
 					OrderModelmap = new TreeMap<String, String>();
@@ -1364,9 +1408,11 @@ public class ShippingConfirm {
 						int count = Integer.valueOf(item.quantity);
 						// System.out.println("item.ItemID:" + item.ItemID);
 
-						if (item.ItemID != null && !item.ItemID.contains("PL") && item.ItemID.length() == 6
-								&& !WeightPlateUtil.isWeightPlate(item.ItemID)
-								&& !WeightPlateUtil.isCalfSupport(item.ItemID)) {
+						if (item.ItemID != null /*&& !item.ItemID.contains("PL") && item.ItemID.length() == 6
+								/*&& !WeightPlateUtil.isWeightPlate(item.ItemID)
+								&& !WeightPlateUtil.isCalfSupport(item.ItemID)*/) {
+							if(WeightPlateUtil.isCheckBoxNoSNitem(item.ItemID) || item.ItemID.contains("PL") || item.ItemID.length() > 6)
+								checkedItemNoSN.add(item);
 							salesOrderList.add(item);
 							if (map.containsKey(item.ItemID)) {
 
@@ -1464,7 +1510,7 @@ public class ShippingConfirm {
 
 		String[] sn = content.toString().split("\n");
 		System.out.println("SN size :" + sn.length);
-		if (sn.length != orderTotalCount) {
+		if (orderCurCount != orderTotalCount) {
 			JOptionPane.showMessageDialog(null, "Quantity Error! Please confirm the items quantiy.");
 			return false;
 		}
@@ -1491,6 +1537,10 @@ public class ShippingConfirm {
 	private String setModelScanCountLabel(int curCount) {
 		String modelQty = "<html>" + "Total : " + curCount + "/" + String.valueOf(orderTotalCount) + " </br>";
 		for (Map.Entry<String, Integer> location : map.entrySet()) {
+			
+			if(WeightPlateUtil.isCheckBoxNoSNitem(location.getKey()) || location.getKey().contains("PL") || location.getKey().length() > 6)
+				continue;
+			
 			int cnt = 0;
 
 			if (modelScanCurMap.get(location.getKey()) != null)
@@ -1522,63 +1572,159 @@ public class ShippingConfirm {
 	 * }
 	 */
 
-	
-	 private void printer(String saleOrder, String date, String billTo, String
-	 shipTo, String itemsInfo) {
-	  
-	  String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " +
-	  date + "\n" + "Bill To : " + billTo + "\n" + "Ship To : " + shipTo + "\n";
-	  
-	  
-	  String header =
-	  " ____________________________________________________________________________________________\n"
-	  ; String title =
-	  " | Qty |    Item   |                     Model                          |                            PRO                    \n"
-	  ; String bolder =
-	  " ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n"
-	  ;
-	  
-	  String items = "";
-	  
-	  for (String s : resultModelItem) { String[] rowdata = s.split("\n"); String
-	  line = "";
-	  
-	  int spaceModelPrefixLen = 0;
-	  
-	 String spaceModelPrefix = ""; String spaceModelSuffix = "";
-	  if(rowdata[2].length()<38) spaceModelPrefixLen = (38 - rowdata[2].length());
-	  
-	  
-	  //if(modelTitleLen < rowdata[2].length()) // modelTitleLen =
-	  //spaceModelPrefixLen - rowdata[2].length();
-	  
-	  //spaceModelPrefixLen += Math.abs(modelTitleLen);
-	  
-	 
-	  
-	  for(int i =0; i <rowdata.length ; i++) { String modelTitle = rowdata[2] +
-	  spaceModelPrefix; if(i == 2) { line += rowdata[i] + spaceModelPrefix; } else
-	  if(i == 3) {
-	  
-	  line += rowdata[i];
-	  
-	  }else line += "   "+rowdata[i] +"    "; }
-	  
-	  items += line +"\n"; }
-	  
-	  
-	  
-	 items += bolder; // 
+	/*
+	 * private void printer(String saleOrder, String date, String billTo, String
+	 * shipTo, String itemsInfo) {
+	 * 
+	 * String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " +
+	 * date + "\n" + "Bill To : " + billTo + "\n" + "Ship To : " + shipTo + "\n";
+	 * 
+	 * 
+	 * String header =
+	 * " ____________________________________________________________________________________________\n"
+	 * ; String title =
+	 * " | Qty |    Item   |                     Model                          |                            PRO                    \n"
+	 * ; String bolder =
+	 * " ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n"
+	 * ;
+	 * 
+	 * String items = "";
+	 * 
+	 * for (String s : resultModelItem) { String[] rowdata = s.split("\n"); String
+	 * line = "";
+	 * 
+	 * int spaceModelPrefixLen = 0;
+	 * 
+	 * String spaceModelPrefix = ""; String spaceModelSuffix = "";
+	 * if(rowdata[2].length()<38) spaceModelPrefixLen = (38 - rowdata[2].length());
+	 * 
+	 * 
+	 * //if(modelTitleLen < rowdata[2].length()) // modelTitleLen =
+	 * spaceModelPrefixLen - rowdata[2].length();
+	 * 
+	 * //spaceModelPrefixLen += Math.abs(modelTitleLen);
+	 * 
+	 * 
+	 * 
+	 * for(int i =0; i <rowdata.length ; i++) { String modelTitle = rowdata[2] +
+	 * spaceModelPrefix; if(i == 2) { line += rowdata[i] + spaceModelPrefix; } else
+	 * if(i == 3) {
+	 * 
+	 * line += rowdata[i];
+	 * 
+	 * }else line += "   "+rowdata[i] +"    "; }
+	 * 
+	 * items += line +"\n"; }
+	 * 
+	 * 
+	 * 
+	 * items += bolder; // String result = PrintTableUtil.printReport(headersList,
+	 * rowsList); //String result = PrintTableUtil.noBorad(headersList, rowsList);
+	 * content += header + title + bolder + items +itemsInfo;
+	 * 
+	 * System.out.println(content);
+	 * 
+	 * PrinterHelper print = new PrinterHelper(); print.printTable(content);
+	 * 
+	 * }
+	 */
+    
+     private void printer(String saleOrder, String date, String billTo, String shipTo, String itemsInfo) {
+      
+     String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " +
+     date + "\n" + "Bill To : " + billTo + "\n" + "Ship To : " + shipTo + "\n" +  "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n";
+     List<String> headersList = Arrays.asList("Qty", "Item", "Model", "PRO#");
+     
+     List<List<String>> rowsList = new ArrayList<List<String>>(); 
+     for (String s :
+      resultModelItem) { String[] rowdata = s.split("\n");
+      rowsList.add(Arrays.asList(rowdata)); }
+     
+      String result = PrintTableUtil.printReport(headersList, rowsList); 
+      //String result = PrintTableUtil.noBorad(headersList, rowsList);
+      content += result + "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n" + itemsInfo;
+                         
+      System.out.println(content);
+     
+     //PrinterHelper print = new PrinterHelper(); 
+     //print.printTable(content);
+      PrintPreviewUitl  print = new PrintPreviewUitl(content); 
+      //print.setVisible(true);
+     }
+     
 
-	 //String result = PrintTableUtil.noBorad(headersList, rowsList);
-	  content += header + title + bolder + items +itemsInfo;
-	  
-	  System.out.println(content);
-	  
-	  PrinterHelper print = new PrinterHelper(); print.printTable(content);
-	  
-	  }
-	 
+	/*private void printer(String saleOrder, String date, String billTo, String shipTo, String itemsInfo) {
+
+		String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " + date + "\n" + "Bill To : "
+				+ billTo + "\n" + "Ship To : " + shipTo + "\n";
+		// List<String> headersList = Arrays.asList("Qty", "Item", "Model", "PRO#");
+
+		/*
+		 * List<List<String>> rowsList = new ArrayList<List<String>>(); for (String s :
+		 * resultModelItem) { String[] rowdata = s.split("\n");
+		 * rowsList.add(Arrays.asList(rowdata)); }
+		 */
+
+	/*	String header = " ____________________________________________________________________________________________\n";
+		String title = " | Qty |    Item   |                     Model                          |                            PRO                    \n";
+		String bolder = " ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n";
+
+		String items = "";
+
+		int modelTitleLen = 0;
+		// int limitLen = 38;
+		/*
+		 * for (String s : resultModelItem) { String[] rowdata = s.split("\n"); String
+		 * line = "";
+		 * 
+		 * int spaceModelPrefixLen = 0;
+		 * 
+		 * String spaceModelPrefix = ""; String spaceModelSuffix = "";
+		 * if(rowdata[2].length()<38) spaceModelPrefixLen = (38 - rowdata[2].length());
+		 * 
+		 * 
+		 * //if(modelTitleLen < rowdata[2].length()) // modelTitleLen =
+		 * spaceModelPrefixLen - rowdata[2].length();
+		 * 
+		 * //spaceModelPrefixLen += Math.abs(modelTitleLen);
+		 * 
+		 * 
+		 * 
+		 * for(int i =0; i <rowdata.length ; i++) { String modelTitle = rowdata[2] +
+		 * spaceModelPrefix; if(i == 2) { line += rowdata[i] + spaceModelPrefix; } else
+		 * if(i == 3) {
+		 * 
+		 * line += rowdata[i];
+		 * 
+		 * }else line += "   "+rowdata[i] +"    "; }
+		 * 
+		 * items += line +"\n"; }
+		 */
+
+	/*	String qty = "    | ";
+		String itemID = "          | ";
+		String model = "          |";
+		String trackingNo = "";
+		for (ShippedPrintItem shippedPrintItem : printItems) {
+			String line = "   ";
+			line += "" + shippedPrintItem.getQty() + qty.substring(String.valueOf(shippedPrintItem.getQty()).length());
+			line += shippedPrintItem.getItemID() + itemID.substring(shippedPrintItem.getItemID().length());
+			line += shippedPrintItem.getModel();
+			line += shippedPrintItem.getTrackingNo();
+			items += line + "\n";
+		}
+
+		items += bolder;
+		// String result = PrintTableUtil.printReport(headersList, rowsList);
+		// String result = PrintTableUtil.noBorad(headersList, rowsList);
+		content += header + title + bolder + items + itemsInfo;
+
+		System.out.println(content);
+
+		PrinterHelper print = new PrinterHelper();
+		print.printTable(content);
+
+	}*/
 
 	
 	private void restoreScanPannel(List<Itembean> items) {
@@ -1612,7 +1758,8 @@ public class ShippingConfirm {
 					modelScanCurMap.put(modelNo, modelScanCurMap.get(modelNo) + 1);
 
 			}
-			lCount.setText(setModelScanCountLabel(item.length));
+			orderCurCount = item.length;
+			lCount.setText(setModelScanCountLabel(orderCurCount));
 		} else {
 			// modelScanCurMap.clear();
 
@@ -1662,5 +1809,6 @@ public class ShippingConfirm {
 		inputSN.setText(updateTxt);
 
 	}
+	
 
 }

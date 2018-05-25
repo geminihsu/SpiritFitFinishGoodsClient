@@ -111,7 +111,7 @@ public class ItemPannelBaseViewDelegate {
 	}
 
 
-	public void scanPannel(JPanel panel, String prevTxt) 
+	public void scanPanel(JPanel panel, String prevTxt) 
 	{
 		
 	}
