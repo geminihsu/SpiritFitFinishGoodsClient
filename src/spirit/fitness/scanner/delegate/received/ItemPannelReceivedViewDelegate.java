@@ -1164,6 +1164,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
 					EmailHelper.sendMail(scannedDate, containers, scanContent,"geminih@spiritfitness.com");
 					EmailHelper.sendMail(scannedDate, containers, scanContent,"vickie@spiritfitness.com");
+					EmailHelper.sendMail(scannedDate, containers, scanContent,"ashleyg@spiritfitness.com");
 				}
 
 			}

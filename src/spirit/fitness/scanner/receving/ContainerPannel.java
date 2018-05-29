@@ -222,6 +222,9 @@ public class ContainerPannel implements ActionListener {
 
 			for (Containerbean item : containerList) {
 
+				
+				if(item.date == null || item.date.equals(""))
+					continue;
 				if (map.containsKey(item.ContainerNo)) {
 					List<Containerbean> items = map.get(item.ContainerNo);
 					items.add(item);
