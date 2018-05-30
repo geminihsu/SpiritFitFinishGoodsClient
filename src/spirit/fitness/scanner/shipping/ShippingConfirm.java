@@ -497,7 +497,7 @@ public class ShippingConfirm {
 	private void placeOrderInfo() {
 
 		salesOrder = salesOrderList.get(0).salesOrder;
-		String date = salesOrderList.get(0).shippingDate;
+		String date = salesOrderList.get(0).createdDate;
 		String billToTitle = salesOrderList.get(0).bill_to;
 		String custPO = salesOrderList.get(0).customerPO;
 		String shippToAdddress = salesOrderList.get(0).shipToAddress;
@@ -724,7 +724,7 @@ public class ShippingConfirm {
 	private void placeOrderInfoDetail() {
 
 		salesOrder = salesOrderList.get(0).salesOrder;
-		String date = salesOrderList.get(0).shippingDate;
+		String date = salesOrderList.get(0).createdDate;
 		String billToTitle = salesOrderList.get(0).bill_to;
 		String custPO = salesOrderList.get(0).customerPO;
 		String shippToAdddress = salesOrderList.get(0).shipToAddress;
@@ -923,7 +923,7 @@ public class ShippingConfirm {
 				report.setEnabled(false);
 				scanItems = new ArrayList<Historybean>();
 				String SalesOrder = salesOrderList.get(0).salesOrder;
-				String date = salesOrderList.get(0).shippingDate;
+				String date = salesOrderList.get(0).createdDate;
 				String billToTitle = salesOrderList.get(0).bill_to;
 				String custPO = salesOrderList.get(0).customerPO;
 				String shippToAdddress = salesOrderList.get(0).shipToAddress;
@@ -939,7 +939,8 @@ public class ShippingConfirm {
 					Historybean _item = new Historybean();
 
 					_item.SN = item;
-					_item.date = timeStamp;
+					_item.shippedDate = timeStamp;
+					_item.createdDate = date;
 					_item.location = "999";
 					_item.modelNo = item.substring(0, 6);
 
@@ -956,7 +957,7 @@ public class ShippingConfirm {
 
 				for (int i = 0; i < salesOrderList.size(); i++) {
 					CustOrderbean order = salesOrderList.get(i);
-					order.shippingDate = timeStamp;
+					order.createdDate = timeStamp;
 					order.closed = true;
 					// order.TrackingNo = proNumber.getText().toString();
 					salesOrderList.set(i, order);
@@ -1483,7 +1484,7 @@ public class ShippingConfirm {
 
 			@Override
 			public void checkHistoryItemsBySalesOrder(List<Historybean> _items) {
-				if (!_items.isEmpty()) {
+				if (_items!= null && !_items.isEmpty()) {
 					isOrderClosed = true;
 					items = _items;
 
