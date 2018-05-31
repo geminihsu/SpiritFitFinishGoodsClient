@@ -183,7 +183,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 		
 		inputSN = new JTextArea(20, 15);
-		String content ="";
+		
 		inputSN.setText(prevTxt);
 		String[] item = prevTxt.split("\n");
 		set = new HashSet<String>();
@@ -1175,8 +1175,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				if (!items.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
 					EmailHelper.sendMail(scannedDate, containers, scanContent,"geminih@spiritfitness.com");
-					EmailHelper.sendMail(scannedDate, containers, scanContent,"vickie@spiritfitness.com");
-					EmailHelper.sendMail(scannedDate, containers, scanContent,"ashleyg@spiritfitness.com");
+					//EmailHelper.sendMail(scannedDate, containers, scanContent,"vickie@spiritfitness.com");
+					//EmailHelper.sendMail(scannedDate, containers, scanContent,"ashleyg@spiritfitness.com");
 				}
 
 			}
