@@ -72,6 +72,7 @@ import spirit.fitness.scanner.util.EmailHelper;
 import spirit.fitness.scanner.util.ExcelHelper;
 import spirit.fitness.scanner.util.InstanceUtil;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
+import spirit.fitness.scanner.util.NetWorkHandler;
 
 public class AppMenu implements ActionListener {
 	private static AppMenu instance = null;
@@ -89,8 +90,9 @@ public class AppMenu implements ActionListener {
 	private LocationRepositoryImplRetrofit localModels;
 	private ItemPannelBaseViewDelegate itemPannelBaseViewDelegate;
 
+
 	public static boolean isExistInstance = false;
-	
+
 	public AppMenu() {
 		// EmailHelper.sendMail();
 		// JOptionPane.showMessageDialog(null, "Model 15516 less than 50. Please move
@@ -100,6 +102,7 @@ public class AppMenu implements ActionListener {
 		loadingframe = new LoadingFrameHelper("Loading Data from Server...");
 		loading = loadingframe.loadingSample("Loading Data from Server...");
 		initialize();
+		NetWorkHandler.getInstance();
 		// loadReport();
 		loadModelMapZone2();
 		loadModel();
@@ -429,6 +432,7 @@ public class AppMenu implements ActionListener {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+					NetWorkHandler.displayError(loadingframe);
 				}
 			}
 		});
@@ -446,6 +450,7 @@ public class AppMenu implements ActionListener {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+					//NetWorkHandler.displayError(loadingframe);
 				}
 			}
 		});
@@ -463,6 +468,7 @@ public class AppMenu implements ActionListener {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+					NetWorkHandler.displayError(loadingframe);
 				}
 			}
 		});
@@ -474,6 +480,7 @@ public class AppMenu implements ActionListener {
 		} catch (Exception x) {
 			// TODO Auto-generated catch block
 			x.printStackTrace();
+			NetWorkHandler.displayError(loadingframe);
 		}
 	}
 

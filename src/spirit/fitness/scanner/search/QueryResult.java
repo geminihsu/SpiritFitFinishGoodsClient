@@ -798,6 +798,12 @@ public class QueryResult {
 				// TODO Auto-generated method stub
 
 			}
+
+			@Override
+			public void exception(String error) {
+				// TODO Auto-generated method stub
+				
+			}
 		});
 
 	}

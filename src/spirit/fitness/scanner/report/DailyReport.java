@@ -65,6 +65,7 @@ import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.util.ExcelHelper;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
 import spirit.fitness.scanner.util.LocationHelper;
+//import spirit.fitness.scanner.util.NetWorkHandler;
 import spirit.fitness.scanner.util.PrinterHelper;
 import spirit.fitness.scanner.zonepannel.ZoneMenu;
 import spirit.fitness.scanner.model.Itembean;
@@ -447,6 +448,7 @@ public class DailyReport {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+					//NetWorkHandler.displayError(loadingframe);
 				}
 			}
 		});

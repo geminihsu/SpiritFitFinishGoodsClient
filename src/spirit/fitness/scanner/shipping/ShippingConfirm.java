@@ -72,6 +72,8 @@ import spirit.fitness.scanner.restful.listener.HistoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.search.QueryResult;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
+import spirit.fitness.scanner.util.NetWorkHandler;
+//import spirit.fitness.scanner.util.NetWorkHandler;
 import spirit.fitness.scanner.util.PrintTableUtil;
 import spirit.fitness.scanner.util.PrinterHelper;
 import spirit.fitness.scanner.util.PrinterHelper.PrintTable;
@@ -244,6 +246,7 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//NetWorkHandler.displayError(loadingframe);
 		}
 
 	}
@@ -261,6 +264,7 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//NetWorkHandler.displayError(loadingframe);
 		}
 
 		return items;
@@ -278,6 +282,7 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//NetWorkHandler.displayError(loadingframe);
 		}
 
 	}
@@ -301,6 +306,7 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//NetWorkHandler.displayError(loadingframe);
 		}
 
 		return items;
@@ -312,6 +318,7 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//NetWorkHandler.displayError(loadingframe);
 		}
 	}
 
@@ -939,8 +946,12 @@ public class ShippingConfirm {
 					Historybean _item = new Historybean();
 
 					_item.SN = item;
+<<<<<<< HEAD
 					_item.shippedDate = timeStamp;
 					_item.createdDate = date;
+=======
+					_item.Date = timeStamp;
+>>>>>>> master
 					_item.location = "999";
 					_item.modelNo = item.substring(0, 6);
 
@@ -1364,6 +1375,12 @@ public class ShippingConfirm {
 				// TODO Auto-generated method stub
 
 			}
+
+			@Override
+			public void exception(String error) {
+				NetWorkHandler.displayError(loadingframe);
+				
+			}
 		});
 
 		ordersRepositoryImplRetrofit = new OrdersRepositoryImplRetrofit();
@@ -1501,6 +1518,12 @@ public class ShippingConfirm {
 					}
 				});
 
+			}
+
+			@Override
+			public void exception(String error) {
+				// TODO Auto-generated method stub
+				
 			}
 
 		});

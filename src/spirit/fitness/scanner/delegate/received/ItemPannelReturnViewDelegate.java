@@ -49,6 +49,7 @@ import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
 import spirit.fitness.scanner.util.LocationHelper;
+import spirit.fitness.scanner.util.NetWorkHandler;
 import spirit.fitness.scanner.zonepannel.ZoneMenu;
 
 public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
@@ -631,6 +632,7 @@ public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			NetWorkHandler.displayError(loadingframe);
 		}
 	}
 
@@ -641,6 +643,7 @@ public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			NetWorkHandler.displayError(loadingframe);
 		}
 	}
 
@@ -801,6 +804,12 @@ public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
 					 */
 
 				}
+			}
+
+			@Override
+			public void exception(String error) {
+				NetWorkHandler.displayError(loadingframe);
+				scanResultFrame.setVisible(true);
 			}
 		});
 	}
