@@ -580,6 +580,12 @@ public class ShippingPicking {
 
 			}
 
+			@Override
+			public void exception(String error) {
+				// TODO Auto-generated method stub
+				
+			}
+
 		});
 
 		ordersRepositoryImplRetrofit = new OrdersRepositoryImplRetrofit();
@@ -706,6 +712,12 @@ public class ShippingPicking {
 					querySalesOrder(salesOrder);
 				}
 
+			}
+
+			@Override
+			public void exception(String error) {
+				// TODO Auto-generated method stub
+				
 			}
 
 		});

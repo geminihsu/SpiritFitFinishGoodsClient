@@ -143,6 +143,12 @@ public class QueryPannel implements ActionListener {
 				// TODO Auto-generated method stub
 
 			}
+
+			@Override
+			public void exception(String error) {
+				// TODO Auto-generated method stub
+				
+			}
 		});
 		zoneCodeReturn = new RTSLocation(null, -1);
 		zoneCodeReturn.setZoneCodeReturnCallBackFunction(new RTSLocation.ZoneCodeReturnCallBackFunction() {

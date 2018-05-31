@@ -72,6 +72,8 @@ import spirit.fitness.scanner.restful.listener.HistoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.search.QueryResult;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
+import spirit.fitness.scanner.util.NetWorkHandler;
+//import spirit.fitness.scanner.util.NetWorkHandler;
 import spirit.fitness.scanner.util.PrintTableUtil;
 import spirit.fitness.scanner.util.PrinterHelper;
 import spirit.fitness.scanner.util.PrinterHelper.PrintTable;
@@ -244,6 +246,7 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//NetWorkHandler.displayError(loadingframe);
 		}
 
 	}
@@ -261,6 +264,7 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//NetWorkHandler.displayError(loadingframe);
 		}
 
 		return items;
@@ -278,6 +282,7 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//NetWorkHandler.displayError(loadingframe);
 		}
 
 	}
@@ -301,6 +306,7 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//NetWorkHandler.displayError(loadingframe);
 		}
 
 		return items;
@@ -312,6 +318,7 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//NetWorkHandler.displayError(loadingframe);
 		}
 	}
 
@@ -497,7 +504,7 @@ public class ShippingConfirm {
 	private void placeOrderInfo() {
 
 		salesOrder = salesOrderList.get(0).salesOrder;
-		String date = salesOrderList.get(0).shippingDate;
+		String date = salesOrderList.get(0).createdDate;
 		String billToTitle = salesOrderList.get(0).bill_to;
 		String custPO = salesOrderList.get(0).customerPO;
 		String shippToAdddress = salesOrderList.get(0).shipToAddress;
@@ -724,7 +731,7 @@ public class ShippingConfirm {
 	private void placeOrderInfoDetail() {
 
 		salesOrder = salesOrderList.get(0).salesOrder;
-		String date = salesOrderList.get(0).shippingDate;
+		String date = salesOrderList.get(0).createdDate;
 		String billToTitle = salesOrderList.get(0).bill_to;
 		String custPO = salesOrderList.get(0).customerPO;
 		String shippToAdddress = salesOrderList.get(0).shipToAddress;
@@ -923,7 +930,7 @@ public class ShippingConfirm {
 				report.setEnabled(false);
 				scanItems = new ArrayList<Historybean>();
 				String SalesOrder = salesOrderList.get(0).salesOrder;
-				String date = salesOrderList.get(0).shippingDate;
+				String date = salesOrderList.get(0).createdDate;
 				String billToTitle = salesOrderList.get(0).bill_to;
 				String custPO = salesOrderList.get(0).customerPO;
 				String shippToAdddress = salesOrderList.get(0).shipToAddress;
@@ -939,7 +946,7 @@ public class ShippingConfirm {
 					Historybean _item = new Historybean();
 
 					_item.SN = item;
-					_item.date = timeStamp;
+					_item.Date = timeStamp;
 					_item.location = "999";
 					_item.modelNo = item.substring(0, 6);
 
@@ -956,7 +963,7 @@ public class ShippingConfirm {
 
 				for (int i = 0; i < salesOrderList.size(); i++) {
 					CustOrderbean order = salesOrderList.get(i);
-					order.shippingDate = timeStamp;
+					order.createdDate = timeStamp;
 					order.closed = true;
 					// order.TrackingNo = proNumber.getText().toString();
 					salesOrderList.set(i, order);
@@ -1363,6 +1370,12 @@ public class ShippingConfirm {
 				// TODO Auto-generated method stub
 
 			}
+
+			@Override
+			public void exception(String error) {
+				NetWorkHandler.displayError(loadingframe);
+				
+			}
 		});
 
 		ordersRepositoryImplRetrofit = new OrdersRepositoryImplRetrofit();
@@ -1500,6 +1513,12 @@ public class ShippingConfirm {
 					}
 				});
 
+			}
+
+			@Override
+			public void exception(String error) {
+				// TODO Auto-generated method stub
+				
 			}
 
 		});

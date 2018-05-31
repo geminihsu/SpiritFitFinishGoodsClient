@@ -51,6 +51,8 @@ import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.util.EmailHelper;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
 import spirit.fitness.scanner.util.LocationHelper;
+import spirit.fitness.scanner.util.NetWorkHandler;
+//import spirit.fitness.scanner.util.NetWorkHandler;
 import spirit.fitness.scanner.zonepannel.Zone1Location;
 import spirit.fitness.scanner.zonepannel.ZoneMenu;
 
@@ -95,6 +97,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	
 	@Override
 	public void scanInfo(String prevTxt) {
+		
 		scanResultFrame = new JFrame("");
 		// Setting the width and height of frame
 		scanResultFrame.setSize(620, 750);
@@ -943,6 +946,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			NetWorkHandler.displayError(loadingframe);
 		}
 	}
 
@@ -957,6 +961,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+					NetWorkHandler.displayError(loadingframe);
 				}
 			}
 		});
@@ -971,6 +976,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			NetWorkHandler.displayError(loadingframe);
 		}
 	}
 	
@@ -1141,6 +1147,12 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					 */
 
 				}
+			}
+
+			@Override
+			public void exception(String error) {
+				NetWorkHandler.displayError(loadingframe);
+				scanResultFrame.setVisible(true);
 			}
 		});
 		containerRepository = new ContainerRepositoryImplRetrofit();

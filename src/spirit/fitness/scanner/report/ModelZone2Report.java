@@ -59,6 +59,7 @@ import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.util.ExcelHelper;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
 import spirit.fitness.scanner.util.LocationHelper;
+//import spirit.fitness.scanner.util.NetWorkHandler;
 import spirit.fitness.scanner.util.PrintJtableUtil;
 import spirit.fitness.scanner.util.PrintTableUtil;
 import spirit.fitness.scanner.util.PrinterHelper;
@@ -355,6 +356,7 @@ public class ModelZone2Report {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+					//NetWorkHandler.displayError(loadingframe);
 				}
 			}
 		});

@@ -68,6 +68,7 @@ import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.search.QueryPannel;
 import spirit.fitness.scanner.util.LoadingFrameHelper;
 import spirit.fitness.scanner.util.LocationHelper;
+//import spirit.fitness.scanner.util.NetWorkHandler;
 import spirit.fitness.scanner.util.WeightPlateUtil;
 import spirit.fitness.scanner.zonepannel.RTSLocation;
 import spirit.fitness.scanner.zonepannel.Zone1Location;
@@ -578,6 +579,7 @@ public class ContainerPannel implements ActionListener {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+					//NetWorkHandler.displayError(loadingframe);
 				}
 			}
 		});
@@ -595,6 +597,7 @@ public class ContainerPannel implements ActionListener {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+					//NetWorkHandler.displayError(loadingframe);
 				}
 			}
 		});
