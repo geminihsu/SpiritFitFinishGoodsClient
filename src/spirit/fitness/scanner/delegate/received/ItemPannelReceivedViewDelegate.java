@@ -183,7 +183,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 		
 		inputSN = new JTextArea(20, 15);
-		String content = "";
+		String content ="";
 		inputSN.setText(prevTxt);
 		String[] item = prevTxt.split("\n");
 		set = new HashSet<String>();
