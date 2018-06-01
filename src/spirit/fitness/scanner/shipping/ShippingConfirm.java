@@ -295,7 +295,7 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			// NetWorkHandler.displayError(loadingframe);
+		    NetWorkHandler.displayError(loadingframe);
 		}
 
 	}
@@ -820,7 +820,7 @@ public class ShippingConfirm {
 
 	}
 	
-	public void checkSNExistFrame(List<Itembean> scanitems) {
+	public void checkSNExistFrame(List<Itembean> scanitems, String message) {
 
 		JFrame dialogFrame = new JFrame("Check Serial number");
 		// Setting the width and height of frame
@@ -848,7 +848,7 @@ public class ShippingConfirm {
 
 		String title = "";
 
-		title = "<html>Those serial number do not exsit Zone 2 :" + " <br/>";
+		title = "<html>"+message+" :" + " <br/>";
 		// Creating JLabel
 		JLabel Info = new JLabel(title);
 		Info.setBounds(40, 0, 500, 50);
@@ -877,10 +877,6 @@ public class ShippingConfirm {
 		ok.setFont(font);
 		panel.add(ok);
 
-		JButton cancel = new JButton("NO");
-		cancel.setBounds(360, 330, 200, 50);
-		cancel.setFont(font);
-		panel.add(cancel);
 
 		/*
 		 * JButton delete = new JButton("Delete"); delete.setBounds(410, 330, 200, 50);
@@ -892,17 +888,11 @@ public class ShippingConfirm {
 			public void actionPerformed(ActionEvent e) {
 				dialogFrame.dispose();
 				dialogFrame.setVisible(false);
-				restoreScanPannel(null);
+				restoreScanPannel(scanitems);
 			}
 		});
 		
-		cancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dialogFrame.dispose();
-				dialogFrame.setVisible(false);
-				scanResultFrame.setVisible(true);
-			}
-		});
+		
 
 		dialogFrame.setBackground(Color.WHITE);
 		dialogFrame.setVisible(true);
@@ -1204,6 +1194,40 @@ public class ShippingConfirm {
 		inputSN = new JTextArea(20, 15);
 		String content = "";
 		
+		prevContent = "6858151803003627\n" + 
+				"4858151803001624\n" + 
+				"4858151803001629\n" + 
+				"4858151803001630\n" + 
+				"1858151712002270\n" + 
+				"1858151712002209\n" + 
+				"1858151712002225\n" + 
+				"1858151712002261\n" + 
+				"1858151712002251\n" + 
+				"1858151712002252\n" + 
+				"8956771801000470\n" + 
+				"8956771801000526\n" + 
+				"3950151804001903\n" + 
+				"3950151804001901\n" + 
+				"3950151804001904\n" + 
+				"3950151804001902\n" + 
+				"5511151802004333\n" + 
+				"5511151802004343\n" + 
+				"5511151802004241\n" + 
+				"5511151802004229\n" + 
+				"5511151802004251\n" + 
+				"5511151802004301\n" + 
+				"5512151804002097\n" + 
+				"5512151804002094\n" + 
+				"5512151804002039\n" + 
+				"5512151804001966\n" + 
+				"5512151804001978\n" + 
+				"5512151804002033\n" + 
+				"5512151804001977\n" + 
+				"5512151804001981\n" + 
+				"5511151802004375\n" + 
+				"8001451803002478\n" + 
+				"5511151802004342\n" + 
+				"5511151802004372\n";
 		inputSN.setText(prevContent);
 		String[] item = prevContent.split("\n");
 		snRepeatSet = new HashSet<String>();
@@ -1484,12 +1508,13 @@ public class ShippingConfirm {
 					else {
 						//JOptionPane.showMessageDialog(null, "Some items don't exist on Zone 2.");
 						//restoreScanPannel(items);
-						checkSNExistFrame(items);
+						checkSNExistFrame(items,"Some items don't exist on Zone 2.");
 					}
 
 				} else if (result == HttpRequestCode.HTTP_REQUEST_ACCEPTED) {
-					JOptionPane.showMessageDialog(null, "Some items don't exist on PeachTree.");
-					restoreScanPannel(items);
+					//JOptionPane.showMessageDialog(null, "Some items don't exist on PeachTree.");
+					//restoreScanPannel(items);
+					checkSNExistFrame(items,"Some items don't exist on PeachTree.");
 				}
 
 			}
@@ -1508,6 +1533,7 @@ public class ShippingConfirm {
 
 			@Override
 			public void exception(String error) {
+				NetWorkHandler.getInstance();
 				NetWorkHandler.displayError(loadingframe);
 				prevContent = inputSN.getText().toString();
 				restoreScanPannel(null);
@@ -1676,8 +1702,16 @@ public class ShippingConfirm {
 
 			@Override
 			public void exception(String error) {
-				// TODO Auto-generated method stub
+				frame.dispose();
+				frame.setVisible(false);
 
+				if (scanResultFrame != null) {
+					scanResultFrame.dispose();
+					scanResultFrame.setVisible(false);
+				}
+				NetWorkHandler.displayError(loadingframe);
+				prevContent = inputSN.getText().toString();
+				restoreScanPannel(null);
 			}
 
 		});
@@ -1945,7 +1979,12 @@ public class ShippingConfirm {
 		if (items == null) {
 			String[] item = prevContent.split("\n");
 			// modelScanCurMap.clear();
-
+			orderCurCount = 0;
+			
+			for(CustOrderbean pallet : checkedItemNoSN) 
+			{
+				orderCurCount+=Integer.valueOf(pallet.quantity);
+			}
 			for (String s : item) {
 				updateTxt += s + "\n";
 
@@ -1954,9 +1993,9 @@ public class ShippingConfirm {
 					modelScanCurMap.put(modelNo, 1);
 				else
 					modelScanCurMap.put(modelNo, modelScanCurMap.get(modelNo) + 1);
-
+				orderCurCount++;
 			}
-			orderCurCount = item.length;
+		
 			lCount.setText(setModelScanCountLabel(orderCurCount));
 		} else {
 			// modelScanCurMap.clear();
@@ -1975,8 +2014,9 @@ public class ShippingConfirm {
 				itemError.add(i.SN);
 			}
 			for (String s : prevText) {
-				if (itemError.contains(s))
+				if (itemError.contains(s)) {
 					continue;
+				}
 				else {
 					updateTxt += s + "\n";
 					snRepeatSet.add(s);
@@ -1987,6 +2027,12 @@ public class ShippingConfirm {
 			String[] itemSize = updateTxt.split("\n");
 			prevContent = updateTxt;
 
+			orderCurCount = 0;
+			
+			for(CustOrderbean pallet : checkedItemNoSN) 
+			{
+				orderCurCount+=Integer.valueOf(pallet.quantity);
+			}
 			if (!updateTxt.equals("")) {
 				for (String s : itemSize) {
 					String modelNo = s.substring(0, 6);
@@ -1994,9 +2040,9 @@ public class ShippingConfirm {
 						modelScanCurMap.put(modelNo, 1);
 					else
 						modelScanCurMap.put(modelNo, modelScanCurMap.get(modelNo) + 1);
-
+					orderCurCount++;
 				}
-				lCount.setText(setModelScanCountLabel(itemSize.length));
+				lCount.setText(setModelScanCountLabel(orderCurCount));
 			} else {
 				inputSN.setText(updateTxt);
 				lCount.setText(setModelScanCountLabel(0));
