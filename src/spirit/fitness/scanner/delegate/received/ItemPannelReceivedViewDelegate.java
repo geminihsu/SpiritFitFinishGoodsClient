@@ -317,7 +317,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		exitButton.setBounds(50, 610, 150, 50);
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+				Constrant.serial_list = "Container No." +containers.get(0).ContainerNo + "\n Receiving SN : \n"+inputSN.getText().toString();
+				
 				isDefaultZone = true;
 
 				if (inputSN.getText().isEmpty())
@@ -389,7 +390,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		location.setBounds(240, 610, 150, 50);
 		location.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+				Constrant.serial_list = "Container No." +containers.get(0).ContainerNo + "\n Receiving SN : \n"+inputSN.getText().toString();
+				
 				String[] scanitem = inputSN.getText().toString().split("\n");
 
 				if (inputSN.getText().isEmpty())
@@ -1173,6 +1175,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			@Override
 			public void getContainerItems(List<Containerbean> items) {
 				if (!items.isEmpty()) {
+					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
 					EmailHelper.sendMail(scannedDate, containers, scanContent,"geminih@spiritfitness.com");
 					//EmailHelper.sendMail(scannedDate, containers, scanContent,"vickie@spiritfitness.com");

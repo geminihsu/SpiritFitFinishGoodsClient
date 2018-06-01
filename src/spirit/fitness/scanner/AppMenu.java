@@ -17,7 +17,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -196,6 +207,8 @@ public class AppMenu implements ActionListener {
 				int result = JOptionPane.showConfirmDialog(frame, "Do you want to close the app?",
 						"The app will be close", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (result == JOptionPane.YES_OPTION) {
+					NetWorkHandler.getInstance();
+					NetWorkHandler.backUpSerialNo();
 					System.exit(0);
 				}
 			}
@@ -295,6 +308,10 @@ public class AppMenu implements ActionListener {
 
 				ModelZone2Report.getInstance(Constrant.modelZone2List);
 				// window.frame.setVisible(true);
+			}else if (e.getSource() == btnConfiguration) {
+				
+				NetWorkHandler.getInstance();
+				NetWorkHandler.backUpSerialNo();
 			}
 
 		}

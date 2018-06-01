@@ -287,6 +287,7 @@ public class ShippingConfirm {
 	private void shippingItems(List<Historybean> datas) {
 
 		try {
+			
 			items = (ArrayList<Historybean>) historyRepositoryImplRetrofit.createItem(datas);
 
 		} catch (NumberFormatException e) {
@@ -295,7 +296,13 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		    NetWorkHandler.displayError(loadingframe);
+			if (scanResultFrame != null) {
+				scanResultFrame.dispose();
+				scanResultFrame.setVisible(false);
+			}
+			NetWorkHandler.displayError(loadingframe);
+			prevContent = inputSN.getText().toString();
+			restoreScanPannel(null);
 		}
 
 	}
@@ -336,7 +343,9 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			// NetWorkHandler.displayError(loadingframe);
+			NetWorkHandler.displayError(loadingframe);
+			prevContent = inputSN.getText().toString();
+			restoreScanPannel(null);
 		}
 
 		return items;
@@ -348,7 +357,9 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			// NetWorkHandler.displayError(loadingframe);
+			NetWorkHandler.displayError(loadingframe);
+			prevContent = inputSN.getText().toString();
+			restoreScanPannel(null);
 		}
 	}
 
@@ -1069,8 +1080,9 @@ public class ShippingConfirm {
 					Historybean _item = new Historybean();
 
 					_item.SN = item;
-					_item.shippedDate = timeStamp;
-					_item.createdDate = date;
+					//_item.shippedDate = timeStamp;
+					//_item.createdDate = date;
+					_item.Date = timeStamp;
 					_item.location = "999";
 					_item.modelNo = item.substring(0, 6);
 
@@ -1194,40 +1206,7 @@ public class ShippingConfirm {
 		inputSN = new JTextArea(20, 15);
 		String content = "";
 		
-		prevContent = "6858151803003627\n" + 
-				"4858151803001624\n" + 
-				"4858151803001629\n" + 
-				"4858151803001630\n" + 
-				"1858151712002270\n" + 
-				"1858151712002209\n" + 
-				"1858151712002225\n" + 
-				"1858151712002261\n" + 
-				"1858151712002251\n" + 
-				"1858151712002252\n" + 
-				"8956771801000470\n" + 
-				"8956771801000526\n" + 
-				"3950151804001903\n" + 
-				"3950151804001901\n" + 
-				"3950151804001904\n" + 
-				"3950151804001902\n" + 
-				"5511151802004333\n" + 
-				"5511151802004343\n" + 
-				"5511151802004241\n" + 
-				"5511151802004229\n" + 
-				"5511151802004251\n" + 
-				"5511151802004301\n" + 
-				"5512151804002097\n" + 
-				"5512151804002094\n" + 
-				"5512151804002039\n" + 
-				"5512151804001966\n" + 
-				"5512151804001978\n" + 
-				"5512151804002033\n" + 
-				"5512151804001977\n" + 
-				"5512151804001981\n" + 
-				"5511151802004375\n" + 
-				"8001451803002478\n" + 
-				"5511151802004342\n" + 
-				"5511151802004372\n";
+		
 		inputSN.setText(prevContent);
 		String[] item = prevContent.split("\n");
 		snRepeatSet = new HashSet<String>();
@@ -1391,6 +1370,8 @@ public class ShippingConfirm {
 		queryButton.setBounds(250, 670, 110, 50);
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Constrant.serial_list = "SO:"+salesOrder + "\n PRO:"+ proNumber.getText().toString() +"\n Shipping SN : \n"+inputSN.getText().toString();
+				
 				boolean verifyOrder = checkOrder(inputSN.getText().toString());
 				prevContent = inputSN.getText().toString();
 				shipDate = shippingDate.getText().toString();
@@ -1636,6 +1617,7 @@ public class ShippingConfirm {
 			public void getHistoryItems(List<Historybean> _items) {
 
 				if (!_items.isEmpty()) {
+					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Report data success.");
 
 					/*if(checkedItemNoSN.size() > 0) 
@@ -1981,6 +1963,9 @@ public class ShippingConfirm {
 			// modelScanCurMap.clear();
 			orderCurCount = 0;
 			
+			for (Map.Entry<String, Integer> location : modelScanCurMap.entrySet()) {
+				modelScanCurMap.put(location.getKey(), 0);
+			}
 			for(CustOrderbean pallet : checkedItemNoSN) 
 			{
 				orderCurCount+=Integer.valueOf(pallet.quantity);
