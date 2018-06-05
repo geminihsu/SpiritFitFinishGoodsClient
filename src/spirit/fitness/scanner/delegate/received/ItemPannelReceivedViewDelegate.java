@@ -64,40 +64,36 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	private List<Itembean> outRangeSN;
 	private String containerNo;
 
-	public ItemPannelReceivedViewDelegate(List<Containerbean> _container,String content) 
-	{
+	public ItemPannelReceivedViewDelegate(List<Containerbean> _container, String content) {
 		getInstance();
-		initial(_container,content);
+		initial(_container, content);
 	}
-	public ItemPannelReceivedViewDelegate(List<Containerbean> _container,String content,String location) {
+
+	public ItemPannelReceivedViewDelegate(List<Containerbean> _container, String content, String location) {
 		getInstance();
-		initial(_container,content,location);
+		initial(_container, content, location);
 	}
+
 	@Override
-	public void initial(List<Containerbean> _container,String content) 
-	{
+	public void initial(List<Containerbean> _container, String content) {
 		containers = _container;
 		scanInfo(content);
 		exceuteCallback();
 		loadModelMapZone2();
 	}
-	
+
 	@Override
-	public void initial(List<Containerbean> _container,String content,String location) {
+	public void initial(List<Containerbean> _container, String content, String location) {
 		containers = _container;
 		containerNo = containers.get(0).ContainerNo;
-		displayScanResultFrame(content,location);
+		displayScanResultFrame(content, location);
 		exceuteCallback();
 		loadModelMapZone2();
 	}
-	
-	
-	
-	
-	
+
 	@Override
 	public void scanInfo(String prevTxt) {
-		
+
 		scanResultFrame = new JFrame("");
 		// Setting the width and height of frame
 		scanResultFrame.setSize(620, 750);
@@ -181,9 +177,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		proNumber.setBounds(320, 50, 250, 50);
 		panel.add(proNumber);
 
-		
 		inputSN = new JTextArea(20, 15);
-		
+
 		inputSN.setText(prevTxt);
 		String[] item = prevTxt.split("\n");
 		set = new HashSet<String>();
@@ -274,7 +269,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		// Creating Query button
 		JButton queryButton = new JButton("Exit");
 		queryButton.setFont(font);
-		queryButton.setBounds(320, 670, 251, 50);
+		queryButton.setBounds(420, 670, 150, 50);
 
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -317,18 +312,20 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		exitButton.setBounds(50, 610, 150, 50);
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Constrant.serial_list = "Container No." +containers.get(0).ContainerNo + "\n Receiving SN : \n"+inputSN.getText().toString();
-				
+				Constrant.serial_list = "Container No." + containers.get(0).ContainerNo + "\n Receiving SN : \n"
+						+ inputSN.getText().toString();
+
 				isDefaultZone = true;
 
 				if (inputSN.getText().isEmpty())
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
-				else if (item.length != orderTotalCount)
+				else if (item.length != orderTotalCount) 
+				{
 					JOptionPane.showMessageDialog(null, "Quantity Error!");
-				else {
+					checkMissItems();
+				}else {
 					scanResultFrame.setVisible(false);
 					scanResultFrame.dispose();
-					
 
 					items = inputSN.getText().toString();
 					scanResultFrame.setVisible(false);
@@ -347,14 +344,12 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					int startIndex = 0;
 					int endIndex = 0;
 					scannedModel = itemList[0].substring(0, 6);
-					for(Containerbean c : containers) 
-					{
-						if(c.SNBegin.substring(0,6).equals(scannedModel))
-						{	
-							startIndex = Integer.valueOf(c.SNBegin.substring(10,16));
-							endIndex = Integer.valueOf(c.SNEnd.substring(10,16));
+					for (Containerbean c : containers) {
+						if (c.SNBegin.substring(0, 6).equals(scannedModel)) {
+							startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
+							endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
 						}
-		                   
+
 					}
 					List<Itembean> items = new ArrayList<Itembean>();
 					outRangeSN = new ArrayList<Itembean>();
@@ -367,16 +362,16 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 						_item.SN = item;
 						_item.ModelNo = scannedModel;
 						items.add(_item);
-						if(Integer.valueOf(_item.SN.substring(10,16)) - startIndex < 0 ||endIndex-Integer.valueOf(_item.SN.substring(10,16)) < 0)
+						if (Integer.valueOf(_item.SN.substring(10, 16)) - startIndex < 0
+								|| endIndex - Integer.valueOf(_item.SN.substring(10, 16)) < 0)
 							outRangeSN.add(_item);
 
 					}
-						
-					if(outRangeSN.size() > 0)
+
+					if (outRangeSN.size() > 0)
 						checkScanResultOutOfFrame(items);
 					else
 						checkReceiveItemExits(items);
-				
 
 				}
 			}
@@ -390,15 +385,18 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		location.setBounds(240, 610, 150, 50);
 		location.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Constrant.serial_list = "Container No." +containers.get(0).ContainerNo + "\n Receiving SN : \n"+inputSN.getText().toString();
-				
+				Constrant.serial_list = "Container No." + containers.get(0).ContainerNo + "\n Receiving SN : \n"
+						+ inputSN.getText().toString();
+
 				String[] scanitem = inputSN.getText().toString().split("\n");
 
 				if (inputSN.getText().isEmpty())
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
-				else if (scanitem.length != orderTotalCount)
+				else if (scanitem.length != orderTotalCount) 
+				{
 					JOptionPane.showMessageDialog(null, "Quantity Error!");
-				else {
+					checkMissItems();
+				}else {
 
 					items = inputSN.getText().toString();
 					scanResultFrame.setVisible(false);
@@ -417,16 +415,14 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					int startIndex = 0;
 					int endIndex = 0;
 					scannedModel = itemList[0].substring(0, 6);
-					for(Containerbean c : containers) 
-					{
-						if(c.SNBegin.substring(0,6).equals(scannedModel))
-						{	
-							startIndex = Integer.valueOf(c.SNBegin.substring(10,16));
-							endIndex = Integer.valueOf(c.SNEnd.substring(10,16));
+					for (Containerbean c : containers) {
+						if (c.SNBegin.substring(0, 6).equals(scannedModel)) {
+							startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
+							endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
 						}
-		                   
+
 					}
-					
+
 					List<Itembean> items = new ArrayList<Itembean>();
 					outRangeSN = new ArrayList<Itembean>();
 					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -437,18 +433,17 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 						_item.SN = item;
 						_item.ModelNo = scannedModel;
 						items.add(_item);
-						
-						if(Integer.valueOf(_item.SN.substring(10,16)) - startIndex < 0 ||endIndex-Integer.valueOf(_item.SN.substring(10,16)) < 0)
+
+						if (Integer.valueOf(_item.SN.substring(10, 16)) - startIndex < 0
+								|| endIndex - Integer.valueOf(_item.SN.substring(10, 16)) < 0)
 							outRangeSN.add(_item);
 
 					}
-					
-					
-					if(outRangeSN.size() > 0)
+
+					if (outRangeSN.size() > 0)
 						checkScanResultOutOfFrame(items);
 					else
 						checkReceiveItemExits(items);
-				
 
 				}
 			}
@@ -459,10 +454,10 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		// Creating Exit button
 		JButton back = new JButton("Back");
 		back.setFont(font);
-		back.setBounds(50, 670, 260, 50);
+		back.setBounds(50, 670, 150, 50);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			
+
 				scanResultFrame.dispose();
 				scanResultFrame.setVisible(false);
 				ContainerPannel.getInstance();
@@ -471,9 +466,34 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		});
 
 		panel.add(back);
+
+		// Creating Exit button
+		JButton sort = new JButton("Sort");
+		sort.setFont(font);
+		sort.setBounds(240, 670, 150, 50);
+		sort.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				String[] scanItem = inputSN.getText().toString().split("\n");
+
+				
+				Arrays.sort(scanItem);
+				
+				String sortResult = "";
+			
+				for (String s : scanItem ) {
+
+					sortResult += s+"\n";
+
+				}
+
+				inputSN.setText(sortResult);
+			}
+		});
+
+		panel.add(sort);
 	}
 
-	
 	@Override
 	public void displayScanResultFrame(String content, String location) {
 
@@ -672,7 +692,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					dialogFrame.dispose();
 					dialogFrame.setVisible(false);
 					dialogFrame = null;
-					
+
 					scanInfo(content);
 				}
 			});
@@ -705,7 +725,6 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			});
 		}
 	}
-
 
 	@Override
 	public void checkScanResultFrame(List<Itembean> _items) {
@@ -835,7 +854,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			}
 		});
 	}
-	
+
 	public void checkScanResultOutOfFrame(List<Itembean> scanitems) {
 		set.clear();
 		JFrame dialogFrame = new JFrame("Check Serial number");
@@ -903,7 +922,6 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		 * delete.setFont(font); panel.add(delete);
 		 */
 
-		
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dialogFrame.dispose();
@@ -911,7 +929,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				checkReceiveItemExits(scanitems);
 			}
 		});
-		
+
 		cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dialogFrame.dispose();
@@ -940,8 +958,127 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			}
 		});
 	}
-	
-	
+
+	public void checkScanResultDispearFrame(String serial) {
+		set.clear();
+		JFrame dialogFrame = new JFrame("Check Serial number");
+		// Setting the width and height of frame
+		dialogFrame.setSize(600, 400);
+		dialogFrame.setLocationRelativeTo(null);
+		dialogFrame.setUndecorated(true);
+		dialogFrame.setResizable(false);
+
+		JPanel panel = new JPanel();
+		panel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Constrant.FRAME_BORDER_BACKGROUN_COLOR));
+
+		panel.setBackground(Constrant.BACKGROUN_COLOR);
+		// adding panel to frame
+		dialogFrame.add(panel);
+
+		panel.setLayout(null);
+		Font font = new Font("Verdana", Font.BOLD, 18);
+
+		String title = "";
+
+		title = "<html>Those all serial number miss :" + " <br/>";
+		// Creating JLabel
+		JLabel Info = new JLabel(title);
+		Info.setBounds(40, 0, 500, 50);
+		Info.setFont(font);
+		panel.add(Info);
+
+		// Creating JLabel
+		JLabel modelLabel = new JLabel("<html>" + serial + "<html>");
+		modelLabel.setOpaque(true);
+		/*
+		 * This method specifies the location and size of component. setBounds(x, y,
+		 * width, height) here (x,y) are cordinates from the top left corner and
+		 * remaining two arguments are the width and height of the component.
+		 */
+		// modelLabel.setBounds(30, 0, 500, 300);
+		modelLabel.setFont(font);
+		modelLabel.setBackground(Constrant.BACKGROUN_COLOR);
+		JScrollPane scroller = new JScrollPane(modelLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroller.setBackground(Constrant.BACKGROUN_COLOR);
+		scroller.setBounds(40, 50, 520, 280);
+		panel.add(scroller);
+
+		JButton ok = new JButton("OK");
+		ok.setBounds(150, 330, 300, 50);
+		ok.setFont(font);
+		panel.add(ok);
+
+		/*
+		 * JButton delete = new JButton("Delete"); delete.setBounds(410, 330, 200, 50);
+		 * delete.setFont(font); panel.add(delete);
+		 */
+
+		ok.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dialogFrame.dispose();
+				dialogFrame.setVisible(false);
+				scanResultFrame.setVisible(true);
+			}
+		});
+
+		dialogFrame.setBackground(Color.WHITE);
+		dialogFrame.setVisible(true);
+
+		dialogFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		dialogFrame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+
+				dialogFrame.dispose();
+				dialogFrame.setVisible(false);
+			}
+		});
+
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				dialogFrame.toFront();
+				dialogFrame.repaint();
+			}
+		});
+	}
+
+	private void checkMissItems() 
+	{
+		String[] scanItem = inputSN.getText().toString().split("\n");
+
+		int startIndex = 0;
+		int endIndex = 0;
+		scannedModel = scanItem[0].substring(0, 6);
+		for (Containerbean c : containers) {
+			if (c.SNBegin.substring(0, 6).equals(scannedModel)) {
+				startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
+				endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
+			}
+
+		}
+		Arrays.sort(scanItem);
+		String noScan = "";
+		String sortResult = "";
+		int idx = 0;
+		for (int i = startIndex; i < endIndex + 1; i++) {
+
+			if (idx < scanItem.length) {
+				if (Integer.valueOf(scanItem[idx].substring(10, 16)) == i) {
+					sortResult += scanItem[idx] + "\n";
+					idx++;
+				} else {
+					noScan += (scanItem[idx].substring(0, 10)) + i + "\n";
+				}
+			}
+
+		}
+
+		inputSN.setText(sortResult);
+		
+		if(!noScan.equals(""))
+			checkScanResultDispearFrame(noScan);
+	}
 	private void checkReceiveItemExits(List<Itembean> items) {
 		try {
 			fgRepository.getReceiveItemBySNList(items);
@@ -971,8 +1108,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	}
 
 	@Override
-	public void submitServer(List<Itembean> items) 
-	{
+	public void submitServer(List<Itembean> items) {
 		try {
 			fgRepository.createItem(items);
 		} catch (Exception e) {
@@ -981,7 +1117,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			NetWorkHandler.displayError(loadingframe);
 		}
 	}
-	
+
 	@Override
 	public void exceuteCallback() {
 		fgModelZone2 = new ModelZoneMapRepositoryImplRetrofit();
@@ -1121,8 +1257,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					if (isDefaultZone)
 						displayScanResultFrame(inputSN.getText().toString(), "000");
 					else {
-						//ZoneMenu.getInstance(containers, inputSN.getText().toString(), 0);
-						Zone1Location window = new Zone1Location(containers,inputSN.getText().toString(), 0);
+						// ZoneMenu.getInstance(containers, inputSN.getText().toString(), 0);
+						Zone1Location window = new Zone1Location(containers, inputSN.getText().toString(), 0);
 						window.frame.setVisible(true);
 					}
 				} else if (items.size() > 0) {
@@ -1177,9 +1313,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				if (!items.isEmpty()) {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
-					EmailHelper.sendMail(scannedDate, containers, scanContent,"geminih@spiritfitness.com");
-					//EmailHelper.sendMail(scannedDate, containers, scanContent,"vickie@spiritfitness.com");
-					//EmailHelper.sendMail(scannedDate, containers, scanContent,"ashleyg@spiritfitness.com");
+					EmailHelper.sendMail(scannedDate, containers, scanContent, "geminih@spiritfitness.com");
+					EmailHelper.sendMail(scannedDate, containers, scanContent, "vickie@spiritfitness.com");
+					EmailHelper.sendMail(scannedDate, containers, scanContent, "ashleyg@spiritfitness.com");
 				}
 
 			}
@@ -1192,7 +1328,5 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		});
 
 	}
-	
-	
-	
+
 }

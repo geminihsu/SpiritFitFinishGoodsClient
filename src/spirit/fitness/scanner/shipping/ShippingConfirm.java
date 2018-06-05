@@ -114,7 +114,7 @@ public class ShippingConfirm {
 	private String prevTrackingNo = "";
 	private String shipDate = "";
 	private String trackingNo = "";
-	
+
 	private String soCreatedDate = "";
 	private String billToTitle = "";
 	private String custPO = "";
@@ -124,7 +124,7 @@ public class ShippingConfirm {
 	private String shippToCountry = "";
 	private String shippToZip = "";
 	private String shippToVia = "";
-	
+
 	private boolean isOrderClosed;
 	private HashSet<String> snRepeatSet;
 
@@ -159,6 +159,8 @@ public class ShippingConfirm {
 	private JLabel lCount;
 	private JLabel lModelError;
 
+	private PrintPreviewUitl printer;
+	
 	private FGRepositoryImplRetrofit fgRepositoryImplRetrofit;
 	private OrdersRepositoryImplRetrofit ordersRepositoryImplRetrofit;
 	private HistoryRepositoryImplRetrofit historyRepositoryImplRetrofit;
@@ -287,7 +289,7 @@ public class ShippingConfirm {
 	private void shippingItems(List<Historybean> datas) {
 
 		try {
-			
+
 			items = (ArrayList<Historybean>) historyRepositoryImplRetrofit.createItem(datas);
 
 		} catch (NumberFormatException e) {
@@ -533,6 +535,7 @@ public class ShippingConfirm {
 		exitButton.setBounds(230, 250, 320, 50);
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				printer = null;
 				shippingConfirm = null;
 				frame.dispose();
 				frame.setVisible(false);
@@ -677,16 +680,9 @@ public class ShippingConfirm {
 					String shipToAddress = billToTitle + "\n              " + shippToAdddress + "\n              "
 							+ shippToCity + "  " + shippToState + "\n              " + shippToZip + "    "
 							+ shippToCountry;
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								printer(salesOrder, soCreatedDate, billToTitle, shipToAddress, historyItemsInfo);
-								// printShippingTable();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					});
+
+					printer(salesOrder, soCreatedDate, billToTitle, shipToAddress, historyItemsInfo);
+					// printShippingTable();
 
 				}
 			});
@@ -830,7 +826,7 @@ public class ShippingConfirm {
 		orderDisplayPanel.add(ShipVia);
 
 	}
-	
+
 	public void checkSNExistFrame(List<Itembean> scanitems, String message) {
 
 		JFrame dialogFrame = new JFrame("Check Serial number");
@@ -859,7 +855,7 @@ public class ShippingConfirm {
 
 		String title = "";
 
-		title = "<html>"+message+" :" + " <br/>";
+		title = "<html>" + message + " :" + " <br/>";
 		// Creating JLabel
 		JLabel Info = new JLabel(title);
 		Info.setBounds(40, 0, 500, 50);
@@ -884,17 +880,15 @@ public class ShippingConfirm {
 		panel.add(scroller);
 
 		JButton ok = new JButton("OK");
-		ok.setBounds(40, 330, 200, 50);
+		ok.setBounds(150, 330, 300, 50);
 		ok.setFont(font);
 		panel.add(ok);
-
 
 		/*
 		 * JButton delete = new JButton("Delete"); delete.setBounds(410, 330, 200, 50);
 		 * delete.setFont(font); panel.add(delete);
 		 */
 
-		
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dialogFrame.dispose();
@@ -902,8 +896,6 @@ public class ShippingConfirm {
 				restoreScanPannel(scanitems);
 			}
 		});
-		
-		
 
 		dialogFrame.setBackground(Color.WHITE);
 		dialogFrame.setVisible(true);
@@ -925,7 +917,7 @@ public class ShippingConfirm {
 			}
 		});
 	}
-	
+
 	public void displayShippingResult(String salesOrder, String date, String pro, String content) {
 
 		JFrame.setDefaultLookAndFeelDecorated(false);
@@ -1080,8 +1072,8 @@ public class ShippingConfirm {
 					Historybean _item = new Historybean();
 
 					_item.SN = item;
-					//_item.shippedDate = timeStamp;
-					//_item.createdDate = date;
+					// _item.shippedDate = timeStamp;
+					// _item.createdDate = date;
 					_item.Date = timeStamp;
 					_item.location = "999";
 					_item.modelNo = item.substring(0, 6);
@@ -1205,8 +1197,7 @@ public class ShippingConfirm {
 
 		inputSN = new JTextArea(20, 15);
 		String content = "";
-		
-		
+
 		inputSN.setText(prevContent);
 		String[] item = prevContent.split("\n");
 		snRepeatSet = new HashSet<String>();
@@ -1370,8 +1361,9 @@ public class ShippingConfirm {
 		queryButton.setBounds(250, 670, 110, 50);
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Constrant.serial_list = "SO:"+salesOrder + "\n PRO:"+ proNumber.getText().toString() +"\n Shipping SN : \n"+inputSN.getText().toString();
-				
+				Constrant.serial_list = "SO:" + salesOrder + "\n PRO:" + proNumber.getText().toString()
+						+ "\n Shipping SN : \n" + inputSN.getText().toString();
+
 				boolean verifyOrder = checkOrder(inputSN.getText().toString());
 				prevContent = inputSN.getText().toString();
 				shipDate = shippingDate.getText().toString();
@@ -1487,15 +1479,15 @@ public class ShippingConfirm {
 					if (items.size() == 0)
 						displayShippingResult(salesOrder, shipDate, trackingNo, inputSN.getText().toString());
 					else {
-						//JOptionPane.showMessageDialog(null, "Some items don't exist on Zone 2.");
-						//restoreScanPannel(items);
-						checkSNExistFrame(items,"Some items don't exist on Zone 2.");
+						// JOptionPane.showMessageDialog(null, "Some items don't exist on Zone 2.");
+						// restoreScanPannel(items);
+						checkSNExistFrame(items, "Some items don't exist on Zone 2.");
 					}
 
 				} else if (result == HttpRequestCode.HTTP_REQUEST_ACCEPTED) {
-					//JOptionPane.showMessageDialog(null, "Some items don't exist on PeachTree.");
-					//restoreScanPannel(items);
-					checkSNExistFrame(items,"Some items don't exist on PeachTree.");
+					// JOptionPane.showMessageDialog(null, "Some items don't exist on PeachTree.");
+					// restoreScanPannel(items);
+					checkSNExistFrame(items, "Some items don't exist on PeachTree.");
 				}
 
 			}
@@ -1547,6 +1539,7 @@ public class ShippingConfirm {
 
 					frame.dispose();
 					frame.setVisible(false);
+					shippingConfirm = null;
 
 				} else {
 					frame.dispose();
@@ -1620,26 +1613,18 @@ public class ShippingConfirm {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Report data success.");
 
-					/*if(checkedItemNoSN.size() > 0) 
-					{
-						List<Palletbean> pallents = new ArrayList<Palletbean>();
-						for(CustOrderbean item : checkedItemNoSN)
-						{
-							Palletbean palletbean = new Palletbean();
-							palletbean.createdDate = item.createdDate;
-							palletbean.billTo = item.bill_to;
-							palletbean.itemID = item.ItemID;
-							palletbean.salesOrder = item.salesOrder;
-							palletbean.shipCity = item.shipToCity;
-							palletbean.shippedDate = _items.get(0).shippedDate;
-							palletbean.shipState = item.shipToState;
-							palletbean.shipVia = item.shipVia;
-							palletbean.trackingNo = _items.get(0).trackingNo;
-							pallents.add(palletbean);
-						}
-						
-						submitPalletItems(pallents);
-					}*/
+					/*
+					 * if(checkedItemNoSN.size() > 0) { List<Palletbean> pallents = new
+					 * ArrayList<Palletbean>(); for(CustOrderbean item : checkedItemNoSN) {
+					 * Palletbean palletbean = new Palletbean(); palletbean.createdDate =
+					 * item.createdDate; palletbean.billTo = item.bill_to; palletbean.itemID =
+					 * item.ItemID; palletbean.salesOrder = item.salesOrder; palletbean.shipCity =
+					 * item.shipToCity; palletbean.shippedDate = _items.get(0).shippedDate;
+					 * palletbean.shipState = item.shipToState; palletbean.shipVia = item.shipVia;
+					 * palletbean.trackingNo = _items.get(0).trackingNo; pallents.add(palletbean); }
+					 * 
+					 * submitPalletItems(pallents); }
+					 */
 					// if(orderFrame != null)
 					// orderFrame.setVisible(true);
 					int rowIndex = 0;
@@ -1704,20 +1689,21 @@ public class ShippingConfirm {
 			@Override
 			public void resultCode(int code) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void addPallet(List<Palletbean> items) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void getPalletItems(List<Palletbean> items) {
 				// TODO Auto-generated method stub
-				
-			}});
+
+			}
+		});
 
 	}
 
@@ -1865,7 +1851,19 @@ public class ShippingConfirm {
 
 		// PrinterHelper print = new PrinterHelper();
 		// print.printTable(content);
-		PrintPreviewUitl print = new PrintPreviewUitl(content);
+		if(printer == null)
+			printer = new PrintPreviewUitl(content);
+		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					printer.printContent();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	
 		// print.setVisible(true);
 	}
 
@@ -1962,13 +1960,12 @@ public class ShippingConfirm {
 			String[] item = prevContent.split("\n");
 			// modelScanCurMap.clear();
 			orderCurCount = 0;
-			
+
 			for (Map.Entry<String, Integer> location : modelScanCurMap.entrySet()) {
 				modelScanCurMap.put(location.getKey(), 0);
 			}
-			for(CustOrderbean pallet : checkedItemNoSN) 
-			{
-				orderCurCount+=Integer.valueOf(pallet.quantity);
+			for (CustOrderbean pallet : checkedItemNoSN) {
+				orderCurCount += Integer.valueOf(pallet.quantity);
 			}
 			for (String s : item) {
 				updateTxt += s + "\n";
@@ -1980,7 +1977,7 @@ public class ShippingConfirm {
 					modelScanCurMap.put(modelNo, modelScanCurMap.get(modelNo) + 1);
 				orderCurCount++;
 			}
-		
+
 			lCount.setText(setModelScanCountLabel(orderCurCount));
 		} else {
 			// modelScanCurMap.clear();
@@ -2001,8 +1998,7 @@ public class ShippingConfirm {
 			for (String s : prevText) {
 				if (itemError.contains(s)) {
 					continue;
-				}
-				else {
+				} else {
 					updateTxt += s + "\n";
 					snRepeatSet.add(s);
 				}
@@ -2013,10 +2009,9 @@ public class ShippingConfirm {
 			prevContent = updateTxt;
 
 			orderCurCount = 0;
-			
-			for(CustOrderbean pallet : checkedItemNoSN) 
-			{
-				orderCurCount+=Integer.valueOf(pallet.quantity);
+
+			for (CustOrderbean pallet : checkedItemNoSN) {
+				orderCurCount += Integer.valueOf(pallet.quantity);
 			}
 			if (!updateTxt.equals("")) {
 				for (String s : itemSize) {

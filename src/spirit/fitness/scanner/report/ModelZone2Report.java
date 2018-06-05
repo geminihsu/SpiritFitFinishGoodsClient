@@ -312,12 +312,15 @@ public class ModelZone2Report {
 						map.put(i.Model, i);
 						mapModelCount.put(i.Model, 1);
 					} else {
+						ModelZone2bean m = map.get(i.Model);
+						
 						mapModelCount.put(i.Model, mapModelCount.get(i.Model) + 1);
 
-						ModelZone2bean m = map.get(i.Model);
+					
 						if (i.Z2CurtQty < m.Z2CurtQty)
 							map.put(i.Model, i);
 					}
+					
 				}
 
 				Constrant.modelZone2 = map;

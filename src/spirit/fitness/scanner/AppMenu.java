@@ -208,7 +208,7 @@ public class AppMenu implements ActionListener {
 						"The app will be close", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (result == JOptionPane.YES_OPTION) {
 					NetWorkHandler.getInstance();
-					NetWorkHandler.backUpSerialNo();
+					NetWorkHandler.backUpSerialNo(loadingframe);
 					System.exit(0);
 				}
 			}
@@ -311,7 +311,7 @@ public class AppMenu implements ActionListener {
 			}else if (e.getSource() == btnConfiguration) {
 				
 				NetWorkHandler.getInstance();
-				NetWorkHandler.backUpSerialNo();
+				NetWorkHandler.backUpSerialNo(loadingframe);
 			}
 
 		}

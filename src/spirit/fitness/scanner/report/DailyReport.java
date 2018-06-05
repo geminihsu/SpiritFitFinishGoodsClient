@@ -413,6 +413,11 @@ public class DailyReport {
 				loadingframe.dispose();
 				LinkedHashMap<String, ModelDailyReportbean> map = new LinkedHashMap<>();
 				for (ModelDailyReportbean i : items) {
+					if(i.ModelNo.equals("115816"))
+					{
+						i.ModelNo = "450887";
+						i.ModelFG = "INTEGRA T500";
+					}
 					map.put(i.ModelNo, i);
 				}
 				Constrant.dailyReport = map;
