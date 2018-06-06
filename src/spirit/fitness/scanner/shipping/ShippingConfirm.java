@@ -53,6 +53,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
@@ -145,6 +146,10 @@ public class ShippingConfirm {
 
 	private int orderTotalCount = 0;
 	private int orderCurCount = 0;
+	
+	private Timer timer;
+	private int isTimeOut = 1;
+	
 	// private List<CustOrderbean> salesOrderList;
 	private List<CustOrderbean> salesOrderList;
 	private List<CustOrderbean> checkedItemNoSN;
@@ -158,6 +163,7 @@ public class ShippingConfirm {
 	private JTextArea inputSN;
 	private JLabel lCount;
 	private JLabel lModelError;
+	
 
 	private PrintPreviewUitl printer;
 	
@@ -289,7 +295,9 @@ public class ShippingConfirm {
 	private void shippingItems(List<Historybean> datas) {
 
 		try {
-
+			setTimer();
+			timer.start();
+			
 			items = (ArrayList<Historybean>) historyRepositoryImplRetrofit.createItem(datas);
 
 		} catch (NumberFormatException e) {
@@ -302,9 +310,10 @@ public class ShippingConfirm {
 				scanResultFrame.dispose();
 				scanResultFrame.setVisible(false);
 			}
+			restoreScanPannel(null);
 			NetWorkHandler.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
-			restoreScanPannel(null);
+			
 		}
 
 	}
@@ -345,9 +354,10 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			restoreScanPannel(null);
 			NetWorkHandler.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
-			restoreScanPannel(null);
+			
 		}
 
 		return items;
@@ -355,13 +365,16 @@ public class ShippingConfirm {
 
 	private void checkItemExitsZone2(List<Itembean> items) {
 		try {
+			setTimer();
+			timer.start();
 			fgRepositoryImplRetrofit.getItemsZone2BySNList(salesOrder, items);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			restoreScanPannel(null);
 			NetWorkHandler.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
-			restoreScanPannel(null);
+			
 		}
 	}
 
@@ -399,7 +412,26 @@ public class ShippingConfirm {
 
 		}
 	}
+	
+	private void setTimer() {
+		timer = new javax.swing.Timer(30000, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (isTimeOut < 4)
+					isTimeOut++;
+				else {
+					isTimeOut = 1;
+					timer.stop();
+					timer = null;
 
+					prevContent = inputSN.getText().toString();
+					restoreScanPannel(null);
+				}
+
+			}
+		});
+	}
+	
+	
 	private JScrollPane getShippgingItemsJScrollPane(List<Historybean> list) {
 		Font font = new Font("Verdana", Font.BOLD, 18);
 		JScrollPane scrollSNPane = new JScrollPane();
@@ -1469,6 +1501,10 @@ public class ShippingConfirm {
 			@Override
 			public void checkInventoryZone2Items(int result, List<Itembean> items) {
 
+				timer.stop();
+                timer = null;
+                isTimeOut = 1;
+                
 				if (loadingframe != null) {
 					loadingframe.setVisible(false);
 					loadingframe.dispose();
@@ -1506,10 +1542,11 @@ public class ShippingConfirm {
 
 			@Override
 			public void exception(String error) {
+				restoreScanPannel(null);
 				NetWorkHandler.getInstance();
 				NetWorkHandler.displayError(loadingframe);
 				prevContent = inputSN.getText().toString();
-				restoreScanPannel(null);
+				
 			}
 		});
 
@@ -1609,6 +1646,9 @@ public class ShippingConfirm {
 			@Override
 			public void getHistoryItems(List<Historybean> _items) {
 
+				timer.stop();
+                timer = null;
+                isTimeOut = 1;
 				if (!_items.isEmpty()) {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Report data success.");
@@ -1676,9 +1716,10 @@ public class ShippingConfirm {
 					scanResultFrame.dispose();
 					scanResultFrame.setVisible(false);
 				}
+				restoreScanPannel(null);
 				NetWorkHandler.displayError(loadingframe);
 				prevContent = inputSN.getText().toString();
-				restoreScanPannel(null);
+			
 			}
 
 		});
@@ -1847,7 +1888,7 @@ public class ShippingConfirm {
 		// String result = PrintTableUtil.noBorad(headersList, rowsList);
 		content += result + "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n" + itemsInfo;
 
-		System.out.println(content);
+		//System.out.println(content);
 
 		// PrinterHelper print = new PrinterHelper();
 		// print.printTable(content);

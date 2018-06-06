@@ -31,6 +31,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
+import javax.swing.Timer;
 import javax.swing.WindowConstants;
 
 import spirit.fitness.scanner.common.Constrant;
@@ -63,6 +64,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	private List<Containerbean> containers;
 	private List<Itembean> outRangeSN;
 	private String containerNo;
+	private Timer timer;
+	private int isTimeOut = 1;
 
 	public ItemPannelReceivedViewDelegate(List<Containerbean> _container, String content) {
 		getInstance();
@@ -319,11 +322,10 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 				if (inputSN.getText().isEmpty())
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
-				else if (item.length != orderTotalCount) 
-				{
+				else if (item.length != orderTotalCount) {
 					JOptionPane.showMessageDialog(null, "Quantity Error!");
 					checkMissItems();
-				}else {
+				} else {
 					scanResultFrame.setVisible(false);
 					scanResultFrame.dispose();
 
@@ -392,11 +394,10 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 				if (inputSN.getText().isEmpty())
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
-				else if (scanitem.length != orderTotalCount) 
-				{
+				else if (scanitem.length != orderTotalCount) {
 					JOptionPane.showMessageDialog(null, "Quantity Error!");
 					checkMissItems();
-				}else {
+				} else {
 
 					items = inputSN.getText().toString();
 					scanResultFrame.setVisible(false);
@@ -476,14 +477,13 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 				String[] scanItem = inputSN.getText().toString().split("\n");
 
-				
 				Arrays.sort(scanItem);
-				
-				String sortResult = "";
-			
-				for (String s : scanItem ) {
 
-					sortResult += s+"\n";
+				String sortResult = "";
+
+				for (String s : scanItem) {
+
+					sortResult += s + "\n";
 
 				}
 
@@ -1043,8 +1043,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		});
 	}
 
-	private void checkMissItems() 
-	{
+	private void checkMissItems() {
 		String[] scanItem = inputSN.getText().toString().split("\n");
 
 		int startIndex = 0;
@@ -1075,12 +1074,36 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		}
 
 		inputSN.setText(sortResult);
-		
-		if(!noScan.equals(""))
+
+		if (!noScan.equals(""))
 			checkScanResultDispearFrame(noScan);
 	}
+
+	private void setTimer() {
+		timer = new javax.swing.Timer(30000, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (isTimeOut < 4)
+					isTimeOut++;
+				else {
+					timer.stop();
+					timer = null;
+
+					if (loadingframe != null) {
+						loadingframe.setVisible(false);
+						loadingframe.dispose();
+					}
+					scanResultFrame.setVisible(true);
+				}
+
+			}
+		});
+
+	}
+
 	private void checkReceiveItemExits(List<Itembean> items) {
 		try {
+			setTimer();
+			timer.start();
 			fgRepository.getReceiveItemBySNList(items);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -1110,6 +1133,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	@Override
 	public void submitServer(List<Itembean> items) {
 		try {
+			setTimer();
+			timer.start();
 			fgRepository.createItem(items);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -1203,7 +1228,10 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 			@Override
 			public void getInventoryItems(List<Itembean> items) {
-
+				timer.stop();
+                timer = null;
+                isTimeOut = 1;
+                
 				if (!items.isEmpty()) {
 					// progressMonitor.close();
 					// task.done();
@@ -1247,6 +1275,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 			@Override
 			public void checkReceiveItem(List<Itembean> items) {
+				timer.stop();
+                timer = null;
+                isTimeOut = 1;
 				String[] scanItem = inputSN.getText().toString().split("\n");
 				if (loadingframe != null) {
 					loadingframe.setVisible(false);
