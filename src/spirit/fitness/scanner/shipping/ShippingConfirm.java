@@ -1874,7 +1874,7 @@ public class ShippingConfirm {
 
 	private void printer(String saleOrder, String date, String billTo, String shipTo, String itemsInfo) {
 
-		String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " + date + "\n" + "Bill To : "
+		String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " + date.substring(0, 10) + "\n" + "Bill To : "
 				+ billTo + "\n" + "Ship To : " + shipTo + "\n" + "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n";
 		List<String> headersList = Arrays.asList("Qty", "Item", "Model", "PRO#");
 
