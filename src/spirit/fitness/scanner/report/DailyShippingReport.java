@@ -53,7 +53,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-
 import spirit.fitness.scanner.AppMenu;
 import spirit.fitness.scanner.common.Constrant;
 import spirit.fitness.scanner.common.HttpRequestCode;
@@ -77,7 +76,6 @@ import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.SalesJournal;
 
-
 public class DailyShippingReport {
 
 	private static DailyShippingReport dailyReport = null;
@@ -94,12 +92,13 @@ public class DailyShippingReport {
 
 	private LoadingFrameHelper loadingframe;
 	private JProgressBar loading;
-	
+
 	private JFileChooser chooser;
 	private String choosertitle;
 	
-	private LinkedHashMap<String, DailyShippingReportbean> map;
+	private List<SalesJournal> soInfo;
 
+	private LinkedHashMap<String, List<DailyShippingReportbean>> map;
 
 	public static DailyShippingReport getInstance() {
 		if (dailyReport == null) {
@@ -107,11 +106,10 @@ public class DailyShippingReport {
 		}
 		return dailyReport;
 	}
-	
-	public static boolean isExit() 
-	 {
-		 return dailyReport != null;
-	 }
+
+	public static boolean isExit() {
+		return dailyReport != null;
+	}
 
 	public DailyShippingReport() {
 
@@ -200,34 +198,32 @@ public class DailyShippingReport {
 			 * rowDataReport[i][10] = qcTotal; rowDataReport[i][11] = Total; } } else {
 			 */
 			for (int j = 0; j < 10; j++) {
-				rowDataReport[i][0] = " " + data.get(i).createdDate.substring(0,10);
+				rowDataReport[i][0] = " " + data.get(i).createdDate.substring(0, 10);
 				rowDataReport[i][1] = data.get(i).salesOrder;
 				rowDataReport[i][2] = data.get(i).itemID;
 				rowDataReport[i][3] = data.get(i).fg;
 				rowDataReport[i][4] = data.get(i).qty;
-				//rowDataReport[i][5] = data.get(i).Scrapped;
+				// rowDataReport[i][5] = data.get(i).Scrapped;
 				rowDataReport[i][5] = data.get(i).trackingNo;
 				rowDataReport[i][6] = data.get(i).shipVia;
 
 				rowDataReport[i][7] = data.get(i).shipState;
-				//rowDataReport[i][9] = data.get(i).Rework;
-				//rowDataReport[i][10] = data.get(i).QC;
+				// rowDataReport[i][9] = data.get(i).Rework;
+				// rowDataReport[i][10] = data.get(i).QC;
 				rowDataReport[i][8] = data.get(i).shipCity;
-				rowDataReport[i][9] = data.get(i).shippingDate.substring(0,10);
+				rowDataReport[i][9] = data.get(i).shippingDate.substring(0, 10);
 				// }
 			}
 
-		
 		}
 
 		String zone = "";
 
-		Object columnNames[] = { "CreateDate", "SO", "ItemID", "FG", "Qty", "Pro", "ShipVia",
-				"ShipState", "ShipCity","ShippingDate" };
+		Object columnNames[] = { "CreateDate", "SO", "ItemID", "FG", "Qty", "Pro", "ShipVia", "ShipState", "ShipCity",
+				"ShippingDate" };
 		Font font = new Font("Verdana", Font.BOLD, 15);
-		final Class[] columnClass = new Class[] { String.class, String.class, Integer.class,
-				Integer.class, Integer.class, Integer.class,Integer.class, Integer.class,
-				Integer.class ,String.class};
+		final Class[] columnClass = new Class[] { String.class, String.class, Integer.class, Integer.class,
+				Integer.class, Integer.class, Integer.class, Integer.class, Integer.class, String.class };
 
 		DefaultTableModel model = new DefaultTableModel(rowDataReport, columnNames) {
 			@Override
@@ -254,18 +250,18 @@ public class DailyShippingReport {
 		modelTitle.setPreferredWidth(30);
 		TableColumn prevCcolumn = table.getColumnModel().getColumn(2);
 		prevCcolumn.setPreferredWidth(40);
-		//TableColumn shippingColumn = table.getColumnModel().getColumn(3);
-		//shippingColumn.setPreferredWidth(90);
+		// TableColumn shippingColumn = table.getColumnModel().getColumn(3);
+		// shippingColumn.setPreferredWidth(90);
 		TableColumn receivedColumn = table.getColumnModel().getColumn(3);
 		receivedColumn.setPreferredWidth(180);
 		TableColumn scrappedColumn = table.getColumnModel().getColumn(4);
 		scrappedColumn.setPreferredWidth(3);
 		TableColumn onHand = table.getColumnModel().getColumn(5);
 		onHand.setPreferredWidth(100);
-		//TableColumn returnQty = table.getColumnModel().getColumn(7);
-		//returnQty.setPreferredWidth(200);
-		//TableColumn column = table.getColumnModel().getColumn(8);
-		//column.setPreferredWidth(120);
+		// TableColumn returnQty = table.getColumnModel().getColumn(7);
+		// returnQty.setPreferredWidth(200);
+		// TableColumn column = table.getColumnModel().getColumn(8);
+		// column.setPreferredWidth(120);
 
 		TableColumn qCcolumn = table.getColumnModel().getColumn(6);
 		qCcolumn.setPreferredWidth(50);
@@ -286,88 +282,71 @@ public class DailyShippingReport {
 		scrollZonePane.setViewportView(table);
 
 		panel.add(scrollZonePane);
-		
+
 		Font btnFont = new Font("Verdana", Font.BOLD, 18);
 		Font txtFont = new Font("Verdana", Font.BOLD, 22);
-		
 
-	
-	
-		
 		JButton Search = new JButton("Import from Peach Tree");
 		Search.setFont(btnFont);
 		Search.setBounds(5, 640, 300, 50);
 
 		Search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(loadingframe != null)
-					loadingframe.setVisible(true);
-				chooser = new JFileChooser(); 
-			    chooser.setCurrentDirectory(new java.io.File("."));
-			    chooser.setDialogTitle(choosertitle);
-			    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			    //
-			    // disable the "All files" option.
-			    //
-			    chooser.setAcceptAllFileFilterUsed(false);
-			    //    
-			    if (chooser.showOpenDialog(btnDone) == JFileChooser.APPROVE_OPTION) { 
-			      System.out.println("getCurrentDirectory(): " 
-			         +  chooser.getCurrentDirectory());
-			      System.out.println("getSelectedFile() : " 
-			         +  chooser.getSelectedFile());
-				 
-			      List<SalesJournal> soInfo =  ExcelHelper.readCSVFile(chooser.getSelectedFile().getAbsolutePath(),map);
-			    }
+				//if (loadingframe != null)
+				//	loadingframe.setVisible(true);
+				chooser = new JFileChooser();
+				chooser.setCurrentDirectory(new java.io.File("."));
+				chooser.setDialogTitle(choosertitle);
+				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				//
+				// disable the "All files" option.
+				//
+				chooser.setAcceptAllFileFilterUsed(false);
+				//
+				if (chooser.showOpenDialog(btnDone) == JFileChooser.APPROVE_OPTION) {
+					System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
+					System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
+
+					soInfo = ExcelHelper.readCSVFile(chooser.getSelectedFile().getAbsolutePath(),
+							map);
+				}
 			}
 		});
 		panel.add(Search);
-		
+
 		btnDone = new JButton("Export To Excel");
 		btnDone.setFont(btnFont);
 		btnDone.setBounds(780, 640, 200, 50);
 
 		btnDone.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							
 
-							chooser = new JFileChooser(); 
-						    chooser.setCurrentDirectory(new java.io.File("."));
-						    chooser.setDialogTitle(choosertitle);
-						    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-						    //
-						    // disable the "All files" option.
-						    //
-						    chooser.setAcceptAllFileFilterUsed(false);
-						    //    
-						    if (chooser.showOpenDialog(btnDone) == JFileChooser.APPROVE_OPTION) { 
-						      System.out.println("getCurrentDirectory(): " 
-						         +  chooser.getCurrentDirectory());
-						      System.out.println("getSelectedFile() : " 
-						         +  chooser.getSelectedFile());
-						      ExcelHelper exp = new ExcelHelper();
+							chooser = new JFileChooser();
+							chooser.setCurrentDirectory(new java.io.File("."));
+							chooser.setDialogTitle(choosertitle);
+							chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+							//
+							// disable the "All files" option.
+							//
+							chooser.setAcceptAllFileFilterUsed(false);
+							//
+							if (chooser.showOpenDialog(btnDone) == JFileChooser.APPROVE_OPTION) {
+								System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
+								System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
 
-								exp.fillDailyShippingData(table,
-										new File(chooser.getSelectedFile() +"\\SALES.csv"));
+								ExcelHelper.writeToCVS(chooser.getSelectedFile().getAbsolutePath(),soInfo);
+							}
 
-								JOptionPane.showMessageDialog(null, "Export  SALES.xls' successfully", "Message",
-										JOptionPane.INFORMATION_MESSAGE);
-						      }
-						    else {
-						      System.out.println("No Selection ");
-						      }
-							
-							
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
 				});
-				
+
 				// HttpRestApi.postData(result);
 			}
 		});
@@ -385,9 +364,7 @@ public class DailyShippingReport {
 			}
 		});
 		panel.add(exitDone);
-		
-		
-		
+
 	}
 
 	private void intialCallback() {
@@ -397,19 +374,19 @@ public class DailyShippingReport {
 			@Override
 			public void resultCode(int code) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void checkHistoryItemsBySalesOrder(List<Historybean> items) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void getHistoryItems(List<Historybean> items) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
@@ -419,15 +396,37 @@ public class DailyShippingReport {
 				loadingframe.dispose();
 				map = new LinkedHashMap<>();
 				for (DailyShippingReportbean i : items) {
-					
-					map.put(i.salesOrder, i);
+					List<DailyShippingReportbean> record = null;
+					if (!map.containsKey(i.salesOrder)) {
+						record = new ArrayList<DailyShippingReportbean>();
+					} else {
+						record = map.get(i.salesOrder);
+					}
+
+					record.add(i);
+					map.put(i.salesOrder, record);
 				}
-			
+
 				List<DailyShippingReportbean> list = new ArrayList<DailyShippingReportbean>();
-				for (Map.Entry<String, DailyShippingReportbean> location : map.entrySet()) 
-				{
-					list.add(location.getValue());
+				for (Map.Entry<String, List<DailyShippingReportbean>> location : map.entrySet()) {
+					HashMap<String, DailyShippingReportbean> reportItem = new HashMap<String, DailyShippingReportbean>();
+
+					for (DailyShippingReportbean d : location.getValue()) {
+						if (reportItem.get(d.itemID) == null) {
+							d.qty = "1";
+						} else {
+							list.remove(d);
+							d.qty = "" + (Integer.valueOf(reportItem.get(d.itemID).qty) + 1);
+
+						}
+						reportItem.put(d.itemID, d);
+					}
+
+					for (Map.Entry<String, DailyShippingReportbean> i : reportItem.entrySet()) {
+						list.add(i.getValue());
+					}
 				}
+
 				displayTable(list);
 				java.awt.EventQueue.invokeLater(new Runnable() {
 					@Override
@@ -437,16 +436,13 @@ public class DailyShippingReport {
 					}
 				});
 
-				
 			}
 
 			@Override
 			public void exception(String error) {
 				// TODO Auto-generated method stub
-				
-			}
 
-		
+			}
 
 		});
 	}
@@ -458,24 +454,21 @@ public class DailyShippingReport {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-				    fgModelZone2.getDailyShippingItems("2018-06-06");
-					//fgModelZone2.getDailyShippingItems(timeStamp);
+					fgModelZone2.getDailyShippingItems("2018-06-06");
+					// fgModelZone2.getDailyShippingItems(timeStamp);
 
 				} catch (Exception e) {
 					e.printStackTrace();
-					//NetWorkHandler.displayError(loadingframe);
+					// NetWorkHandler.displayError(loadingframe);
 				}
 			}
 		});
 
 	}
-	
-	
-	private void exportSALES(List<SalesJournal> salesInfo)
-	{
-		//compare data between SO.csv and SALES.csv
-		
+
+	private void exportSALES(List<SalesJournal> salesInfo) {
+		// compare data between SO.csv and SALES.csv
+
 	}
-	
 
 }
