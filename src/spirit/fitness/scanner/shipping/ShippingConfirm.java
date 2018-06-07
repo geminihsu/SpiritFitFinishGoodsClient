@@ -146,10 +146,10 @@ public class ShippingConfirm {
 
 	private int orderTotalCount = 0;
 	private int orderCurCount = 0;
-	
+
 	private Timer timer;
 	private int isTimeOut = 1;
-	
+
 	// private List<CustOrderbean> salesOrderList;
 	private List<CustOrderbean> salesOrderList;
 	private List<CustOrderbean> checkedItemNoSN;
@@ -163,10 +163,9 @@ public class ShippingConfirm {
 	private JTextArea inputSN;
 	private JLabel lCount;
 	private JLabel lModelError;
-	
 
 	private PrintPreviewUitl printer;
-	
+
 	private FGRepositoryImplRetrofit fgRepositoryImplRetrofit;
 	private OrdersRepositoryImplRetrofit ordersRepositoryImplRetrofit;
 	private HistoryRepositoryImplRetrofit historyRepositoryImplRetrofit;
@@ -297,7 +296,7 @@ public class ShippingConfirm {
 		try {
 			setTimer();
 			timer.start();
-			
+
 			items = (ArrayList<Historybean>) historyRepositoryImplRetrofit.createItem(datas);
 
 		} catch (NumberFormatException e) {
@@ -313,7 +312,7 @@ public class ShippingConfirm {
 			restoreScanPannel(null);
 			NetWorkHandler.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
-			
+
 		}
 
 	}
@@ -357,7 +356,7 @@ public class ShippingConfirm {
 			restoreScanPannel(null);
 			NetWorkHandler.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
-			
+
 		}
 
 		return items;
@@ -374,7 +373,7 @@ public class ShippingConfirm {
 			restoreScanPannel(null);
 			NetWorkHandler.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
-			
+
 		}
 	}
 
@@ -412,7 +411,7 @@ public class ShippingConfirm {
 
 		}
 	}
-	
+
 	private void setTimer() {
 		timer = new javax.swing.Timer(30000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -430,8 +429,7 @@ public class ShippingConfirm {
 			}
 		});
 	}
-	
-	
+
 	private JScrollPane getShippgingItemsJScrollPane(List<Historybean> list) {
 		Font font = new Font("Verdana", Font.BOLD, 18);
 		JScrollPane scrollSNPane = new JScrollPane();
@@ -1104,9 +1102,8 @@ public class ShippingConfirm {
 					Historybean _item = new Historybean();
 
 					_item.SN = item;
-					// _item.shippedDate = timeStamp;
-					// _item.createdDate = date;
-					_item.Date = timeStamp;
+					_item.shippingDate = timeStamp;
+					_item.createdDate = date;
 					_item.location = "999";
 					_item.modelNo = item.substring(0, 6);
 
@@ -1502,9 +1499,9 @@ public class ShippingConfirm {
 			public void checkInventoryZone2Items(int result, List<Itembean> items) {
 
 				timer.stop();
-                timer = null;
-                isTimeOut = 1;
-                
+				timer = null;
+				isTimeOut = 1;
+
 				if (loadingframe != null) {
 					loadingframe.setVisible(false);
 					loadingframe.dispose();
@@ -1546,7 +1543,7 @@ public class ShippingConfirm {
 				NetWorkHandler.getInstance();
 				NetWorkHandler.displayError(loadingframe);
 				prevContent = inputSN.getText().toString();
-				
+
 			}
 		});
 
@@ -1647,24 +1644,33 @@ public class ShippingConfirm {
 			public void getHistoryItems(List<Historybean> _items) {
 
 				timer.stop();
-                timer = null;
-                isTimeOut = 1;
+				timer = null;
+				isTimeOut = 1;
 				if (!_items.isEmpty()) {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Report data success.");
 
-					/*
-					 * if(checkedItemNoSN.size() > 0) { List<Palletbean> pallents = new
-					 * ArrayList<Palletbean>(); for(CustOrderbean item : checkedItemNoSN) {
-					 * Palletbean palletbean = new Palletbean(); palletbean.createdDate =
-					 * item.createdDate; palletbean.billTo = item.bill_to; palletbean.itemID =
-					 * item.ItemID; palletbean.salesOrder = item.salesOrder; palletbean.shipCity =
-					 * item.shipToCity; palletbean.shippedDate = _items.get(0).shippedDate;
-					 * palletbean.shipState = item.shipToState; palletbean.shipVia = item.shipVia;
-					 * palletbean.trackingNo = _items.get(0).trackingNo; pallents.add(palletbean); }
-					 * 
-					 * submitPalletItems(pallents); }
-					 */
+					if (checkedItemNoSN.size() > 0) {
+						List<Palletbean> pallents = new ArrayList<Palletbean>();
+						for (CustOrderbean item : checkedItemNoSN) {
+							Palletbean palletbean = new Palletbean();
+							palletbean.createdDate =  _items.get(0).createdDate;
+							palletbean.billTo = item.bill_to;
+							palletbean.itemID = item.ItemID;
+							palletbean.description = item.description;
+							palletbean.qty = item.quantity;
+							palletbean.salesOrder = item.salesOrder;
+							palletbean.shipCity = item.shipToCity;
+							palletbean.shippedDate = _items.get(0).shippingDate;
+							palletbean.shipState = item.shipToState;
+							palletbean.shipVia = item.shipVia;
+							palletbean.trackingNo = _items.get(0).trackingNo;
+							pallents.add(palletbean);
+						}
+
+						submitPalletItems(pallents);
+					}
+
 					// if(orderFrame != null)
 					// orderFrame.setVisible(true);
 					int rowIndex = 0;
@@ -1719,7 +1725,13 @@ public class ShippingConfirm {
 				restoreScanPannel(null);
 				NetWorkHandler.displayError(loadingframe);
 				prevContent = inputSN.getText().toString();
-			
+
+			}
+
+			@Override
+			public void getDailyShippingItems(List<spirit.fitness.scanner.model.DailyShippingReportbean> items) {
+				// TODO Auto-generated method stub
+
 			}
 
 		});
@@ -1888,13 +1900,13 @@ public class ShippingConfirm {
 		// String result = PrintTableUtil.noBorad(headersList, rowsList);
 		content += result + "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n" + itemsInfo;
 
-		//System.out.println(content);
+		// System.out.println(content);
 
 		// PrinterHelper print = new PrinterHelper();
 		// print.printTable(content);
-		if(printer == null)
+		if (printer == null)
 			printer = new PrintPreviewUitl(content);
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -1904,7 +1916,7 @@ public class ShippingConfirm {
 				}
 			}
 		});
-	
+
 		// print.setVisible(true);
 	}
 
