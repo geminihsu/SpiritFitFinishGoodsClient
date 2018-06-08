@@ -66,6 +66,7 @@ import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.Modelbean;
 import spirit.fitness.scanner.receving.ContainerPannel;
 import spirit.fitness.scanner.report.DailyReport;
+import spirit.fitness.scanner.report.DailyShippingReport;
 import spirit.fitness.scanner.report.ModelZone2Report;
 import spirit.fitness.scanner.restful.FGRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.LocationRepositoryImplRetrofit;
@@ -89,7 +90,7 @@ public class AppMenu implements ActionListener {
 	private static AppMenu instance = null;
 
 	private JButton btnRecving, btnMoving, btnInQuiry, btnShipping, btnReport, btnModelQuantity, btnPickingList,
-			btnReplenishment, btnConfiguration;
+			btnReplenishment, btnDailyShipping;
 	private JFrame frame;
 	private JFrame receivedFrame;
 
@@ -172,8 +173,8 @@ public class AppMenu implements ActionListener {
 
 		btnReplenishment = new JButton("Replenishment");
 		btnReplenishment.setFont(font);
-		btnConfiguration = new JButton("Configuration");
-		btnConfiguration.setFont(font);
+		btnDailyShipping = new JButton("Daily Shipping Report");
+		btnDailyShipping.setFont(font);
 		// btnModelQuantity = new JButton("Model Quantity");
 		// btnModelQuantity.setFont(font);
 		// btnRecving.setBounds(20,20,100,40);
@@ -191,7 +192,7 @@ public class AppMenu implements ActionListener {
 		btnReport.addActionListener(this);
 		btnPickingList.addActionListener(this);
 		btnReplenishment.addActionListener(this);
-		btnConfiguration.addActionListener(this);
+		btnDailyShipping.addActionListener(this);
 		cp.add(btnRecving);
 		cp.add(btnMoving);
 		cp.add(btnInQuiry);
@@ -199,7 +200,7 @@ public class AppMenu implements ActionListener {
 		cp.add(btnShipping);
 		cp.add(btnReport);
 		cp.add(btnReplenishment);
-		cp.add(btnConfiguration);
+		cp.add(btnDailyShipping);
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		frame.addWindowListener(new WindowAdapter() {
@@ -308,10 +309,9 @@ public class AppMenu implements ActionListener {
 
 				ModelZone2Report.getInstance(Constrant.modelZone2List);
 				// window.frame.setVisible(true);
-			}else if (e.getSource() == btnConfiguration) {
+			}else if (e.getSource() == btnDailyShipping) {
 				
-				NetWorkHandler.getInstance();
-				NetWorkHandler.backUpSerialNo(loadingframe);
+				DailyShippingReport.getInstance();
 			}
 
 		}

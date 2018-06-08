@@ -89,6 +89,7 @@ import spirit.fitness.scanner.util.PrinterHelper;
 import spirit.fitness.scanner.util.WeightPlateUtil;
 import spirit.fitness.scanner.zonepannel.ZoneMenu;
 import spirit.fitness.scanner.model.CustOrderbean;
+import spirit.fitness.scanner.model.DailyShippingReportbean;
 import spirit.fitness.scanner.model.Historybean;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
@@ -716,6 +717,12 @@ public class ShippingPicking {
 
 			@Override
 			public void exception(String error) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void getDailyShippingItems(List<DailyShippingReportbean> items) {
 				// TODO Auto-generated method stub
 				
 			}

@@ -146,10 +146,10 @@ public class ShippingConfirm {
 
 	private int orderTotalCount = 0;
 	private int orderCurCount = 0;
-	
+
 	private Timer timer;
 	private int isTimeOut = 1;
-	
+
 	// private List<CustOrderbean> salesOrderList;
 	private List<CustOrderbean> salesOrderList;
 	private List<CustOrderbean> checkedItemNoSN;
@@ -163,10 +163,9 @@ public class ShippingConfirm {
 	private JTextArea inputSN;
 	private JLabel lCount;
 	private JLabel lModelError;
-	
 
 	private PrintPreviewUitl printer;
-	
+
 	private FGRepositoryImplRetrofit fgRepositoryImplRetrofit;
 	private OrdersRepositoryImplRetrofit ordersRepositoryImplRetrofit;
 	private HistoryRepositoryImplRetrofit historyRepositoryImplRetrofit;
@@ -297,7 +296,7 @@ public class ShippingConfirm {
 		try {
 			setTimer();
 			timer.start();
-			
+
 			items = (ArrayList<Historybean>) historyRepositoryImplRetrofit.createItem(datas);
 
 		} catch (NumberFormatException e) {
@@ -313,7 +312,7 @@ public class ShippingConfirm {
 			restoreScanPannel(null);
 			NetWorkHandler.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
-			
+
 		}
 
 	}
@@ -357,7 +356,7 @@ public class ShippingConfirm {
 			restoreScanPannel(null);
 			NetWorkHandler.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
-			
+
 		}
 
 		return items;
@@ -374,7 +373,7 @@ public class ShippingConfirm {
 			restoreScanPannel(null);
 			NetWorkHandler.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
-			
+
 		}
 	}
 
@@ -412,7 +411,7 @@ public class ShippingConfirm {
 
 		}
 	}
-	
+
 	private void setTimer() {
 		timer = new javax.swing.Timer(30000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -430,8 +429,7 @@ public class ShippingConfirm {
 			}
 		});
 	}
-	
-	
+
 	private JScrollPane getShippgingItemsJScrollPane(List<Historybean> list) {
 		Font font = new Font("Verdana", Font.BOLD, 18);
 		JScrollPane scrollSNPane = new JScrollPane();
@@ -1501,9 +1499,9 @@ public class ShippingConfirm {
 			public void checkInventoryZone2Items(int result, List<Itembean> items) {
 
 				timer.stop();
-                timer = null;
-                isTimeOut = 1;
-                
+				timer = null;
+				isTimeOut = 1;
+
 				if (loadingframe != null) {
 					loadingframe.setVisible(false);
 					loadingframe.dispose();
@@ -1545,7 +1543,7 @@ public class ShippingConfirm {
 				NetWorkHandler.getInstance();
 				NetWorkHandler.displayError(loadingframe);
 				prevContent = inputSN.getText().toString();
-				
+
 			}
 		});
 
@@ -1727,7 +1725,13 @@ public class ShippingConfirm {
 				restoreScanPannel(null);
 				NetWorkHandler.displayError(loadingframe);
 				prevContent = inputSN.getText().toString();
-			
+
+			}
+
+			@Override
+			public void getDailyShippingItems(List<spirit.fitness.scanner.model.DailyShippingReportbean> items) {
+				// TODO Auto-generated method stub
+
 			}
 
 		});
@@ -1896,13 +1900,13 @@ public class ShippingConfirm {
 		// String result = PrintTableUtil.noBorad(headersList, rowsList);
 		content += result + "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n" + itemsInfo;
 
-		//System.out.println(content);
+		// System.out.println(content);
 
 		// PrinterHelper print = new PrinterHelper();
 		// print.printTable(content);
-		if(printer == null)
+		if (printer == null)
 			printer = new PrintPreviewUitl(content);
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -1912,7 +1916,7 @@ public class ShippingConfirm {
 				}
 			}
 		});
-	
+
 		// print.setVisible(true);
 	}
 
