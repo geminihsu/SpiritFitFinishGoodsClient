@@ -95,7 +95,7 @@ public class DailyShippingReport {
 
 	private JFileChooser chooser;
 	private String choosertitle;
-	
+
 	private List<SalesJournal> soInfo;
 
 	private LinkedHashMap<String, List<DailyShippingReportbean>> map;
@@ -286,14 +286,14 @@ public class DailyShippingReport {
 		Font btnFont = new Font("Verdana", Font.BOLD, 18);
 		Font txtFont = new Font("Verdana", Font.BOLD, 22);
 
-		JButton Search = new JButton("Import from Peach Tree");
+		JButton Search = new JButton("Import SO file");
 		Search.setFont(btnFont);
-		Search.setBounds(5, 640, 300, 50);
+		Search.setBounds(5, 640, 200, 50);
 
 		Search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//if (loadingframe != null)
-				//	loadingframe.setVisible(true);
+				// if (loadingframe != null)
+				// loadingframe.setVisible(true);
 				chooser = new JFileChooser();
 				chooser.setCurrentDirectory(new java.io.File("."));
 				chooser.setDialogTitle(choosertitle);
@@ -307,14 +307,16 @@ public class DailyShippingReport {
 					System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
 					System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
 
-					soInfo = ExcelHelper.readCSVFile(chooser.getSelectedFile().getAbsolutePath(),
-							map);
+					soInfo = ExcelHelper.readCSVFile(chooser.getSelectedFile().getAbsolutePath(), map);
+					if (soInfo.size() > 0)
+						JOptionPane.showMessageDialog(null, "Import Success.");
+
 				}
 			}
 		});
 		panel.add(Search);
 
-		btnDone = new JButton("Export To Excel");
+		btnDone = new JButton("Export SO file");
 		btnDone.setFont(btnFont);
 		btnDone.setBounds(780, 640, 200, 50);
 
@@ -338,7 +340,8 @@ public class DailyShippingReport {
 								System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
 								System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
 
-								ExcelHelper.writeToCVS(chooser.getSelectedFile().getAbsolutePath(),soInfo);
+								if (ExcelHelper.writeToCVS(chooser.getSelectedFile().getAbsolutePath(), soInfo))
+									JOptionPane.showMessageDialog(null, "Export Success.");
 							}
 
 						} catch (Exception e) {
@@ -454,7 +457,7 @@ public class DailyShippingReport {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					fgModelZone2.getDailyShippingItems("2018-06-06");
+					fgModelZone2.getDailyShippingItems("2018-06-08");
 					// fgModelZone2.getDailyShippingItems(timeStamp);
 
 				} catch (Exception e) {
