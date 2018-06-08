@@ -1104,9 +1104,8 @@ public class ShippingConfirm {
 					Historybean _item = new Historybean();
 
 					_item.SN = item;
-					// _item.shippedDate = timeStamp;
-					// _item.createdDate = date;
-					_item.Date = timeStamp;
+					_item.shippingDate = timeStamp;
+					_item.createdDate = date;
 					_item.location = "999";
 					_item.modelNo = item.substring(0, 6);
 
@@ -1647,24 +1646,33 @@ public class ShippingConfirm {
 			public void getHistoryItems(List<Historybean> _items) {
 
 				timer.stop();
-                timer = null;
-                isTimeOut = 1;
+				timer = null;
+				isTimeOut = 1;
 				if (!_items.isEmpty()) {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Report data success.");
 
-					/*
-					 * if(checkedItemNoSN.size() > 0) { List<Palletbean> pallents = new
-					 * ArrayList<Palletbean>(); for(CustOrderbean item : checkedItemNoSN) {
-					 * Palletbean palletbean = new Palletbean(); palletbean.createdDate =
-					 * item.createdDate; palletbean.billTo = item.bill_to; palletbean.itemID =
-					 * item.ItemID; palletbean.salesOrder = item.salesOrder; palletbean.shipCity =
-					 * item.shipToCity; palletbean.shippedDate = _items.get(0).shippedDate;
-					 * palletbean.shipState = item.shipToState; palletbean.shipVia = item.shipVia;
-					 * palletbean.trackingNo = _items.get(0).trackingNo; pallents.add(palletbean); }
-					 * 
-					 * submitPalletItems(pallents); }
-					 */
+					if (checkedItemNoSN.size() > 0) {
+						List<Palletbean> pallents = new ArrayList<Palletbean>();
+						for (CustOrderbean item : checkedItemNoSN) {
+							Palletbean palletbean = new Palletbean();
+							palletbean.createdDate =  _items.get(0).createdDate;
+							palletbean.billTo = item.bill_to;
+							palletbean.itemID = item.ItemID;
+							palletbean.description = item.description;
+							palletbean.qty = item.quantity;
+							palletbean.salesOrder = item.salesOrder;
+							palletbean.shipCity = item.shipToCity;
+							palletbean.shippedDate = _items.get(0).shippingDate;
+							palletbean.shipState = item.shipToState;
+							palletbean.shipVia = item.shipVia;
+							palletbean.trackingNo = _items.get(0).trackingNo;
+							pallents.add(palletbean);
+						}
+
+						submitPalletItems(pallents);
+					}
+
 					// if(orderFrame != null)
 					// orderFrame.setVisible(true);
 					int rowIndex = 0;
