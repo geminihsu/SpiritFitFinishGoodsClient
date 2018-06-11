@@ -102,6 +102,14 @@ public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
 				scanResultFrame.setVisible(false);
 			}
 		});
+		
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				scanResultFrame.toFront();
+				scanResultFrame.repaint();
+			}
+		});
 	}
 
 	@Override
