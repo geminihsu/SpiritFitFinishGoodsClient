@@ -483,7 +483,12 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				String sortResult = "";
 
 				for (String s : scanItem) {
-
+					if(s.length() > 16) 
+					{
+						s = s.substring(0, 16);
+						if(set.contains(s))
+							continue;
+					}
 					sortResult += s + "\n";
 
 				}
@@ -1064,6 +1069,12 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		for (int i = startIndex; i < endIndex + 1; i++) {
 
 			if (idx < scanItem.length) {
+				
+				if(scanItem[idx].length() > 16) {
+					scanItem[idx] = scanItem[idx].substring(0, 16);
+				    if(set.contains(scanItem[idx]))
+				    	continue;
+				}
 				if (Integer.valueOf(scanItem[idx].substring(10, 16)) == i) {
 					sortResult += scanItem[idx] + "\n";
 					idx++;
