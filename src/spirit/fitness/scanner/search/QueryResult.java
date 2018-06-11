@@ -407,7 +407,7 @@ public class QueryResult {
 		}
 
 		if (zone3Data != null) {
-			zone3.setText("Unshippable" + zoneCount.get(5));
+			zone3.setText("Unshippable : " + zoneCount.get(5));
 
 			int height = 50 * zone3Data.length + 20;
 
@@ -445,7 +445,7 @@ public class QueryResult {
 			zone4.setVisible(false);
 		}
 
-		quantity.setText("QUANTITY :" + queryModelCount);
+		quantity.setText("QUANTITY : " + queryModelCount);
 		panel.setBackground(Constrant.BACKGROUN_COLOR);
 
 		JButton prev = new JButton(new AbstractAction("Back") {
