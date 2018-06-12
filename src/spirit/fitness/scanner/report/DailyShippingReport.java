@@ -457,7 +457,7 @@ public class DailyShippingReport {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					fgModelZone2.getDailyShippingItems("2018-06-08");
+					fgModelZone2.getDailyShippingItems("2018-06-11");
 					// fgModelZone2.getDailyShippingItems(timeStamp);
 
 				} catch (Exception e) {
