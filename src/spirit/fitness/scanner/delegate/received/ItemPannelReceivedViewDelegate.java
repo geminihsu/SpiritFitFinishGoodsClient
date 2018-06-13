@@ -483,11 +483,16 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				String sortResult = "";
 
 				for (String s : scanItem) {
-
+					if(s.length() > 16) 
+					{
+						s = s.substring(0, 16);
+						if(set.contains(s))
+							continue;
+					}
 					sortResult += s + "\n";
 
 				}
-
+				
 				inputSN.setText(sortResult);
 			}
 		});
