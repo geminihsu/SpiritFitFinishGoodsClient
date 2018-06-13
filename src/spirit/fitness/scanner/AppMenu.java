@@ -173,7 +173,8 @@ public class AppMenu implements ActionListener {
 
 		btnReplenishment = new JButton("Replenishment");
 		btnReplenishment.setFont(font);
-		btnDailyShipping = new JButton("Daily Shipping Report");
+		//btnDailyShipping = new JButton("Daily Shipping Report");
+		btnDailyShipping = new JButton("Configuration");
 		btnDailyShipping.setFont(font);
 		// btnModelQuantity = new JButton("Model Quantity");
 		// btnModelQuantity.setFont(font);
@@ -192,7 +193,7 @@ public class AppMenu implements ActionListener {
 		btnReport.addActionListener(this);
 		btnPickingList.addActionListener(this);
 		btnReplenishment.addActionListener(this);
-		btnDailyShipping.addActionListener(this);
+		//btnDailyShipping.addActionListener(this);
 		cp.add(btnRecving);
 		cp.add(btnMoving);
 		cp.add(btnInQuiry);

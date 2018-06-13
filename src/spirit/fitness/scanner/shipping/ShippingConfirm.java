@@ -305,6 +305,10 @@ public class ShippingConfirm {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			if (loadingframe != null) {
+				loadingframe.setVisible(false);
+				loadingframe.dispose();
+			}
 			if (scanResultFrame != null) {
 				scanResultFrame.dispose();
 				scanResultFrame.setVisible(false);
@@ -352,6 +356,10 @@ public class ShippingConfirm {
 			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			if (loadingframe != null) {
+				loadingframe.setVisible(false);
+				loadingframe.dispose();
+			}
 			e.printStackTrace();
 			restoreScanPannel(null);
 			NetWorkHandler.displayError(loadingframe);
@@ -369,6 +377,10 @@ public class ShippingConfirm {
 			fgRepositoryImplRetrofit.getItemsZone2BySNList(salesOrder, items);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			if (loadingframe != null) {
+				loadingframe.setVisible(false);
+				loadingframe.dispose();
+			}
 			e.printStackTrace();
 			restoreScanPannel(null);
 			NetWorkHandler.displayError(loadingframe);
