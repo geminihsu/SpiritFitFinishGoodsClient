@@ -1069,6 +1069,13 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		for (int i = startIndex; i < endIndex + 1; i++) {
 
 			if (idx < scanItem.length) {
+                
+                if(scanItem[idx].length() > 16) {
+                    scanItem[idx] = scanItem[idx].substring(0, 16);
+                    if(set.contains(scanItem[idx]))
+                        continue;
+                }
+
 				if (Integer.valueOf(scanItem[idx].substring(10, 16)) == i) {
 					sortResult += scanItem[idx] + "\n";
 					idx++;
