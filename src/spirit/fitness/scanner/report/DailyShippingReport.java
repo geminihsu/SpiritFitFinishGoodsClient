@@ -15,10 +15,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -95,7 +98,7 @@ public class DailyShippingReport {
 
 	private JFileChooser chooser;
 	private String choosertitle;
-	
+
 	private List<SalesJournal> soInfo;
 
 	private LinkedHashMap<String, List<DailyShippingReportbean>> map;
@@ -286,14 +289,14 @@ public class DailyShippingReport {
 		Font btnFont = new Font("Verdana", Font.BOLD, 18);
 		Font txtFont = new Font("Verdana", Font.BOLD, 22);
 
-		JButton Search = new JButton("Import from Peach Tree");
+		JButton Search = new JButton("Import SO file");
 		Search.setFont(btnFont);
-		Search.setBounds(5, 640, 300, 50);
+		Search.setBounds(5, 640, 200, 50);
 
 		Search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//if (loadingframe != null)
-				//	loadingframe.setVisible(true);
+				// if (loadingframe != null)
+				// loadingframe.setVisible(true);
 				chooser = new JFileChooser();
 				chooser.setCurrentDirectory(new java.io.File("."));
 				chooser.setDialogTitle(choosertitle);
@@ -307,14 +310,18 @@ public class DailyShippingReport {
 					System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
 					System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
 
-					soInfo = ExcelHelper.readCSVFile(chooser.getSelectedFile().getAbsolutePath(),
-							map);
+					soInfo = ExcelHelper.readCSVFile(chooser.getSelectedFile().getAbsolutePath(), map);
+					if (soInfo.size() > 0)
+						JOptionPane.showMessageDialog(null, "Import Success.");
+					else
+						JOptionPane.showMessageDialog(null, "Import Fail.");
+
 				}
 			}
 		});
 		panel.add(Search);
 
-		btnDone = new JButton("Export To Excel");
+		btnDone = new JButton("Export SALES file");
 		btnDone.setFont(btnFont);
 		btnDone.setBounds(780, 640, 200, 50);
 
@@ -338,7 +345,10 @@ public class DailyShippingReport {
 								System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
 								System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
 
-								ExcelHelper.writeToCVS(chooser.getSelectedFile().getAbsolutePath(),soInfo);
+								if (ExcelHelper.writeToCVS(chooser.getSelectedFile().getAbsolutePath(), soInfo))
+									JOptionPane.showMessageDialog(null, "Export Success.");
+								else
+									JOptionPane.showMessageDialog(null, "Import Fail.");
 							}
 
 						} catch (Exception e) {
@@ -395,6 +405,10 @@ public class DailyShippingReport {
 				loadingframe.setVisible(false);
 				loadingframe.dispose();
 				map = new LinkedHashMap<>();
+				
+				//sort by date
+				Collections.sort(items, new DateSalesOrderComparator());
+				
 				for (DailyShippingReportbean i : items) {
 					List<DailyShippingReportbean> record = null;
 					if (!map.containsKey(i.salesOrder)) {
@@ -454,8 +468,10 @@ public class DailyShippingReport {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					fgModelZone2.getDailyShippingItems("2018-06-06");
-					// fgModelZone2.getDailyShippingItems(timeStamp);
+					String timeStamp = new SimpleDateFormat("yyyy-MM-dd")
+							.format(Calendar.getInstance().getTime());
+					//fgModelZone2.getDailyShippingItems(timeStamp);
+					fgModelZone2.getDailyShippingItems("2018-06-12");
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -471,4 +487,12 @@ public class DailyShippingReport {
 
 	}
 
+	class DateSalesOrderComparator implements Comparator<DailyShippingReportbean> {
+	    @Override
+	    public int compare(DailyShippingReportbean a, DailyShippingReportbean b) {
+			
+	    	return a.createdDate.compareTo(b.createdDate);
+
+	    }
+	}
 }
