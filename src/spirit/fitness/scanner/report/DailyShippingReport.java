@@ -15,10 +15,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -310,13 +313,15 @@ public class DailyShippingReport {
 					soInfo = ExcelHelper.readCSVFile(chooser.getSelectedFile().getAbsolutePath(), map);
 					if (soInfo.size() > 0)
 						JOptionPane.showMessageDialog(null, "Import Success.");
+					else
+						JOptionPane.showMessageDialog(null, "Import Fail.");
 
 				}
 			}
 		});
 		panel.add(Search);
 
-		btnDone = new JButton("Export SO file");
+		btnDone = new JButton("Export SALES file");
 		btnDone.setFont(btnFont);
 		btnDone.setBounds(780, 640, 200, 50);
 
@@ -342,6 +347,8 @@ public class DailyShippingReport {
 
 								if (ExcelHelper.writeToCVS(chooser.getSelectedFile().getAbsolutePath(), soInfo))
 									JOptionPane.showMessageDialog(null, "Export Success.");
+								else
+									JOptionPane.showMessageDialog(null, "Import Fail.");
 							}
 
 						} catch (Exception e) {
@@ -398,6 +405,10 @@ public class DailyShippingReport {
 				loadingframe.setVisible(false);
 				loadingframe.dispose();
 				map = new LinkedHashMap<>();
+				
+				//sort by date
+				Collections.sort(items, new DateSalesOrderComparator());
+				
 				for (DailyShippingReportbean i : items) {
 					List<DailyShippingReportbean> record = null;
 					if (!map.containsKey(i.salesOrder)) {
@@ -457,8 +468,10 @@ public class DailyShippingReport {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					fgModelZone2.getDailyShippingItems("2018-06-11");
-					// fgModelZone2.getDailyShippingItems(timeStamp);
+					String timeStamp = new SimpleDateFormat("yyyy-MM-dd")
+							.format(Calendar.getInstance().getTime());
+					//fgModelZone2.getDailyShippingItems(timeStamp);
+					fgModelZone2.getDailyShippingItems("2018-06-12");
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -474,4 +487,12 @@ public class DailyShippingReport {
 
 	}
 
+	class DateSalesOrderComparator implements Comparator<DailyShippingReportbean> {
+	    @Override
+	    public int compare(DailyShippingReportbean a, DailyShippingReportbean b) {
+			
+	    	return a.createdDate.compareTo(b.createdDate);
+
+	    }
+	}
 }
