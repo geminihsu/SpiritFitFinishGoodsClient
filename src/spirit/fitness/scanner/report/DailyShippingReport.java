@@ -291,7 +291,7 @@ public class DailyShippingReport {
 
 		JButton Search = new JButton("Import SO file");
 		Search.setFont(btnFont);
-		Search.setBounds(5, 640, 200, 50);
+		Search.setBounds(530, 640, 200, 50);
 
 		Search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -323,7 +323,7 @@ public class DailyShippingReport {
 
 		btnDone = new JButton("Export SALES file");
 		btnDone.setFont(btnFont);
-		btnDone.setBounds(780, 640, 200, 50);
+		btnDone.setBounds(738, 640, 250, 50);
 
 		btnDone.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -362,6 +362,50 @@ public class DailyShippingReport {
 		});
 		panel.add(btnDone);
 
+		JButton save = new JButton("Save shipping report");
+		save.setFont(btnFont);
+		save.setBounds(5, 640, 250, 50);
+
+		save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+
+							chooser = new JFileChooser();
+							chooser.setCurrentDirectory(new java.io.File("."));
+							chooser.setDialogTitle(choosertitle);
+							chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+							//
+							// disable the "All files" option.
+							//
+							chooser.setAcceptAllFileFilterUsed(false);
+							//
+							if (chooser.showOpenDialog(btnDone) == JFileChooser.APPROVE_OPTION) {
+								System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
+								System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
+
+								 ExcelHelper exp = new ExcelHelper();
+									String timeStamp = new SimpleDateFormat("yyyy-MM-dd")
+											.format(Calendar.getInstance().getTime());
+									
+								 exp.fillDailyShippingData(table,
+											new File(chooser.getSelectedFile() +"\\"+timeStamp + "_ship.xls"));
+
+							}
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+
+				// HttpRestApi.postData(result);
+			}
+		});
+		panel.add(save);
+		
 		JButton exitDone = new JButton("Exit");
 		exitDone.setFont(btnFont);
 		exitDone.setBounds(995, 640, 200, 50);
@@ -470,8 +514,7 @@ public class DailyShippingReport {
 				try {
 					String timeStamp = new SimpleDateFormat("yyyy-MM-dd")
 							.format(Calendar.getInstance().getTime());
-					//fgModelZone2.getDailyShippingItems(timeStamp);
-					fgModelZone2.getDailyShippingItems("2018-06-12");
+					fgModelZone2.getDailyShippingItems(timeStamp);
 
 				} catch (Exception e) {
 					e.printStackTrace();
