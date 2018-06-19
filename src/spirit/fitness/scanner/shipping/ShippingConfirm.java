@@ -630,6 +630,11 @@ public class ShippingConfirm {
 					orderModelItems[rowIndex][0] = location.getValue();
 					orderModelItems[rowIndex][1] = salesOrderList.get(rowIndex).ItemID;
 
+                    String ItemID = salesOrderList.get(rowIndex).ItemID;
+                    if(salesOrderList.get(rowIndex).ItemID.equals("115816"))
+                        salesOrderList.get(rowIndex).ItemID = "450887";
+                    
+					
 					if (!WeightPlateUtil.isModelParts(salesOrderList.get(rowIndex).ItemID))
 						orderModelItems[rowIndex][2] = salesOrderList.get(rowIndex).description;
 					else
@@ -1612,8 +1617,12 @@ public class ShippingConfirm {
 									|| item.ItemID.length() > 6)
 								checkedItemNoSN.add(item);
 							salesOrderList.add(item);
+							
+                            if(item.ItemID.equals("450887"))
+                                item.ItemID = "115816";
+							
 							if (map.containsKey(item.ItemID)) {
-
+								
 								count += map.get(item.ItemID);
 								map.put(item.ItemID, count);
 								orderTotalCount += count;

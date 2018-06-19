@@ -388,9 +388,15 @@ public class ShippingPicking {
 				String zoneDes = "";
 				HashMap<String, Integer> loc = locMap.get(item.modelID);
 				for (int j = 0; j < colsize; j++) {
+					
+					if(item.modelID.equals("115816"))
+						item.modelID = "450887";
+					
+					
 					orderModelItems[rowIndex][0] = loc.get(item.location);
 					orderModelItems[rowIndex][1] = item.modelID;
 
+				
 					if (!WeightPlateUtil.isModelParts(item.modelID))
 						orderModelItems[rowIndex][2] = item.modelDes;
 					else
@@ -626,6 +632,11 @@ public class ShippingPicking {
 						// System.out.println("item.ItemID:" + item.ItemID);
 
 						if (item.ItemID != null) {
+							
+							if(item.ItemID.equals("450887"))
+								item.ItemID = "115816";
+							
+							
 							if (map.containsKey(item.ItemID)) {
 
 								if (!item.ItemID.contains("PL") && item.ItemID.length() == 6
