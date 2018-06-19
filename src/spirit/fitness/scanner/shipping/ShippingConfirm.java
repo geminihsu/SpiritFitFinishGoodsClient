@@ -630,10 +630,9 @@ public class ShippingConfirm {
 					orderModelItems[rowIndex][0] = location.getValue();
 					orderModelItems[rowIndex][1] = salesOrderList.get(rowIndex).ItemID;
 
-                    String ItemID = salesOrderList.get(rowIndex).ItemID;
-                    if(salesOrderList.get(rowIndex).ItemID.equals("115816"))
-                        salesOrderList.get(rowIndex).ItemID = "450887";
-                    
+					String ItemID = salesOrderList.get(rowIndex).ItemID;
+					if(salesOrderList.get(rowIndex).ItemID.equals("115816"))
+						salesOrderList.get(rowIndex).ItemID = "450887";
 					
 					if (!WeightPlateUtil.isModelParts(salesOrderList.get(rowIndex).ItemID))
 						orderModelItems[rowIndex][2] = salesOrderList.get(rowIndex).description;
@@ -800,6 +799,8 @@ public class ShippingConfirm {
 					String trackingNo = items.get(0).trackingNo;
 					if (trackingNo.equals(""))
 						trackingNo += " ";
+					
+						
 					resultModelItem.add(location.getValue() + "\n" + salesOrderList.get(rowIndex).ItemID + "\n"
 							+ salesOrderList.get(rowIndex).description + "\n" + trackingNo + "\n");
 					rowIndex++;
@@ -1617,12 +1618,12 @@ public class ShippingConfirm {
 									|| item.ItemID.length() > 6)
 								checkedItemNoSN.add(item);
 							salesOrderList.add(item);
-							
-                            if(item.ItemID.equals("450887"))
-                                item.ItemID = "115816";
-							
-							if (map.containsKey(item.ItemID)) {
+
+							if(item.ItemID.equals("450887"))
+								item.ItemID = "115816";
 								
+							if (map.containsKey(item.ItemID)) {
+
 								count += map.get(item.ItemID);
 								map.put(item.ItemID, count);
 								orderTotalCount += count;
@@ -1675,7 +1676,7 @@ public class ShippingConfirm {
 						List<Palletbean> pallents = new ArrayList<Palletbean>();
 						for (CustOrderbean item : checkedItemNoSN) {
 							Palletbean palletbean = new Palletbean();
-							palletbean.createdDate =  _items.get(0).createdDate;
+							palletbean.createdDate = _items.get(0).createdDate;
 							palletbean.billTo = item.bill_to;
 							palletbean.itemID = item.ItemID;
 							palletbean.description = item.description;
@@ -1907,8 +1908,9 @@ public class ShippingConfirm {
 
 	private void printer(String saleOrder, String date, String billTo, String shipTo, String itemsInfo) {
 
-		String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " + date.substring(0, 10) + "\n" + "Bill To : "
-				+ billTo + "\n" + "Ship To : " + shipTo + "\n" + "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n";
+		String content = "Sales Order : " + saleOrder + "\n" + "TransactionDate : " + date.substring(0, 10) + "\n"
+				+ "Bill To : " + billTo + "\n" + "Ship To : " + shipTo + "\n"
+				+ "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁\n";
 		List<String> headersList = Arrays.asList("Qty", "Item", "Model", "PRO#");
 
 		List<List<String>> rowsList = new ArrayList<List<String>>();
