@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -80,6 +81,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	@Override
 	public void initial(List<Containerbean> _container, String content) {
 		containers = _container;
+		Collections.sort(containers,new ContainerSortByModel());
 		scanInfo(content);
 		exceuteCallback();
 		loadModelMapZone2();
@@ -88,6 +90,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	@Override
 	public void initial(List<Containerbean> _container, String content, String location) {
 		containers = _container;
+		Collections.sort(containers,new ContainerSortByModel());
 		containerNo = containers.get(0).ContainerNo;
 		displayScanResultFrame(content, location);
 		exceuteCallback();
@@ -1371,6 +1374,19 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			}
 		});
 
+	}
+	
+	
+	class ContainerSortByModel implements Comparator<Containerbean>
+	{
+	    // Used for sorting in ascending order of
+	    // roll name
+	    public int compare(Containerbean a, Containerbean b)
+	    {
+	    	String modelA = a.SNBegin.substring(0,6);
+	    	String modelB = b.SNBegin.substring(0,6);
+	        return modelA.compareTo(modelB);
+	    }
 	}
 
 }
