@@ -350,29 +350,34 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					int startIndex = 0;
 					int endIndex = 0;
 					scannedModel = itemList[0].substring(0, 6);
+					List<Itembean> items = new ArrayList<Itembean>();
+					outRangeSN = new ArrayList<Itembean>();
 					for (Containerbean c : containers) {
-						if (c.SNBegin.substring(0, 6).equals(scannedModel)) {
-							startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
-							endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
+
+						startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
+						endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
+						String modelNoMap = c.SNBegin.substring(0, 6);
+
+						for (String item : itemList) {
+							if (item.substring(0, 6).endsWith(modelNoMap)) {
+								Itembean _item = new Itembean();
+
+								_item.SN = item;
+								_item.ModelNo = scannedModel;
+								items.add(_item);
+
+								if (Integer.valueOf(_item.SN.substring(10, 16)) - startIndex < 0
+										|| endIndex - Integer.valueOf(_item.SN.substring(10, 16)) < 0)
+									outRangeSN.add(_item);
+
+							}
 						}
 
 					}
-					List<Itembean> items = new ArrayList<Itembean>();
-					outRangeSN = new ArrayList<Itembean>();
-					scannedModel = itemList[0].substring(0, 6);
+
 					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 							.format(Calendar.getInstance().getTime());
-					for (String item : itemList) {
-						Itembean _item = new Itembean();
 
-						_item.SN = item;
-						_item.ModelNo = scannedModel;
-						items.add(_item);
-						if (Integer.valueOf(_item.SN.substring(10, 16)) - startIndex < 0
-								|| endIndex - Integer.valueOf(_item.SN.substring(10, 16)) < 0)
-							outRangeSN.add(_item);
-
-					}
 
 					if (outRangeSN.size() > 0)
 						checkScanResultOutOfFrame(items);
@@ -420,30 +425,34 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					int startIndex = 0;
 					int endIndex = 0;
 					scannedModel = itemList[0].substring(0, 6);
+					List<Itembean> items = new ArrayList<Itembean>();
+					outRangeSN = new ArrayList<Itembean>();
 					for (Containerbean c : containers) {
-						if (c.SNBegin.substring(0, 6).equals(scannedModel)) {
-							startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
-							endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
+
+						startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
+						endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
+						String modelNoMap = c.SNBegin.substring(0, 6);
+
+						for (String item : itemList) {
+							if (item.substring(0, 6).endsWith(modelNoMap)) {
+								Itembean _item = new Itembean();
+
+								_item.SN = item;
+								_item.ModelNo = scannedModel;
+								items.add(_item);
+
+								if (Integer.valueOf(_item.SN.substring(10, 16)) - startIndex < 0
+										|| endIndex - Integer.valueOf(_item.SN.substring(10, 16)) < 0)
+									outRangeSN.add(_item);
+
+							}
 						}
 
 					}
 
-					List<Itembean> items = new ArrayList<Itembean>();
-					outRangeSN = new ArrayList<Itembean>();
 					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 							.format(Calendar.getInstance().getTime());
-					for (String item : itemList) {
-						Itembean _item = new Itembean();
 
-						_item.SN = item;
-						_item.ModelNo = scannedModel;
-						items.add(_item);
-
-						if (Integer.valueOf(_item.SN.substring(10, 16)) - startIndex < 0
-								|| endIndex - Integer.valueOf(_item.SN.substring(10, 16)) < 0)
-							outRangeSN.add(_item);
-
-					}
 
 					if (outRangeSN.size() > 0)
 						checkScanResultOutOfFrame(items);
