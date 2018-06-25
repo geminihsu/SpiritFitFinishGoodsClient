@@ -641,16 +641,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 			ok.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// String book =
-					// "{\"Seq\":"+91+",\"SN\":\"1858151709001848\",\"Date\":\"2017-12-13
-					// 16:14:02.343\",\"Location\":\"051\",\"ModelNo\":\"185815\"}";
-					// String result =
-					// "{\"Seq\":"+92+",\"SN\":\"1858151709001848\",\"Date\":\"2017-12-13
-					// 16:14:02.343\",\"Location\":\"051\",\"ModelNo\":\"185815\"}";
+					
 					ok.setEnabled(false);
 
-					// progressMonitor = new ProgressMonitor(ItemsPannel.this, "Please wait...", "",
-					// 0, 100);
 
 					List<Itembean> items = new ArrayList<Itembean>();
 					scannedModel = itemList[0].substring(0, 6);

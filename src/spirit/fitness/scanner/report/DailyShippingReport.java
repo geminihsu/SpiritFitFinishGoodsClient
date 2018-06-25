@@ -514,7 +514,8 @@ public class DailyShippingReport {
 				try {
 					String timeStamp = new SimpleDateFormat("yyyy-MM-dd")
 							.format(Calendar.getInstance().getTime());
-					fgModelZone2.getDailyShippingItems(timeStamp);
+					//fgModelZone2.getDailyShippingItems(timeStamp);
+					fgModelZone2.getDailyShippingItems("2018-06-22");
 
 				} catch (Exception e) {
 					e.printStackTrace();
