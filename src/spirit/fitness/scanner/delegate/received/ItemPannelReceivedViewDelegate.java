@@ -81,7 +81,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	@Override
 	public void initial(List<Containerbean> _container, String content) {
 		containers = _container;
-		Collections.sort(containers,new ContainerSortByModel());
+		Collections.sort(containers, new ContainerSortByModel());
 		scanInfo(content);
 		exceuteCallback();
 		loadModelMapZone2();
@@ -90,7 +90,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	@Override
 	public void initial(List<Containerbean> _container, String content, String location) {
 		containers = _container;
-		Collections.sort(containers,new ContainerSortByModel());
+		Collections.sort(containers, new ContainerSortByModel());
 		containerNo = containers.get(0).ContainerNo;
 		displayScanResultFrame(content, location);
 		exceuteCallback();
@@ -350,29 +350,34 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					int startIndex = 0;
 					int endIndex = 0;
 					scannedModel = itemList[0].substring(0, 6);
-					for (Containerbean c : containers) {
-						if (c.SNBegin.substring(0, 6).equals(scannedModel)) {
-							startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
-							endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
-						}
-
-					}
 					List<Itembean> items = new ArrayList<Itembean>();
 					outRangeSN = new ArrayList<Itembean>();
 					scannedModel = itemList[0].substring(0, 6);
-					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-							.format(Calendar.getInstance().getTime());
-					for (String item : itemList) {
-						Itembean _item = new Itembean();
 
-						_item.SN = item;
-						_item.ModelNo = scannedModel;
-						items.add(_item);
-						if (Integer.valueOf(_item.SN.substring(10, 16)) - startIndex < 0
-								|| endIndex - Integer.valueOf(_item.SN.substring(10, 16)) < 0)
-							outRangeSN.add(_item);
+					for (Containerbean c : containers) {
+
+						startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
+						endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
+
+						String modelNoMap = c.SNBegin.substring(0, 6);
+						for (String item : itemList) {
+
+							if (item.substring(0, 6).endsWith(modelNoMap)) {
+								Itembean _item = new Itembean();
+
+								_item.SN = item;
+								_item.ModelNo = _item.SN.substring(0, 6);
+								items.add(_item);
+								if (Integer.valueOf(_item.SN.substring(10, 16)) - startIndex < 0
+										|| endIndex - Integer.valueOf(_item.SN.substring(10, 16)) < 0)
+									outRangeSN.add(_item);
+							}
+						}
 
 					}
+
+					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+							.format(Calendar.getInstance().getTime());
 
 					if (outRangeSN.size() > 0)
 						checkScanResultOutOfFrame(items);
@@ -420,30 +425,33 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					int startIndex = 0;
 					int endIndex = 0;
 					scannedModel = itemList[0].substring(0, 6);
+					List<Itembean> items = new ArrayList<Itembean>();
+					outRangeSN = new ArrayList<Itembean>();
 					for (Containerbean c : containers) {
-						if (c.SNBegin.substring(0, 6).equals(scannedModel)) {
-							startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
-							endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
+
+						startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
+						endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
+						String modelNoMap = c.SNBegin.substring(0, 6);
+
+						for (String item : itemList) {
+							if (item.substring(0, 6).endsWith(modelNoMap)) {
+								Itembean _item = new Itembean();
+
+								_item.SN = item;
+								_item.ModelNo = scannedModel;
+								items.add(_item);
+
+								if (Integer.valueOf(_item.SN.substring(10, 16)) - startIndex < 0
+										|| endIndex - Integer.valueOf(_item.SN.substring(10, 16)) < 0)
+									outRangeSN.add(_item);
+
+							}
 						}
 
 					}
 
-					List<Itembean> items = new ArrayList<Itembean>();
-					outRangeSN = new ArrayList<Itembean>();
 					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 							.format(Calendar.getInstance().getTime());
-					for (String item : itemList) {
-						Itembean _item = new Itembean();
-
-						_item.SN = item;
-						_item.ModelNo = scannedModel;
-						items.add(_item);
-
-						if (Integer.valueOf(_item.SN.substring(10, 16)) - startIndex < 0
-								|| endIndex - Integer.valueOf(_item.SN.substring(10, 16)) < 0)
-							outRangeSN.add(_item);
-
-					}
 
 					if (outRangeSN.size() > 0)
 						checkScanResultOutOfFrame(items);
@@ -486,16 +494,15 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				String sortResult = "";
 
 				for (String s : scanItem) {
-					if(s.length() > 16) 
-					{
+					if (s.length() > 16) {
 						s = s.substring(0, 16);
-						if(set.contains(s))
+						if (set.contains(s))
 							continue;
 					}
 					sortResult += s + "\n";
 
 				}
-				
+
 				inputSN.setText(sortResult);
 			}
 		});
@@ -661,7 +668,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 						_item.SN = item;
 						_item.date = scannedDate;
 						_item.Location = location;
-						_item.ModelNo = scannedModel;
+						_item.ModelNo = _item.SN.substring(0, 6);
 						_item.ContainerNo = containerNo;
 						items.add(_item);
 
@@ -1072,12 +1079,12 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		for (int i = startIndex; i < endIndex + 1; i++) {
 
 			if (idx < scanItem.length) {
-                
-                if(scanItem[idx].length() > 16) {
-                    scanItem[idx] = scanItem[idx].substring(0, 16);
-                    if(set.contains(scanItem[idx]))
-                        continue;
-                }
+
+				if (scanItem[idx].length() > 16) {
+					scanItem[idx] = scanItem[idx].substring(0, 16);
+					if (set.contains(scanItem[idx]))
+						continue;
+				}
 
 				if (Integer.valueOf(scanItem[idx].substring(10, 16)) == i) {
 					sortResult += scanItem[idx] + "\n";
@@ -1245,9 +1252,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			@Override
 			public void getInventoryItems(List<Itembean> items) {
 				timer.stop();
-                timer = null;
-                isTimeOut = 1;
-                
+				timer = null;
+				isTimeOut = 1;
+
 				if (!items.isEmpty()) {
 					// progressMonitor.close();
 					// task.done();
@@ -1292,8 +1299,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			@Override
 			public void checkReceiveItem(List<Itembean> items) {
 				timer.stop();
-                timer = null;
-                isTimeOut = 1;
+				timer = null;
+				isTimeOut = 1;
 				String[] scanItem = inputSN.getText().toString().split("\n");
 				if (loadingframe != null) {
 					loadingframe.setVisible(false);
@@ -1361,8 +1368,10 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
 					EmailHelper.sendMail(scannedDate, containers, scanContent, "geminih@spiritfitness.com");
-					//EmailHelper.sendMail(scannedDate, containers, scanContent, "vickie@spiritfitness.com");
-					//EmailHelper.sendMail(scannedDate, containers, scanContent, "ashleyg@spiritfitness.com");
+					// EmailHelper.sendMail(scannedDate, containers, scanContent,
+					// "vickie@spiritfitness.com");
+					// EmailHelper.sendMail(scannedDate, containers, scanContent,
+					// "ashleyg@spiritfitness.com");
 				}
 
 			}
@@ -1375,18 +1384,15 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		});
 
 	}
-	
-	
-	class ContainerSortByModel implements Comparator<Containerbean>
-	{
-	    // Used for sorting in ascending order of
-	    // roll name
-	    public int compare(Containerbean a, Containerbean b)
-	    {
-	    	String modelA = a.SNBegin.substring(0,6);
-	    	String modelB = b.SNBegin.substring(0,6);
-	        return modelA.compareTo(modelB);
-	    }
+
+	class ContainerSortByModel implements Comparator<Containerbean> {
+		// Used for sorting in ascending order of
+		// roll name
+		public int compare(Containerbean a, Containerbean b) {
+			String modelA = a.SNBegin.substring(0, 6);
+			String modelB = b.SNBegin.substring(0, 6);
+			return modelA.compareTo(modelB);
+		}
 	}
 
 }
