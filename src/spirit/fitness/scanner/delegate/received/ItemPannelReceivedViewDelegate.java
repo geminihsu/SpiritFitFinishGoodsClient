@@ -1367,11 +1367,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				if (!items.isEmpty()) {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
-					EmailHelper.sendMail(scannedDate, containers, scanContent, "geminih@spiritfitness.com");
-					// EmailHelper.sendMail(scannedDate, containers, scanContent,
-					// "vickie@spiritfitness.com");
-					// EmailHelper.sendMail(scannedDate, containers, scanContent,
-					// "ashleyg@spiritfitness.com");
+					//EmailHelper.sendMail(scannedDate, containers, scanContent, "geminih@spiritfitness.com");
+					//EmailHelper.sendMail(scannedDate, containers, scanContent, "vickie@spiritfitness.com");
+				    //EmailHelper.sendMail(scannedDate, containers, scanContent, "ashleyg@spiritfitness.com");
 				}
 
 			}
