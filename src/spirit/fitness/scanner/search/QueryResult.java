@@ -303,9 +303,10 @@ public class QueryResult {
 					
 					String locationCode = String.valueOf(location).substring(37, 40);
 					
-					if(locationCode.equals("RTS"))
-						locationCode = "881";
-					else if(locationCode.equals("Uns"))
+					//if(locationCode.equals("RTS"))
+					//	locationCode = "881";
+					//else
+						if(locationCode.startsWith("Uns"))
 						locationCode = "555";
 					
 					queryLocation(locationCode);
@@ -407,7 +408,7 @@ public class QueryResult {
 		}
 
 		if (zone3Data != null) {
-			zone3.setText("Unshippable and RTS: " + zoneCount.get(5));
+			zone3.setText("Unshippable : " + zoneCount.get(5));
 
 			int height = 50 * zone3Data.length + 20;
 
@@ -742,8 +743,8 @@ public class QueryResult {
 						locationCode = "Show Room";
 					else if(locationCode.equals("555"))
 						locationCode = "Unshippable";
-					else if(locationCode.equals("881")||locationCode.equals("891")||locationCode.equals("901"))
-						locationCode = "RTS";
+					//else if(locationCode.equals("881")||locationCode.equals("891")||locationCode.equals("901"))
+					//	locationCode = "RTS";
 					
 					rowData[rowIndex][0] = "<html>" + "<span style=\"color: blue;\"> <u>" + locationCode
 							+ "</u></span> " + "</html>";
