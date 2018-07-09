@@ -439,7 +439,7 @@ public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
 						_item.SN = item;
 						_item.date = scannedDate;
 						_item.Location = location;
-						_item.ModelNo = scannedModel;
+						_item.ModelNo = _item.SN.substring(0, 6);
 						_item.ContainerNo = containerNo;
 						items.add(_item);
 
