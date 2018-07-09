@@ -514,7 +514,22 @@ public class DailyShippingReport {
 				try {
 					String timeStamp = new SimpleDateFormat("yyyy-MM-dd")
 							.format(Calendar.getInstance().getTime());
-					fgModelZone2.getDailyShippingItems(timeStamp);
+					
+					SimpleDateFormat shipFormat = new SimpleDateFormat("yyyy-MM-dd");
+					
+					Date shippedDate = shipFormat.parse(timeStamp);
+					Calendar ship = Calendar.getInstance();
+					ship.setTime(shippedDate);
+					
+					 int dayOfWeek = ship.get(Calendar.DAY_OF_WEEK);
+					 if(dayOfWeek == Calendar.MONDAY)
+						 ship.add(Calendar.DATE, -3);
+					 else
+						 ship.add(Calendar.DATE, -1);
+					String dueDate = new SimpleDateFormat("yyyy-MM-dd").format(ship.getTime());
+					
+					
+					fgModelZone2.getDailyShippingItems(dueDate);
 				} catch (Exception e) {
 					e.printStackTrace();
 					// NetWorkHandler.displayError(loadingframe);
