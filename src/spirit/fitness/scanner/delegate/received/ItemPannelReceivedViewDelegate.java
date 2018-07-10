@@ -492,18 +492,33 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				Arrays.sort(scanItem);
 
 				String sortResult = "";
-
+				
+				modelScanCurMap.clear();
+				set = new HashSet<String>();
+				
 				for (String s : scanItem) {
 					if (s.length() > 16) {
 						s = s.substring(0, 16);
 						if (set.contains(s))
 							continue;
 					}
+					set.add(s);
+
+					String modelNo = s.substring(0, 10);
+					if (!modelScanCurMap.containsKey(modelNo))
+						modelScanCurMap.put(modelNo, 1);
+					else
+						modelScanCurMap.put(modelNo, modelScanCurMap.get(modelNo) + 1);
+
+					
 					sortResult += s + "\n";
 
 				}
 
+				
+				
 				inputSN.setText(sortResult);
+				ltotal.setText(setModelScanCountLabel(set.size()));
 			}
 		});
 
@@ -1367,7 +1382,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				if (!items.isEmpty()) {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
-					//EmailHelper.sendMail(scannedDate, containers, scanContent, "geminih@spiritfitness.com");
+					EmailHelper.sendMail(scannedDate, containers, scanContent, "geminih@spiritfitness.com");
 					//EmailHelper.sendMail(scannedDate, containers, scanContent, "vickie@spiritfitness.com");
 				    //EmailHelper.sendMail(scannedDate, containers, scanContent, "ashleyg@spiritfitness.com");
 				}
