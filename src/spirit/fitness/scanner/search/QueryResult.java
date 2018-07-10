@@ -453,6 +453,7 @@ public class QueryResult {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				queryModelCount = 0;
 				if (isQueryRepeat && colFrame != null) {
 					colFrame.dispose();
 					colFrame.setVisible(false);
@@ -622,6 +623,8 @@ public class QueryResult {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				queryModelCount = 0;
+				
 				if (isQueryRepeat && colFrame != null) {
 					colFrame.dispose();
 					colFrame.setVisible(false);
