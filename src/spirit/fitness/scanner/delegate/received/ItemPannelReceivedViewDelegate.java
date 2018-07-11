@@ -319,6 +319,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		exitButton.setBounds(50, 610, 150, 50);
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+                String[] scanitem = inputSN.getText().toString().split("\n");
+
+				
 				Constrant.serial_list = "Container No." + containers.get(0).ContainerNo + "\n Receiving SN : \n"
 						+ inputSN.getText().toString();
 
@@ -326,7 +329,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 				if (inputSN.getText().isEmpty())
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
-				else if (item.length != orderTotalCount) {
+				else if (scanitem.length != orderTotalCount) {
 					JOptionPane.showMessageDialog(null, "Quantity Error!");
 					checkMissItems();
 				} else {
