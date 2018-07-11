@@ -322,11 +322,13 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				Constrant.serial_list = "Container No." + containers.get(0).ContainerNo + "\n Receiving SN : \n"
 						+ inputSN.getText().toString();
 
+				String[] scanitem = inputSN.getText().toString().split("\n");
+
 				isDefaultZone = true;
 
 				if (inputSN.getText().isEmpty())
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
-				else if (item.length != orderTotalCount) {
+				else if (scanitem.length != orderTotalCount) {
 					JOptionPane.showMessageDialog(null, "Quantity Error!");
 					checkMissItems();
 				} else {
