@@ -95,7 +95,8 @@ public class DailyShippingReport {
 
 	private LoadingFrameHelper loadingframe;
 	private JProgressBar loading;
-
+    private JTextField date;
+	
 	private JFileChooser chooser;
 	private String choosertitle;
 
@@ -118,8 +119,11 @@ public class DailyShippingReport {
 
 		loadingframe = new LoadingFrameHelper("Loading Data from Server...");
 		loading = loadingframe.loadingSample("Loading Data from Server...");
+		
+		date = new JTextField(20);
 		intialCallback();
 		String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+		date.setText(timeStamp);
 		loadModelZone2Map(timeStamp);
 
 	}
@@ -166,15 +170,14 @@ public class DailyShippingReport {
 		 * we are setting the layout to null
 		 */
 		panel.setLayout(null);
-
+	
 		// ScrollPane for Result
 		JScrollPane scrollZonePane = new JScrollPane();
 
 		scrollZonePane.setBackground(Constrant.TABLE_COLOR);
 		panel.add(scrollZonePane);
 
-		String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
-
+		
 		Object rowDataReport[][] = new Object[data.size()][10];
 		System.out.println(data.size());
 
@@ -289,9 +292,9 @@ public class DailyShippingReport {
 		Font btnFont = new Font("Verdana", Font.BOLD, 18);
 		Font txtFont = new Font("Verdana", Font.BOLD, 22);
 
-		JButton Search = new JButton("Import SO file");
+		JButton Search = new JButton("Import SO");
 		Search.setFont(btnFont);
-		Search.setBounds(530, 640, 200, 50);
+		Search.setBounds(730, 640, 150, 50);
 
 		Search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -321,9 +324,9 @@ public class DailyShippingReport {
 		});
 		panel.add(Search);
 
-		btnDone = new JButton("Export SALES file");
+		btnDone = new JButton("Export SALES");
 		btnDone.setFont(btnFont);
-		btnDone.setBounds(738, 640, 250, 50);
+		btnDone.setBounds(890, 640, 180, 50);
 
 		btnDone.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -364,7 +367,7 @@ public class DailyShippingReport {
 
 		JButton save = new JButton("Save shipping report");
 		save.setFont(btnFont);
-		save.setBounds(5, 640, 250, 50);
+		save.setBounds(450, 640, 270, 50);
 
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -406,9 +409,39 @@ public class DailyShippingReport {
 		});
 		panel.add(save);
 		
+		
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e) {
+				date.requestFocus();
+			}
+		});
+		
+
+		
+		
+		date.setFont(txtFont);
+		date.setBounds(5, 640, 200, 50);
+		panel.add(date);
+		
+		JButton find = new JButton("Find");
+		find.setFont(btnFont);
+		find.setBounds(220, 640, 200, 50);
+
+		find.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(loadingframe != null)
+					loadingframe.setVisible(true);
+				
+				loadModelZone2Map(date.getText().toString());
+				frame.dispose();
+				frame.setVisible(false);
+			}
+		});
+		panel.add(find);
+		
 		JButton exitDone = new JButton("Exit");
 		exitDone.setFont(btnFont);
-		exitDone.setBounds(995, 640, 200, 50);
+		exitDone.setBounds(1080, 640, 100, 50);
 
 		exitDone.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -512,10 +545,8 @@ public class DailyShippingReport {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					String timeStamp = new SimpleDateFormat("yyyy-MM-dd")
-							.format(Calendar.getInstance().getTime());
-					
-					SimpleDateFormat shipFormat = new SimpleDateFormat("yyyy-MM-dd");
+						
+					/*SimpleDateFormat shipFormat = new SimpleDateFormat("yyyy-MM-dd");
 					
 					Date shippedDate = shipFormat.parse(timeStamp);
 					Calendar ship = Calendar.getInstance();
@@ -528,8 +559,9 @@ public class DailyShippingReport {
 						 ship.add(Calendar.DATE, -1);
 					String dueDate = new SimpleDateFormat("yyyy-MM-dd").format(ship.getTime());
 					
-					
-					fgModelZone2.getDailyShippingItems(dueDate);
+					date.setText(dueDate);*/
+					date.setText(timeStamp);
+					fgModelZone2.getDailyShippingItems(timeStamp);
 				} catch (Exception e) {
 					e.printStackTrace();
 					// NetWorkHandler.displayError(loadingframe);
