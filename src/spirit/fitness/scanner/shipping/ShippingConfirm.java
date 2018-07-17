@@ -1442,6 +1442,7 @@ public class ShippingConfirm {
 						public void run() {
 
 							checkItemExitsZone2(items);
+							
 						}
 					});
 
