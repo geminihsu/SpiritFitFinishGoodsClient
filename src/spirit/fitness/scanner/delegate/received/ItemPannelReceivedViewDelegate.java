@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
@@ -48,6 +50,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
@@ -90,6 +93,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	private List<Containerbean> containers;
 	private List<Itembean> outRangeSN;
 	private List<SerialNo> snList;
+	private List<Integer> duplicatedSNIdx;
 	private HashMap<String, Integer> scanItemMap = new HashMap<String, Integer>();
 
 	private String containerNo;
@@ -100,7 +104,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	private boolean isAutoScroll;
 	private int scanCnt;
 	private JLabel shippingLabel;
-	private JTable table;
+	private JTable snListTable;
+	private JTextField snInput;
 
 	public ItemPannelReceivedViewDelegate(List<Containerbean> _container, String content) {
 		getInstance();
@@ -151,7 +156,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 		// scanPanel(panel, prevTxt);
 
-		scanPanelContainer2();
+		scanPanelContainer2(prevTxt);
 		scanResultFrame.setBackground(Color.WHITE);
 		scanResultFrame.setVisible(true);
 
@@ -760,8 +765,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					dialogFrame.dispose();
 					dialogFrame.setVisible(false);
 					dialogFrame = null;
-
-					scanInfo(content);
+					scanResultFrame.setVisible(true);
 				}
 			});
 
@@ -1087,6 +1091,11 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				dialogFrame.dispose();
 				dialogFrame.setVisible(false);
 				scanResultFrame.setVisible(true);
+				scanResultFrame.addWindowListener(new WindowAdapter() {
+					public void windowOpened(WindowEvent e) {
+						snInput.requestFocus();
+					}
+				});	
 			}
 		});
 
@@ -1204,6 +1213,24 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		});
 
 	}
+	
+	// Updated container status from open to close
+		private void getContainerStatus(String containerNo) {
+
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+
+						containerRepository.getItemsByContainerNo(containerNo);
+
+					} catch (Exception e) {
+						e.printStackTrace();
+						NetWorkHandler.displayError(loadingframe);
+					}
+				}
+			});
+
+		}
 
 	@Override
 	public void submitServer(List<Itembean> items) {
@@ -1433,11 +1460,18 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				// TODO Auto-generated method stub
 
 			}
+
+			@Override
+			public void getContainerItemsByContainerNo(List<Containerbean> items) {
+				
+				
+			}
 		});
 
 	}
 
-	private void scanPanelContainer2() {
+	private void scanPanelContainer2(String prevTxt) {
+		duplicatedSNIdx = new ArrayList<Integer>();
 		set = new HashSet<String>();
 		modelTotalCurMap = new LinkedHashMap<String, Integer>();
 		modelScanCurMap = new LinkedHashMap<String, Integer>();
@@ -1467,18 +1501,18 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		JLabel model = new JLabel("  Model No." + containers.get(0).SNBegin.substring(0, 6));
 		model.setFont(font);
 		tfPanel.add(model);
-
-		JTextField date = new JTextField(50);
+		
+		snInput = new JTextField(50);
 
 		Border borderTable = BorderFactory.createLineBorder(Constrant.BACKGROUN_COLOR, 5);
-		date.setBackground(Constrant.BACKGROUN_COLOR);
-		date.setCaretColor(Constrant.BACKGROUN_COLOR);
-		date.setVerifyInputWhenFocusTarget(true);
+		snInput.setBackground(Constrant.BACKGROUN_COLOR);
+		snInput.setCaretColor(Constrant.BACKGROUN_COLOR);
+		snInput.setVerifyInputWhenFocusTarget(true);
 		// set the border of this component
-		date.setBorder(borderTable);
-		date.setFont(font);
-		tfPanel.add(date);
-		date.addActionListener(new ActionListener() {
+		snInput.setBorder(borderTable);
+		snInput.setFont(font);
+		tfPanel.add(snInput);
+		snInput.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
@@ -1486,15 +1520,21 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		});
 
 		
-		
-		
-		InputMap input = date.getInputMap();
+		scanResultFrame.addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e) {
+				snInput.requestFocus();
+			}
+		});	
+	
+	
+
+		InputMap input = snInput.getInputMap();
 		KeyStroke enter = KeyStroke.getKeyStroke("ENTER");
 		KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
 		input.put(shiftEnter, INSERT_BREAK); // input.get(enter)) = "insert-break"
 		input.put(enter, TEXT_SUBMIT);
 
-		ActionMap actions = date.getActionMap();
+		ActionMap actions = snInput.getActionMap();
 		actions.put(TEXT_SUBMIT, new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1503,8 +1543,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 				String model = "";
 				int curModelCnt = 0;
-				if (date.getText().toString().length() == 16) {
-					model = date.getText().toString().substring(0, 6);
+				if (snInput.getText().toString().length() == 16) {
+					model = snInput.getText().toString().substring(0, 6);
 
 					if (modelScanCurMap.get(model) == null)
 						lenError = true;
@@ -1513,20 +1553,25 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 				}
 
-				if (!set.contains(date.getText().toString()) && date.getText().toString().length() == 16
-						&& set.size() <= orderTotalCount && modelTotalCurMap.containsKey(model)
+				if ( snInput.getText().toString().length() == 16
+						 && modelTotalCurMap.containsKey(model)
 						&& curModelCnt < modelTotalCurMap.get(model) ) {
 					
-					curModelCnt++;
-					modelScanCurMap.put(model, curModelCnt);
-					addSerialNoToTable(date.getText().toString());
-					date.setText("");
+					
+					
+					if (!scanItemMap.containsKey(snInput.getText().toString())) 
+					{
+						curModelCnt++;
+						modelScanCurMap.put(model, curModelCnt);
+					}
+					addSerialNoToTable(snInput.getText().toString());
+					snInput.setText("");
 					TitledBorder titledBorder = BorderFactory.createTitledBorder(null,
-							"Total : " + scanCnt + "/" + modelTotalCurMap.get(model), TitledBorder.CENTER,
+							"Total : " + scanItemMap.size() + "/" + modelTotalCurMap.get(model), TitledBorder.CENTER,
 							TitledBorder.BOTTOM, font, Color.BLACK);
 					tfPanel.setBorder(titledBorder);
 				} else {
-					date.setText("");
+					snInput.setText("");
 					// prev = prev.substring(0, prev.length() - (item[item.length - 1].length()) -
 					// 1);
 
@@ -1573,67 +1618,19 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				
 				isDefaultZone = true;
 
-				if (snList.isEmpty())
+				if (scanItemMap.size() == 0) 
+				{
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
-				else if (snList.size() != orderTotalCount) {
-					JOptionPane.showMessageDialog(null, "Quantity Error!");
-					checkMissItems(snItems);
-				} else {
-					scanResultFrame.setVisible(false);
-					scanResultFrame.dispose();
-
-					
-					scanResultFrame.setVisible(false);
-					scanResultFrame.dispose();
-					destroy();
-					// if (type == MOVING) {
-					loadingframe = new LoadingFrameHelper("Checking data...");
-					loading = loadingframe.loadingSample("Checking data...");
-
-					
-					int startIndex = 0;
-					int endIndex = 0;
-					scannedModel = snList.get(0).serialNo.substring(0, 6);
-					List<Itembean> items = new ArrayList<Itembean>();
-					outRangeSN = new ArrayList<Itembean>();
-					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-							.format(Calendar.getInstance().getTime());
-
-					for (Containerbean c : containers) {
-
-						startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
-						endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
-
-						String modelNoMap = c.SNBegin.substring(0, 6);
-						
-						
-						for (SerialNo item : snList) {
-
-							if (item.serialNo.substring(0, 6).endsWith(modelNoMap)) {
-								Itembean _item = new Itembean();
-
-								_item.SN = item.serialNo;
-								_item.ModelNo = item.serialNo.substring(0, 6);
-								_item.date = timeStamp;
-								items.add(_item);
-								if (Integer.valueOf(item.serialNo.substring(10, 16)) - startIndex < 0
-										|| endIndex - Integer.valueOf(item.serialNo.substring(10, 16)) < 0)
-									outRangeSN.add(_item);
-							}
+					scanResultFrame.addWindowListener(new WindowAdapter() {
+						public void windowOpened(WindowEvent e) {
+							snInput.requestFocus();
 						}
-
-					}
-
-					Constrant.serial_list = "Container No." + containers.get(0).ContainerNo + "\n Receiving SN : \n"
-							+ snItems;
-
-					if (outRangeSN.size() > 0)
-						checkScanResultOutOfFrame(items);
-					else
-						checkReceiveItemExits(items);
-
+					});	
+				}else 
+				{
+					//query container information again
+					getContainerStatus(containers.get(0).ContainerNo);
 				}
-
 			}
 		});
 		
@@ -1647,10 +1644,15 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				}
 				
 
-				if (snList.isEmpty())
+				if (scanItemMap.size() == 0)
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
-				else if (snList.size() != orderTotalCount) {
+				else if (scanItemMap.size() != orderTotalCount) {
 					JOptionPane.showMessageDialog(null, "Quantity Error!");
+					scanResultFrame.addWindowListener(new WindowAdapter() {
+						public void windowOpened(WindowEvent e) {
+							snInput.requestFocus();
+						}
+					});	
 					checkMissItems(snItems);
 				} else {
 					scanResultFrame.setVisible(false);
@@ -1726,6 +1728,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 						modelScanCurMap = new LinkedHashMap<String, Integer>();
 						scanItemMap =  new HashMap<String, Integer>();
 						snList.clear();
+						duplicatedSNIdx.clear();
 						
 						containerNo = containers.get(0).ContainerNo;
 						orderTotalCount = 0;
@@ -1781,32 +1784,55 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 		String[] header = { "No.", "SN" };
 		dtm = new DefaultTableModel(null, header) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				if(duplicatedSNIdx.contains(row)&& column == 1)
+				{
+					Object[] options = { "Delete", "Cancel" };
+					int n = JOptionPane.showOptionDialog(scanResultFrame,
+							"would you like to delete the duplicate item?", "A Silly Question",
+							JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+					
+					if(n == 0) 
+					{
+						String model = dtm.getValueAt(row, column).toString().substring(0,6);
+						//scanItemMap.remove(dtm.getValueAt(row, column));
+						dtm.setValueAt(null, row, column);
+						duplicatedSNIdx.clear();
+						TitledBorder titledBorder = BorderFactory.createTitledBorder(null,
+								"Total : " + scanItemMap.size() + "/" + modelTotalCurMap.get(model), TitledBorder.CENTER,
+								TitledBorder.BOTTOM, font, Color.BLACK);
+						tfPanel.setBorder(titledBorder);
+					}
+				}
+					return false;
+			}
 
 			@Override
 			public Class<?> getColumnClass(int col) {
 				return getValueAt(0, col).getClass();
 			}
 		};
-		table = new JTable(dtm);
-		JScrollPane scrollPane = new JScrollPane(table);
+		snListTable = new JTable(dtm);
+		JScrollPane scrollPane = new JScrollPane(snListTable);
 		JScrollBar vScroll = scrollPane.getVerticalScrollBar();
 
 		Dimension d = new Dimension(500, 480);
-		table.setPreferredScrollableViewportSize(d);
+		snListTable.setPreferredScrollableViewportSize(d);
 
-		table.getTableHeader().setFont(font);
-		table.getTableHeader().setBackground(Constrant.BACKGROUN_COLOR);
-		table.setBackground(Constrant.BACKGROUN_COLOR);
-		table.setFont(font);
-		table.setRowHeight(30);
+		snListTable.getTableHeader().setFont(font);
+		snListTable.getTableHeader().setBackground(Constrant.BACKGROUN_COLOR);
+		snListTable.setBackground(Constrant.BACKGROUN_COLOR);
+		snListTable.setFont(font);
+		snListTable.setRowHeight(30);
 
 		DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
 		leftRenderer.setHorizontalAlignment(JLabel.CENTER);
-		TableColumn modelNo = table.getColumnModel().getColumn(0);
+		TableColumn modelNo = snListTable.getColumnModel().getColumn(0);
 		modelNo.setPreferredWidth(2);
 		modelNo.setCellRenderer(leftRenderer);
 
-		TableColumn sn = table.getColumnModel().getColumn(1);
+		TableColumn sn = snListTable.getColumnModel().getColumn(1);
 		sn.setCellRenderer(leftRenderer);
 		sn.setPreferredWidth(350);
 		scrollPane.setBackground(Constrant.BACKGROUN_COLOR);
@@ -1821,7 +1847,33 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		});
 		scrollPane.getViewport().setBackground(Constrant.BACKGROUN_COLOR);
 		scrollPane.getVerticalScrollBar().setBackground(Constrant.BACKGROUN_COLOR);
+		//restore sn
+		System.out.println("snList size :" + snList.size());
+		String[] item = prevTxt.split("\n");
+		set = new HashSet<String>();
+		int len = 0;
+		if (!prevTxt.equals("")) {
 
+			len = item.length;
+			modelScanCurMap.clear();
+			for (String s : item) {
+				set.add(s);
+
+				String SNmodelNo = s.substring(0, 10);
+				if (!modelScanCurMap.containsKey(SNmodelNo))
+					modelScanCurMap.put(SNmodelNo, 1);
+				else
+					modelScanCurMap.put(SNmodelNo, modelScanCurMap.get(SNmodelNo) + 1);
+
+				addSerialNoToTable(s);
+				
+			}
+
+			titledBorder = BorderFactory.createTitledBorder(null,
+					"Total : "+len+"/" + modelTotalCurMap.get(containers.get(0).SNBegin.substring(0, 6)),
+					TitledBorder.CENTER, TitledBorder.BOTTOM, font, Color.BLACK);
+			tfPanel.setBorder(titledBorder);
+		}
 
 		// Setup the content-pane of JFrame in BorderLayout
 		Container cp = scanResultFrame.getContentPane();
@@ -1831,12 +1883,15 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		cp.add(btnPanel, BorderLayout.EAST);
 		cp.add(scrollPane, BorderLayout.CENTER);
 
+	
+		
 	}
-
+	
 	
 	private void addSerialNoToTable(String sn) {
+		scanCnt++;
 		if (!scanItemMap.containsKey(sn)) {
-			char c = (char) ('A' + scanCnt++ % 26);
+			//char c = (char) ('A' + scanCnt++ % 26);
 
 			scanItemMap.put(sn, scanCnt);
 			SerialNo snItem = new SerialNo();
@@ -1849,11 +1904,17 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		} else {
 
 			if (scanCnt - scanItemMap.get(sn) > 1) {
-				char c = (char) ('A' + scanCnt++ % 26);
+				//char c = (char) ('A' + scanCnt++ % 26);
+				duplicatedSNIdx.add(scanItemMap.get(sn) -1);
+				duplicatedSNIdx.add(scanCnt -1);
+				
+				TableColumn tmIdx = snListTable.getColumnModel().getColumn(0);
+				tmIdx.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.blue));
 
-				// TableColumn tm = table.getColumnModel().getColumn(0);
-				// table.setCellRenderer(new ColorColumnRenderer(Color.lightGray, Color.blue));
+				TableColumn tm = snListTable.getColumnModel().getColumn(1);
+				tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.blue));
 
+				
 				scanItemMap.put(sn, scanCnt);
 				SerialNo snItem = new SerialNo();
 				snItem.no = scanCnt;
@@ -1905,8 +1966,16 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				int row, int column) {
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-			cell.setForeground(((Double) value) > 0 ? Color.BLUE : Color.RED);
+		
+			if(duplicatedSNIdx.contains(row))
+				cell.setBackground(Color.lightGray);
+			else
+				cell.setBackground(Constrant.BACKGROUN_COLOR);
 
+
+			((JLabel) cell).setHorizontalAlignment(SwingConstants.CENTER);
+			
+			
 			return cell;
 		}
 	}
