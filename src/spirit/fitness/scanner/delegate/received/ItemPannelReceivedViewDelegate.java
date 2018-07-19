@@ -1494,7 +1494,6 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	}
 	
 	private void addSerialNoToTable(String sn) {
-		scanCnt++;
 		if (!scanItemMap.containsKey(sn)) {
 			//char c = (char) ('A' + scanCnt++ % 26);
 
@@ -1506,6 +1505,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			dtm.addRow(new Object[] { scanCnt, sn,
 
 			});
+			scanCnt++;
 		} else {
 
 			if (scanCnt - scanItemMap.get(sn) > 1 && scanItemMap.size() < orderTotalCount) {
@@ -1528,7 +1528,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				dtm.addRow(new Object[] { scanCnt, sn,
 
 				});
-
+				scanCnt++;
 			}
 		}
 
