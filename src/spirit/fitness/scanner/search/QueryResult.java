@@ -303,9 +303,10 @@ public class QueryResult {
 					
 					String locationCode = String.valueOf(location).substring(37, 40);
 					
-					if(locationCode.equals("RTS"))
-						locationCode = "881";
-					else if(locationCode.equals("Uns"))
+					//if(locationCode.equals("RTS"))
+					//	locationCode = "881";
+					//else
+						if(locationCode.startsWith("Uns"))
 						locationCode = "555";
 					
 					queryLocation(locationCode);
@@ -452,6 +453,7 @@ public class QueryResult {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				queryModelCount = 0;
 				if (isQueryRepeat && colFrame != null) {
 					colFrame.dispose();
 					colFrame.setVisible(false);
@@ -621,6 +623,8 @@ public class QueryResult {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				queryModelCount = 0;
+				
 				if (isQueryRepeat && colFrame != null) {
 					colFrame.dispose();
 					colFrame.setVisible(false);

@@ -273,7 +273,7 @@ public class ContainerPannel implements ActionListener {
 
 			final Class[] columnClass = new Class[] { String.class, String.class, String.class,Integer.class };
 
-			Object columnNames[] = { "RECEIVED DATE", "CONTAINERNO", "ModelNo", "QTY" };
+			Object columnNames[] = { "RECEIVED DATE", "CONTAINERNO", "MODELNO.", "QTY" };
 
 		
 			DefaultTableModel container = new DefaultTableModel(containerItems, columnNames) {
