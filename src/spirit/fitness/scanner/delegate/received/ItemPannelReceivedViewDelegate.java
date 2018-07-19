@@ -1532,7 +1532,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		tfPanel.setBorder(titledBorder);
 		tfPanel.setBackground(Constrant.BACKGROUN_COLOR);
 
-		JLabel totalLabel = new JLabel("  Container# " + containers.get(0).ContainerNo);
+		JLabel totalLabel = new JLabel(" Container# " + containers.get(0).ContainerNo);
 		totalLabel.setFont(font);
 		tfPanel.add(totalLabel);
 
