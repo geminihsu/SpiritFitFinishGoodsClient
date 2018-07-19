@@ -643,27 +643,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			} else
 				result = "SN : " + Integer.valueOf(((String) sortedList.get(0)).substring(10, 16)) + "~"
 						+ Integer.valueOf(((String) sortedList.get(sortedList.size() - 1)).substring(10, 16));
-			// else if (noContinue.size() == 0 && sortedList.size() > 1)
-			// result = "SN : " + Integer.valueOf(((String) sortedList.get(0)).substring(10,
-			// 16)) + "~"
-			// + Integer.valueOf(((String) sortedList.get(sortedList.size() -
-			// 1)).substring(10, 16));
-			// else {
-			// result = "SN : " + Integer.valueOf(((String) sortedList.get(0)).substring(10,
-			// 16)) + "~" + (skip - 1);
-
-			// int noContinueStartIndex = noContinue.get(0);
-			// result += " <br/>"+((String) sortedList.get(0)).substring(0,10)
-			// +noContinueStartIndex +"~";
-			/*
-			 * for (int i = 1; i < noContinue.size(); i++) { result += noContinue.get(i) -
-			 * 1; }
-			 */
-
-			// result += "," + (noContinue.get(noContinue.size() - 1) + "~"
-			// + Integer.valueOf(((String) sortedList.get(sortedList.size() -
-			// 1)).substring(10, 16)));
-			// }
+			
 			dialogFrame = new JFrame("Query Pannel");
 			// Setting the width and height of frame
 			dialogFrame.setSize(600, 400);
@@ -689,11 +669,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					+ ") <br/>" + "Total : " + sortedList.size() + " <br/>" + result + " <br/>" + "to location " + "["
 					+ zoneCode + "][" + location + "] ?</html>");
 
-			/*
-			 * This method specifies the location and size of component. setBounds(x, y,
-			 * width, height) here (x,y) are cordinates from the top left corner and
-			 * remaining two arguments are the width and height of the component.
-			 */
+		
 			modelLabel.setBounds(30, 0, 500, 200);
 			modelLabel.setFont(font);
 			panel.add(modelLabel);
@@ -705,17 +681,10 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 			ok.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// String book =
-					// "{\"Seq\":"+91+",\"SN\":\"1858151709001848\",\"Date\":\"2017-12-13
-					// 16:14:02.343\",\"Location\":\"051\",\"ModelNo\":\"185815\"}";
-					// String result =
-					// "{\"Seq\":"+92+",\"SN\":\"1858151709001848\",\"Date\":\"2017-12-13
-					// 16:14:02.343\",\"Location\":\"051\",\"ModelNo\":\"185815\"}";
+					
 					ok.setEnabled(false);
 
-					// progressMonitor = new ProgressMonitor(ItemsPannel.this, "Please wait...", "",
-					// 0, 100);
-
+					
 					List<Itembean> items = new ArrayList<Itembean>();
 					scannedModel = itemList[0].substring(0, 6);
 					scannedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
@@ -1390,6 +1359,12 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					if (isDefaultZone)
 						displayScanResultFrame(snItems, "000");
 					else {
+						snItems = "";
+						
+						for (SerialNo item : snList) 
+						{
+							snItems +=item.serialNo + "\n";
+						}
 						// ZoneMenu.getInstance(containers, inputSN.getText().toString(), 0);
 						Zone1Location window = new Zone1Location(containers, snItems, 0);
 						window.frame.setVisible(true);
@@ -1462,9 +1437,72 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			}
 
 			@Override
-			public void getContainerItemsByContainerNo(List<Containerbean> items) {
-				
-				
+			public void getContainerItemsByContainerNo(List<Containerbean> container) {
+				orderTotalCount = Integer.valueOf(container.get(0).SNEnd.substring(10, 16))
+						- Integer.valueOf(container.get(0).SNBegin.substring(10, 16)) + 1;
+				if (scanItemMap.size() != orderTotalCount) {
+					JOptionPane.showMessageDialog(null, "Quantity Error!");
+					scanResultFrame.addWindowListener(new WindowAdapter() {
+						public void windowOpened(WindowEvent e) {
+							snInput.requestFocus();
+						}
+					});	
+					checkMissItems(snItems);
+				} else {
+					scanResultFrame.setVisible(false);
+					scanResultFrame.dispose();
+
+					
+					scanResultFrame.setVisible(false);
+					scanResultFrame.dispose();
+					destroy();
+					// if (type == MOVING) {
+					loadingframe = new LoadingFrameHelper("Checking data...");
+					loading = loadingframe.loadingSample("Checking data...");
+
+					
+					int startIndex = 0;
+					int endIndex = 0;
+					scannedModel = snList.get(0).serialNo.substring(0, 6);
+					List<Itembean> items = new ArrayList<Itembean>();
+					outRangeSN = new ArrayList<Itembean>();
+					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+							.format(Calendar.getInstance().getTime());
+
+					for (Containerbean c : containers) {
+
+						startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
+						endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
+
+						String modelNoMap = c.SNBegin.substring(0, 6);
+						
+						
+						for (SerialNo item : snList) {
+
+							if (item.serialNo.substring(0, 6).endsWith(modelNoMap)) {
+								Itembean _item = new Itembean();
+
+								_item.SN = item.serialNo;
+								_item.ModelNo = item.serialNo.substring(0, 6);
+								_item.date = timeStamp;
+								items.add(_item);
+								if (Integer.valueOf(item.serialNo.substring(10, 16)) - startIndex < 0
+										|| endIndex - Integer.valueOf(item.serialNo.substring(10, 16)) < 0)
+									outRangeSN.add(_item);
+							}
+						}
+
+					}
+
+					Constrant.serial_list = "Container No." + containers.get(0).ContainerNo + "\n Receiving SN : \n"
+							+ snItems;
+
+					if (outRangeSN.size() > 0)
+						checkScanResultOutOfFrame(items);
+					else
+						checkReceiveItemExits(items);
+
+				}
 			}
 		});
 
@@ -1626,6 +1664,15 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 							snInput.requestFocus();
 						}
 					});	
+				}else if(duplicatedSNIdx.size() > 0) 
+				{
+					JOptionPane.showMessageDialog(null, "Please check duplicated items.");
+					scanResultFrame.addWindowListener(new WindowAdapter() {
+						public void windowOpened(WindowEvent e) {
+							snInput.requestFocus();
+						}
+					});	
+					
 				}else 
 				{
 					//query container information again
@@ -1644,72 +1691,27 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				}
 				
 
-				if (scanItemMap.size() == 0)
+				if (scanItemMap.size() == 0) {
 					JOptionPane.showMessageDialog(null, "Please scan serial number.");
-				else if (scanItemMap.size() != orderTotalCount) {
-					JOptionPane.showMessageDialog(null, "Quantity Error!");
 					scanResultFrame.addWindowListener(new WindowAdapter() {
 						public void windowOpened(WindowEvent e) {
 							snInput.requestFocus();
 						}
 					});	
-					checkMissItems(snItems);
-				} else {
-					scanResultFrame.setVisible(false);
-					scanResultFrame.dispose();
-
-					
-					scanResultFrame.setVisible(false);
-					scanResultFrame.dispose();
-					destroy();
-					// if (type == MOVING) {
-					loadingframe = new LoadingFrameHelper("Checking data...");
-					loading = loadingframe.loadingSample("Checking data...");
-
-					
-					int startIndex = 0;
-					int endIndex = 0;
-					scannedModel = snList.get(0).serialNo.substring(0, 6);
-					List<Itembean> items = new ArrayList<Itembean>();
-					outRangeSN = new ArrayList<Itembean>();
-					String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-							.format(Calendar.getInstance().getTime());
-
-					for (Containerbean c : containers) {
-
-						startIndex = Integer.valueOf(c.SNBegin.substring(10, 16));
-						endIndex = Integer.valueOf(c.SNEnd.substring(10, 16));
-
-						String modelNoMap = c.SNBegin.substring(0, 6);
-						
-						
-						for (SerialNo item : snList) {
-
-							if (item.serialNo.substring(0, 6).endsWith(modelNoMap)) {
-								Itembean _item = new Itembean();
-
-								_item.SN = item.serialNo;
-								_item.ModelNo = item.serialNo.substring(0, 6);
-								_item.date = timeStamp;
-								items.add(_item);
-								if (Integer.valueOf(item.serialNo.substring(10, 16)) - startIndex < 0
-										|| endIndex - Integer.valueOf(item.serialNo.substring(10, 16)) < 0)
-									outRangeSN.add(_item);
-							}
+				}else if(duplicatedSNIdx.size() > 0) 
+				{
+					JOptionPane.showMessageDialog(null, "Please check duplicated items.");
+					scanResultFrame.addWindowListener(new WindowAdapter() {
+						public void windowOpened(WindowEvent e) {
+							snInput.requestFocus();
 						}
-
-					}
-
-					Constrant.serial_list = "Container No." + containers.get(0).ContainerNo + "\n Receiving SN : \n"
-							+ snItems;
-
-					if (outRangeSN.size() > 0)
-						checkScanResultOutOfFrame(items);
-					else
-						checkReceiveItemExits(items);
-
+					});	
+					
+				}else 
+				{
+					//query container information again
+					getContainerStatus(containers.get(0).ContainerNo);
 				}
-
 			}
 		});
 		
@@ -1796,7 +1798,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					if(n == 0) 
 					{
 						String model = dtm.getValueAt(row, column).toString().substring(0,6);
-						//scanItemMap.remove(dtm.getValueAt(row, column));
+						
+						snList.remove(row);
+						
 						dtm.setValueAt(null, row, column);
 						duplicatedSNIdx.clear();
 						TitledBorder titledBorder = BorderFactory.createTitledBorder(null,
@@ -1848,27 +1852,29 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		scrollPane.getViewport().setBackground(Constrant.BACKGROUN_COLOR);
 		scrollPane.getVerticalScrollBar().setBackground(Constrant.BACKGROUN_COLOR);
 		//restore sn
-		System.out.println("snList size :" + snList.size());
 		String[] item = prevTxt.split("\n");
 		set = new HashSet<String>();
 		int len = 0;
 		if (!prevTxt.equals("")) {
-
+			dtm.setRowCount(0);
 			len = item.length;
 			modelScanCurMap.clear();
+			
 			for (String s : item) {
 				set.add(s);
 
-				String SNmodelNo = s.substring(0, 10);
+				String SNmodelNo = s.substring(0, 6);
 				if (!modelScanCurMap.containsKey(SNmodelNo))
 					modelScanCurMap.put(SNmodelNo, 1);
 				else
 					modelScanCurMap.put(SNmodelNo, modelScanCurMap.get(SNmodelNo) + 1);
 
+				
 				addSerialNoToTable(s);
 				
 			}
-
+			
+			
 			titledBorder = BorderFactory.createTitledBorder(null,
 					"Total : "+len+"/" + modelTotalCurMap.get(containers.get(0).SNBegin.substring(0, 6)),
 					TitledBorder.CENTER, TitledBorder.BOTTOM, font, Color.BLACK);
@@ -1903,7 +1909,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			});
 		} else {
 
-			if (scanCnt - scanItemMap.get(sn) > 1) {
+			if (scanCnt - scanItemMap.get(sn) > 1 && scanItemMap.size() < orderTotalCount) {
 				//char c = (char) ('A' + scanCnt++ % 26);
 				duplicatedSNIdx.add(scanItemMap.get(sn) -1);
 				duplicatedSNIdx.add(scanCnt -1);

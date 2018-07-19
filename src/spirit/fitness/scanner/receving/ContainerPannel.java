@@ -239,7 +239,7 @@ public class ContainerPannel implements ActionListener {
 			int totalCount = 0;
 			int rowIndex = 0;
 
-			final Object[][] containerItems = new Object[map.size()][3];
+			final Object[][] containerItems = new Object[map.size()][4];
 
 			for (Map.Entry<String, List<Containerbean>> location : map.entrySet()) {
 
@@ -253,23 +253,29 @@ public class ContainerPannel implements ActionListener {
 							- Integer.valueOf(list.get(s).SNBegin.substring(10, 16)) + 1;
 				}
 
-				for (int j = 0; j < 3; j++) {
+				for (int j = 0; j < 4; j++) {
 
-					containerItems[rowIndex][0] = list.get(0).date.substring(0, 10);
+					String date = "";
+					if( list.get(0).date != null)
+							date = list.get(0).date.substring(0, 10);
+					containerItems[rowIndex][0] = date;
 
 					containerItems[rowIndex][1] = location.getKey();
-
-					containerItems[rowIndex][2] = qty;
+					
+					containerItems[rowIndex][2] = location.getValue().get(0).ModelNo;
+					
+					containerItems[rowIndex][3] = qty + 1;
 
 				}
 
 				rowIndex++;
 			}
 
-			final Class[] columnClass = new Class[] { String.class, String.class, Integer.class };
+			final Class[] columnClass = new Class[] { String.class, String.class, String.class,Integer.class };
 
-			Object columnNames[] = { "DATE", "CONTAINERNO", "QTY" };
+			Object columnNames[] = { "RECEIVED DATE", "CONTAINERNO", "ModelNo", "QTY" };
 
+		
 			DefaultTableModel container = new DefaultTableModel(containerItems, columnNames) {
 				@Override
 				public boolean isCellEditable(int row, int column) {
@@ -296,9 +302,15 @@ public class ContainerPannel implements ActionListener {
 			TableColumn date = containerTable.getColumnModel().getColumn(0);
 			date.setCellRenderer(leftRenderer);
 			TableColumn no = containerTable.getColumnModel().getColumn(1);
+			no.setPreferredWidth(150);
 			no.setCellRenderer(leftRenderer);
-			TableColumn qty = containerTable.getColumnModel().getColumn(2);
+			
+			TableColumn model = containerTable.getColumnModel().getColumn(2);
+			model.setCellRenderer(leftRenderer);
+
+			TableColumn qty = containerTable.getColumnModel().getColumn(3);
 			qty.setCellRenderer(leftRenderer);
+			qty.setPreferredWidth(20);
 
 			int heigh = 0;
 
