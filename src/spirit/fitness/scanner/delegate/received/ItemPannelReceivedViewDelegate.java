@@ -7,16 +7,11 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
@@ -34,15 +29,12 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -54,13 +46,10 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.text.TableView.TableRow;
 
 import spirit.fitness.scanner.common.Constrant;
 import spirit.fitness.scanner.common.HttpRequestCode;
@@ -95,17 +84,17 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	private List<SerialNo> snList;
 	private List<Integer> duplicatedSNIdx;
 	private HashMap<String, Integer> scanItemMap = new HashMap<String, Integer>();
-
+	
 	private String containerNo;
 	private String snItems ="";
 	private Timer timer;
 	private int isTimeOut = 1;
-	private DefaultTableModel dtm;
 	private boolean isAutoScroll;
-	private int scanCnt;
-	private JLabel shippingLabel;
+	private int scanCnt = 1;
+	
 	private JTable snListTable;
 	private JTextField snInput;
+	private DefaultTableModel dtm;
 
 	public ItemPannelReceivedViewDelegate(List<Containerbean> _container, String content) {
 		getInstance();
@@ -120,7 +109,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	@Override
 	public void initial(List<Containerbean> _container, String content) {
 		containers = _container;
-		Collections.sort(containers, new ContainerSortByModel());
+		Collections.sort(containers,new ContainerSortByModel());
 		snList = new ArrayList<SerialNo>();
 		scanInfo(content);
 		exceuteCallback();
@@ -130,8 +119,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	@Override
 	public void initial(List<Containerbean> _container, String content, String location) {
 		containers = _container;
-		Collections.sort(containers, new ContainerSortByModel());
 		containerNo = containers.get(0).ContainerNo;
+		Collections.sort(containers,new ContainerSortByModel());
 		snList = new ArrayList<SerialNo>();
 		displayScanResultFrame(content, location);
 		exceuteCallback();
@@ -154,8 +143,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		// adding panel to frame
 		scanResultFrame.add(panel);
 
-		scanPanel(panel,prevTxt);
-	
+		scanPanel(panel, prevTxt);
+
 		scanResultFrame.setBackground(Color.WHITE);
 		scanResultFrame.setVisible(true);
 
@@ -257,8 +246,6 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 						 && modelTotalCurMap.containsKey(model)
 						&& curModelCnt < modelTotalCurMap.get(model) ) {
 					
-					
-					
 					if (!scanItemMap.containsKey(snInput.getText().toString())) 
 					{
 						curModelCnt++;
@@ -266,6 +253,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					}
 					addSerialNoToTable(snInput.getText().toString());
 					snInput.setText("");
+					snListTable.changeSelection(snListTable.getRowCount() - 1, 0, false, false);
 					TitledBorder titledBorder = BorderFactory.createTitledBorder(null,
 							"Total : " + scanItemMap.size() + "/" + modelTotalCurMap.get(model), TitledBorder.CENTER,
 							TitledBorder.BOTTOM, font, Color.BLACK);
@@ -385,6 +373,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					result = JOptionPane.showConfirmDialog(scanResultFrame, "Do you want to clear the all item?", "",
 							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 					if (result == JOptionPane.YES_OPTION) {
+						Constrant.serial_list = "";
 						scanCnt = 0;
 						orderTotalCount = 0;
 						set = new HashSet<String>();
@@ -461,7 +450,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					{
 						String model = dtm.getValueAt(row, column).toString().substring(0,6);
 						
-						snList.remove(row);
+						SerialNo sn = snList.get(row);
+						sn.serialNo = "";
+						snList.set(row, sn);
 						
 						dtm.setValueAt(null, row, column);
 						duplicatedSNIdx.clear();
@@ -513,6 +504,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		});
 		scrollPane.getViewport().setBackground(Constrant.BACKGROUN_COLOR);
 		scrollPane.getVerticalScrollBar().setBackground(Constrant.BACKGROUN_COLOR);
+		
 		//restore sn
 		String[] item = prevTxt.split("\n");
 		set = new HashSet<String>();
@@ -536,7 +528,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				
 			}
 			
-			
+			snListTable.changeSelection(snListTable.getRowCount() - 1, 0, false, false);
 			titledBorder = BorderFactory.createTitledBorder(null,
 					"Total : "+len+"/" + modelTotalCurMap.get(containers.get(0).SNBegin.substring(0, 6)),
 					TitledBorder.CENTER, TitledBorder.BOTTOM, font, Color.BLACK);
@@ -628,7 +620,27 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			} else
 				result = "SN : " + Integer.valueOf(((String) sortedList.get(0)).substring(10, 16)) + "~"
 						+ Integer.valueOf(((String) sortedList.get(sortedList.size() - 1)).substring(10, 16));
-			
+			// else if (noContinue.size() == 0 && sortedList.size() > 1)
+			// result = "SN : " + Integer.valueOf(((String) sortedList.get(0)).substring(10,
+			// 16)) + "~"
+			// + Integer.valueOf(((String) sortedList.get(sortedList.size() -
+			// 1)).substring(10, 16));
+			// else {
+			// result = "SN : " + Integer.valueOf(((String) sortedList.get(0)).substring(10,
+			// 16)) + "~" + (skip - 1);
+
+			// int noContinueStartIndex = noContinue.get(0);
+			// result += " <br/>"+((String) sortedList.get(0)).substring(0,10)
+			// +noContinueStartIndex +"~";
+			/*
+			 * for (int i = 1; i < noContinue.size(); i++) { result += noContinue.get(i) -
+			 * 1; }
+			 */
+
+			// result += "," + (noContinue.get(noContinue.size() - 1) + "~"
+			// + Integer.valueOf(((String) sortedList.get(sortedList.size() -
+			// 1)).substring(10, 16)));
+			// }
 			dialogFrame = new JFrame("Query Pannel");
 			// Setting the width and height of frame
 			dialogFrame.setSize(600, 400);
@@ -654,7 +666,11 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					+ ") <br/>" + "Total : " + sortedList.size() + " <br/>" + result + " <br/>" + "to location " + "["
 					+ zoneCode + "][" + location + "] ?</html>");
 
-		
+			/*
+			 * This method specifies the location and size of component. setBounds(x, y,
+			 * width, height) here (x,y) are cordinates from the top left corner and
+			 * remaining two arguments are the width and height of the component.
+			 */
 			modelLabel.setBounds(30, 0, 500, 200);
 			modelLabel.setFont(font);
 			panel.add(modelLabel);
@@ -669,7 +685,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					
 					ok.setEnabled(false);
 
-					
+
 					List<Itembean> items = new ArrayList<Itembean>();
 					scannedModel = itemList[0].substring(0, 6);
 					scannedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
@@ -679,7 +695,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 						_item.SN = item;
 						_item.date = scannedDate;
 						_item.Location = location;
-						_item.ModelNo = _item.SN.substring(0, 6);
+						_item.ModelNo = scannedModel;
 						_item.ContainerNo = containerNo;
 						items.add(_item);
 
@@ -719,7 +735,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					dialogFrame.dispose();
 					dialogFrame.setVisible(false);
 					dialogFrame = null;
-					scanResultFrame.setVisible(true);
+
+					scanInfo(content);
 				}
 			});
 
@@ -751,6 +768,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			});
 		}
 	}
+
 
 	@Override
 	public void checkScanResultFrame(List<Itembean> _items) {
@@ -847,7 +865,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 						}
 					}
 					String[] item = updateTxt.split("\n");
-					inputSN.setText(updateTxt);
+					
 
 					if (item.length == 1 && item[0].equals(""))
 						ltotal.setText("Total : 0");
@@ -880,7 +898,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			}
 		});
 	}
-
+	
 	public void checkScanResultOutOfFrame(List<Itembean> scanitems) {
 		set.clear();
 		JFrame dialogFrame = new JFrame("Check Serial number");
@@ -1045,11 +1063,6 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				dialogFrame.dispose();
 				dialogFrame.setVisible(false);
 				scanResultFrame.setVisible(true);
-				scanResultFrame.addWindowListener(new WindowAdapter() {
-					public void windowOpened(WindowEvent e) {
-						snInput.requestFocus();
-					}
-				});	
 			}
 		});
 
@@ -1167,25 +1180,25 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		});
 
 	}
-	
+
 	// Updated container status from open to close
-		private void getContainerStatus(String containerNo) {
+	private void getContainerStatus(String containerNo) {
 
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					try {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
 
-						containerRepository.getItemsByContainerNo(containerNo);
+					containerRepository.getItemsByContainerNo(containerNo);
 
-					} catch (Exception e) {
-						e.printStackTrace();
-						NetWorkHandler.displayError(loadingframe);
-					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					NetWorkHandler.displayError(loadingframe);
 				}
-			});
+			}
+		});
 
-		}
-
+	}
+	
 	@Override
 	public void submitServer(List<Itembean> items) {
 		try {
@@ -1285,9 +1298,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			@Override
 			public void getInventoryItems(List<Itembean> items) {
 				timer.stop();
-				timer = null;
-				isTimeOut = 1;
-
+                timer = null;
+                isTimeOut = 1;
+                
 				if (!items.isEmpty()) {
 					// progressMonitor.close();
 					// task.done();
@@ -1334,7 +1347,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				timer.stop();
 				timer = null;
 				isTimeOut = 1;
-				
+		
 				if (loadingframe != null) {
 					loadingframe.setVisible(false);
 					loadingframe.dispose();
@@ -1345,10 +1358,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 						displayScanResultFrame(snItems, "000");
 					else {
 						snItems = "";
-						
-						for (SerialNo item : snList) 
-						{
-							snItems +=item.serialNo + "\n";
+
+						for (SerialNo item : snList) {
+							snItems += item.serialNo + "\n";
 						}
 						// ZoneMenu.getInstance(containers, inputSN.getText().toString(), 0);
 						Zone1Location window = new Zone1Location(containers, snItems, 0);
@@ -1359,23 +1371,6 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 					if (items.size() > 0)
 						checkScanResultFrame(items);
-					/*
-					 * if (scanResultFrame != null) { String updateTxt = ""; for (Itembean i :
-					 * items) { updateTxt += i.SN + "\n"; } if (modelScanCurMap.isEmpty())
-					 * ltotal.setText("Total : " + items.size()); else { set.clear();
-					 * modelScanCurMap.clear(); for (Itembean s : items) { set.add(s.SN);
-					 * 
-					 * String modelNo = s.SN.substring(0, 10); if
-					 * (!modelScanCurMap.containsKey(modelNo)) modelScanCurMap.put(modelNo, 1); else
-					 * modelScanCurMap.put(modelNo, modelScanCurMap.get(modelNo) + 1);
-					 * 
-					 * } ltotal.setText(setModelScanCountLabel(set.size()));
-					 * 
-					 * } inputSN.setText(updateTxt); scanResultFrame.setVisible(true); } if
-					 * (dialogFrame != null) { dialogFrame.dispose(); dialogFrame.setVisible(false);
-					 * } } else ZoneMenu.getInstance(containers, inputSN.getText().toString(),
-					 * assignType);
-					 */
 
 				}
 			}
@@ -1407,10 +1402,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
 					EmailHelper.sendMail(scannedDate, containers, scanContent, "geminih@spiritfitness.com");
-					// EmailHelper.sendMail(scannedDate, containers, scanContent,
-					// "vickie@spiritfitness.com");
-					// EmailHelper.sendMail(scannedDate, containers, scanContent,
-					// "ashleyg@spiritfitness.com");
+					EmailHelper.sendMail(scannedDate, containers, scanContent, "vickie@spiritfitness.com");
+					EmailHelper.sendMail(scannedDate, containers, scanContent, "ashleyg@spiritfitness.com");
 				}
 
 			}
@@ -1432,6 +1425,13 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 							snInput.requestFocus();
 						}
 					});	
+					
+					snItems = "";
+					for(SerialNo s : snList) 
+					{
+						snItems +=s.serialNo+"\n";
+					}
+					
 					checkMissItems(snItems);
 				} else {
 					scanResultFrame.setVisible(false);
@@ -1492,11 +1492,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		});
 
 	}
-
-	
 	
 	private void addSerialNoToTable(String sn) {
-		
 		if (!scanItemMap.containsKey(sn)) {
 			//char c = (char) ('A' + scanCnt++ % 26);
 
@@ -1510,10 +1507,20 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			});
 			scanCnt++;
 		} else {
-
+			
 			if (scanCnt - scanItemMap.get(sn) > 1 && scanItemMap.size() < orderTotalCount) {
 				//char c = (char) ('A' + scanCnt++ % 26);
-				duplicatedSNIdx.add(scanItemMap.get(sn) -1);
+				
+				int repeatIdx = 0;
+				
+				for(SerialNo item : snList) 
+				{
+					
+					if(item.serialNo.equals(sn))
+						duplicatedSNIdx.add(repeatIdx);
+					repeatIdx++;
+				}
+				System.out.println(scanCnt -1);
 				duplicatedSNIdx.add(scanCnt -1);
 				
 				TableColumn tmIdx = snListTable.getColumnModel().getColumn(0);
@@ -1587,4 +1594,5 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			return cell;
 		}
 	}
+
 }
