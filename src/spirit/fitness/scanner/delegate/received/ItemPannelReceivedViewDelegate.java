@@ -462,6 +462,13 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 						tfPanel.setBorder(titledBorder);
 					}
 				}
+				
+                TableColumn tmIdx = snListTable.getColumnModel().getColumn(0);
+                tmIdx.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.blue));
+
+                TableColumn tm = snListTable.getColumnModel().getColumn(1);
+                tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.blue));
+
 					return false;
 			}
 
