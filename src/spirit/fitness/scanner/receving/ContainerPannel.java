@@ -264,7 +264,7 @@ public class ContainerPannel implements ActionListener {
 					
 					containerItems[rowIndex][2] = location.getValue().get(0).ModelNo;
 					
-					containerItems[rowIndex][3] = qty + 1;
+					containerItems[rowIndex][3] = qty;
 
 				}
 

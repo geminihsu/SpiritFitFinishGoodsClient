@@ -90,7 +90,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	private Timer timer;
 	private int isTimeOut = 1;
 	private boolean isAutoScroll;
-	private int scanCnt;
+	private int scanCnt = 1;
 	
 	private JTable snListTable;
 	private JTextField snInput;
@@ -245,8 +245,6 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				if ( snInput.getText().toString().length() == 16
 						 && modelTotalCurMap.containsKey(model)
 						&& curModelCnt < modelTotalCurMap.get(model) ) {
-					
-					
 					
 					if (!scanItemMap.containsKey(snInput.getText().toString())) 
 					{
@@ -452,7 +450,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					{
 						String model = dtm.getValueAt(row, column).toString().substring(0,6);
 						
-						snList.remove(row);
+						SerialNo sn = snList.get(row);
+						sn.serialNo = "";
+						snList.set(row, sn);
 						
 						dtm.setValueAt(null, row, column);
 						duplicatedSNIdx.clear();
@@ -1507,10 +1507,20 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			});
 			scanCnt++;
 		} else {
-
+			
 			if (scanCnt - scanItemMap.get(sn) > 1 && scanItemMap.size() < orderTotalCount) {
 				//char c = (char) ('A' + scanCnt++ % 26);
-				duplicatedSNIdx.add(scanItemMap.get(sn) -1);
+				
+				int repeatIdx = 0;
+				
+				for(SerialNo item : snList) 
+				{
+					
+					if(item.serialNo.equals(sn))
+						duplicatedSNIdx.add(repeatIdx);
+					repeatIdx++;
+				}
+				System.out.println(scanCnt -1);
 				duplicatedSNIdx.add(scanCnt -1);
 				
 				TableColumn tmIdx = snListTable.getColumnModel().getColumn(0);
