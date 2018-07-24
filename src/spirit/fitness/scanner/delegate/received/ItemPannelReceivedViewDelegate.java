@@ -479,56 +479,40 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 						SerialNo sn = snList.get(row);
 						sn.serialNo = "";
 						snList.set(row, sn);
-
-						// System.out.println("before delete:" +String.valueOf(row));
-						// for(int i : duplicatedSNIdx)
-						// {
-						// System.out.println("i:" +String.valueOf(i));
-						// }
-						dtm.setValueAt(null, row, column);
-
-						List<String> findDuplicatedRemovedItem = new ArrayList<String>();
-
-						for (int i = 0; i < duplicatedSNIdx.size(); i++) {
-							if (duplicatedSNIdx.get(i) == row) {
-								duplicatedSNIdx.remove(i);
-
-							}
-							if(!snList.get(i).serialNo.equals(""))
-							findDuplicatedRemovedItem.add(snList.get(i).serialNo);
+				
+						String prevTxt = "";
+						for (SerialNo s : snList) {
+							prevTxt += s.serialNo + "\n";
 						}
 
-						// Check if duplicatedSNIdx has duplicated items
-						Set<String> duplicatesSize = findDuplicates(findDuplicatedRemovedItem);
-						if (duplicatesSize.size() == 0) {
-							duplicatedSNIdx.clear();
-						}
+						//reset table data in order to highlight repeat items
+						dtm.setRowCount(0);
+						scanCnt = 1;
 
-						// System.out.println("delete row:" +String.valueOf(row));
-						// for(int i : duplicatedSNIdx)
-						// {
-						// System.out.println("i:" +String.valueOf(i));
-						// }
-						TitledBorder titledBorder = BorderFactory.createTitledBorder(null,
-								"Total : " + scanItemMap.size() + "/" + modelTotalCurMap.get(model),
-								TitledBorder.CENTER, TitledBorder.BOTTOM, font, Color.BLACK);
-						tfPanel.setBorder(titledBorder);
+						snList.clear();
+						duplicatedSNIdx.clear();
+						String[] snItems = prevTxt.split("\n");
+						modelScanCurMap.clear();
+						scanItemMap.clear();
+						set.clear();
+						for (String s : snItems) {
+							set.add(s);
 
-						scanResultFrame.addWindowListener(new WindowAdapter() {
-							public void windowOpened(WindowEvent e) {
-								snInput.requestFocus();
+							if (!s.equals("")) {
+								String SNmodelNo = s.substring(0, 6);
+								if (!modelScanCurMap.containsKey(SNmodelNo))
+									modelScanCurMap.put(SNmodelNo, 1);
+								else
+									modelScanCurMap.put(SNmodelNo, modelScanCurMap.get(SNmodelNo) + 1);
 							}
-						});
+							addSerialNoToTable(s);
+
+						}						
 
 					}
 				}
-				TableColumn tmIdx = snListTable.getColumnModel().getColumn(0);
-				tmIdx.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.blue));
-
-				TableColumn tm = snListTable.getColumnModel().getColumn(1);
-				tm.setCellRenderer(new ColorColumnRenderer(Color.LIGHT_GRAY, Color.blue));
+				
 				snInput.requestFocus();
-
 				return false;
 			}
 
@@ -573,33 +557,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		scrollPane.getVerticalScrollBar().setBackground(Constrant.BACKGROUN_COLOR);
 
 		// restore sn
-		String[] item = prevTxt.split("\n");
-		set = new HashSet<String>();
-		int len = 0;
-		if (!prevTxt.equals("")) {
-			dtm.setRowCount(0);
-			len = item.length;
-			modelScanCurMap.clear();
-
-			for (String s : item) {
-				set.add(s);
-
-				String SNmodelNo = s.substring(0, 6);
-				if (!modelScanCurMap.containsKey(SNmodelNo))
-					modelScanCurMap.put(SNmodelNo, 1);
-				else
-					modelScanCurMap.put(SNmodelNo, modelScanCurMap.get(SNmodelNo) + 1);
-
-				addSerialNoToTable(s);
-
-			}
-
-			snListTable.changeSelection(snListTable.getRowCount() - 1, 0, false, false);
-			titledBorder = BorderFactory.createTitledBorder(null,
-					"Total : " + len + "/" + modelTotalCurMap.get(containers.get(0).SNBegin.substring(0, 6)),
-					TitledBorder.CENTER, TitledBorder.BOTTOM, font, Color.BLACK);
-			tfPanel.setBorder(titledBorder);
-		}
+		restoreData(prevTxt);
 
 		// Setup the content-pane of JFrame in BorderLayout
 		Container cp = scanResultFrame.getContentPane();
@@ -787,7 +745,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 						}
 					});
 					// HttpRestApi.postData(result);
-					snInput.requestFocus();
+					if(snInput != null)
+						snInput.requestFocus();
 				}
 			});
 
@@ -927,21 +886,14 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					scanItemMap.clear();
 					duplicatedSNIdx.clear();
 					snList.clear();
+					
 					scanCnt = 1;
 					for (String p : checkItem) {
 						String SNmodelNo = p.substring(0, 6);
 						if (!itemError.contains(p)) {
 							set.add(p);
 
-							if (!modelScanCurMap.containsKey(SNmodelNo))
-								modelScanCurMap.put(SNmodelNo, 1);
-							else
-								modelScanCurMap.put(SNmodelNo, modelScanCurMap.get(SNmodelNo) + 1);
-
-							SerialNo sn = new SerialNo();
-							sn.no = modelScanCurMap.get(SNmodelNo);
-							sn.serialNo = p;
-							snList.add(sn);
+						
 
 							addSerialNoToTable(p);
 						}
@@ -1233,7 +1185,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 				} else {
 					
 				
-					noScan += (snBegin.substring(0, 16 - snLen.length())) + i + "\n";
+					noScan += (snBegin.substring(0, 16 - snLen.length())) + i + "<br/>";
 				}
 			}
 
@@ -1615,6 +1567,39 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 	}
 
+	
+	public void restoreData(String prevTxt) 
+	{
+		Font font = new Font("Verdana", Font.BOLD, 18);
+		String[] item = prevTxt.split("\n");
+		set = new HashSet<String>();
+		int len = 0;
+		if (!prevTxt.equals("")) {
+			dtm.setRowCount(0);
+			len = item.length;
+			modelScanCurMap.clear();
+
+			for (String s : item) {
+				set.add(s);
+
+				String SNmodelNo = s.substring(0, 6);
+				if (!modelScanCurMap.containsKey(SNmodelNo))
+					modelScanCurMap.put(SNmodelNo, 1);
+				else
+					modelScanCurMap.put(SNmodelNo, modelScanCurMap.get(SNmodelNo) + 1);
+
+				addSerialNoToTable(s);
+
+			}
+
+			snListTable.changeSelection(snListTable.getRowCount() - 1, 0, false, false);
+			TitledBorder titledBorder = BorderFactory.createTitledBorder(null,
+					"Total : " + len + "/" + modelTotalCurMap.get(containers.get(0).SNBegin.substring(0, 6)),
+					TitledBorder.CENTER, TitledBorder.BOTTOM, font, Color.BLACK);
+			tfPanel.setBorder(titledBorder);
+		}
+	}
+	
 	public Set<String> findDuplicates(List<String> listContainingDuplicates) {
 
 		final Set<String> setToReturn = new HashSet<String>();
@@ -1629,9 +1614,10 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	}
 
 	private void addSerialNoToTable(String sn) {
-		if (!scanItemMap.containsKey(sn)) {
+		if (!scanItemMap.containsKey(sn) || sn.equals("")) {
 			// char c = (char) ('A' + scanCnt++ % 26);
-
+			
+			if(!sn.equals(""))
 			scanItemMap.put(sn, scanCnt);
 			SerialNo snItem = new SerialNo();
 			snItem.no = scanCnt;
@@ -1640,6 +1626,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			dtm.addRow(new Object[] { scanCnt, sn,
 
 			});
+			
 			scanCnt++;
 		} else {
 
