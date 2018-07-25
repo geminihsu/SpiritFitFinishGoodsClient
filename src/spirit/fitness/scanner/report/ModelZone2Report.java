@@ -67,6 +67,7 @@ import spirit.fitness.scanner.zonepannel.ZoneMenu;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
+import spirit.fitness.scanner.model.PickUpZoneMap;
 
 
 public class ModelZone2Report {
@@ -342,6 +343,12 @@ public class ModelZone2Report {
 			public void getModelDailyReportItems(List<ModelDailyReportbean> items) {
 				// TODO Auto-generated method stub
 
+			}
+
+			@Override
+			public void pickUpZone(List<PickUpZoneMap> items) {
+				// TODO Auto-generated method stub
+				
 			}
 
 		});

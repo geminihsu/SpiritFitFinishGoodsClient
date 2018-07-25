@@ -64,6 +64,7 @@ import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.Modelbean;
+import spirit.fitness.scanner.model.PickUpZoneMap;
 import spirit.fitness.scanner.receving.ContainerPannel;
 import spirit.fitness.scanner.report.DailyReport;
 import spirit.fitness.scanner.report.DailyShippingReport;
@@ -381,6 +382,12 @@ public class AppMenu implements ActionListener {
 					map.put(i.ModelNo, i);
 				}
 				Constrant.dailyReport = map;
+			}
+
+			@Override
+			public void pickUpZone(List<PickUpZoneMap> items) {
+				// TODO Auto-generated method stub
+				
 			}
 
 		});
