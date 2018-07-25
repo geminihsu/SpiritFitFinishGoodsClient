@@ -132,6 +132,36 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	@Override
 	public void scanInfo(String prevTxt) {
 
+		scanResultFrame = new JFrame("");
+		// Setting the width and height of frame
+		scanResultFrame.setSize(620, 750);
+		scanResultFrame.setLocationRelativeTo(null);
+		scanResultFrame.setUndecorated(true);
+		scanResultFrame.setResizable(false);
+
+		JPanel panel = new JPanel();
+		panel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Constrant.FRAME_BORDER_BACKGROUN_COLOR));
+		panel.setBackground(Constrant.BACKGROUN_COLOR);
+		// adding panel to frame
+		scanResultFrame.add(panel);
+
+		scanPanel(panel, prevTxt);
+
+		scanResultFrame.setBackground(Color.WHITE);
+		scanResultFrame.setVisible(true);
+
+		scanResultFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		scanResultFrame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+
+				scanResultFrame.dispose();
+				scanResultFrame.setVisible(false);
+			}
+		});
+	}
+
+	@Override
+	public void scanPanel(JPanel panel, String prevTxt) {
 		duplicatedSNIdx = new ArrayList<Integer>();
 		set = new HashSet<String>();
 		modelTotalCurMap = new LinkedHashMap<String, Integer>();
@@ -535,7 +565,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		cp.add(btnPanel, BorderLayout.EAST);
 		cp.add(scrollPane, BorderLayout.CENTER);
 	}
-
+	
 
 	@Override
 	public void displayScanResultFrame(String content, String location) {
