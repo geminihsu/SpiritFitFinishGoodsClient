@@ -593,7 +593,9 @@ public class ShippingConfirm {
 		soCreatedDate = salesOrderList.get(0).createdDate;
 		billToTitle = salesOrderList.get(0).bill_to;
 		custPO = salesOrderList.get(0).customerPO;
-		shippToAdddress = salesOrderList.get(0).shipToAddress;
+		String[] name = salesOrderList.get(0).shipToAddress.split("\n");
+		String shippToName = name[0];
+		shippToAdddress = name[1];
 		shippToCity = salesOrderList.get(0).shipToCity;
 		shippToCountry = salesOrderList.get(0).shipToCountry;
 		shippToState = salesOrderList.get(0).shipToState;
@@ -723,7 +725,7 @@ public class ShippingConfirm {
 			print.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 
-					String shipToAddress = billToTitle + "\n              " + shippToAdddress + "\n              "
+					String shipToAddress = shippToName + "\n              " + shippToAdddress + "\n              "
 							+ shippToCity + "  " + shippToState + "\n              " + shippToZip + "    "
 							+ shippToCountry;
 
@@ -817,7 +819,9 @@ public class ShippingConfirm {
 		soCreatedDate = salesOrderList.get(0).createdDate;
 		billToTitle = salesOrderList.get(0).bill_to;
 		custPO = salesOrderList.get(0).customerPO;
-		shippToAdddress = salesOrderList.get(0).shipToAddress;
+		String[] name = salesOrderList.get(0).shipToAddress.split("\n");
+		String shippToName = name[0];
+		shippToAdddress = name[1];
 		shippToCity = salesOrderList.get(0).shipToCity;
 		shippToCountry = salesOrderList.get(0).shipToCountry;
 		shippToState = salesOrderList.get(0).shipToState;
@@ -858,7 +862,7 @@ public class ShippingConfirm {
 		// JLabel shipTo = new JLabel("Ship To :"+ "FITNESS OUTLET\n1067 INDUSTRY
 		// DR\nSEATTLE WA \n98188");
 
-		JLabel shipTo = new JLabel("<html>Ship To <p style='margin-left:100'>" + billToTitle + "<br/>" + shippToAdddress
+		JLabel shipTo = new JLabel("<html>Ship To <p style='margin-left:100'>" + shippToName +"<br/>" + shippToAdddress
 				+ "<br/>" + shippToCity + "  " + shippToState + "<br/>" + shippToZip + "</html>", SwingConstants.LEFT);
 
 		shipTo.setBounds(40, 100, 600, 200);
@@ -1442,6 +1446,7 @@ public class ShippingConfirm {
 						public void run() {
 
 							checkItemExitsZone2(items);
+							
 						}
 					});
 

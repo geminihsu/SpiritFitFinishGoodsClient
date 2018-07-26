@@ -41,6 +41,7 @@ import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.Modelbean;
+import spirit.fitness.scanner.model.PickUpZoneMap;
 import spirit.fitness.scanner.restful.FGRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.ModelZoneMapRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
@@ -824,6 +825,12 @@ public class ItemPannelMovedViewDelegate extends ItemPannelBaseViewDelegate{
 					map.put(i.ModelNo, i);
 				}
 				Constrant.dailyReport = map;
+			}
+
+			@Override
+			public void pickUpZone(List<PickUpZoneMap> items) {
+				// TODO Auto-generated method stub
+				
 			}
 
 		});
