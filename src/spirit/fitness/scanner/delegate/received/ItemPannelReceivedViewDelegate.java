@@ -556,6 +556,10 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		scrollPane.getVerticalScrollBar().setBackground(Constrant.BACKGROUN_COLOR);
 
 		// restore sn
+		/*for(int i = 4208; i < 4858; i++) {
+			prevTxt += "115416180600" +i+ "\n";
+		}*/
+		
 		restoreData(prevTxt);
 
 		// Setup the content-pane of JFrame in BorderLayout
@@ -1477,6 +1481,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
 					EmailHelper.sendMail(scannedDate, containers, scanContent, "geminih@spiritfitness.com");
+					EmailHelper.sendMail(scannedDate, containers, scanContent, "jeremyc@spiritfitness.com");
 					EmailHelper.sendMail(scannedDate, containers, scanContent, "vickie@spiritfitness.com");
 					EmailHelper.sendMail(scannedDate, containers, scanContent, "ashleyg@spiritfitness.com");
 				}
