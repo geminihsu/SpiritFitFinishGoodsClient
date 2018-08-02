@@ -493,7 +493,7 @@ public class DailyShippingReport {
 					} else {
 						record = map.get(i.salesOrder);
 					}
-
+					
 					record.add(i);
 					map.put(i.salesOrder, record);
 				}
@@ -514,6 +514,7 @@ public class DailyShippingReport {
 					}
 
 					for (Map.Entry<String, DailyShippingReportbean> i : reportItem.entrySet()) {
+						
 						list.add(i.getValue());
 					}
 				}
