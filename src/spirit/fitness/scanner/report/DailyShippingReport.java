@@ -178,7 +178,7 @@ public class DailyShippingReport {
 		panel.add(scrollZonePane);
 
 		
-		Object rowDataReport[][] = new Object[data.size()][10];
+		Object rowDataReport[][] = new Object[data.size()][8];
 		System.out.println(data.size());
 
 		int prevTotal = 0;
@@ -203,21 +203,17 @@ public class DailyShippingReport {
 			 * rowDataReport[i][8] = showroom; rowDataReport[i][9] = reworkTotal;
 			 * rowDataReport[i][10] = qcTotal; rowDataReport[i][11] = Total; } } else {
 			 */
-			for (int j = 0; j < 10; j++) {
+			for (int j = 0; j < 8; j++) {
 				rowDataReport[i][0] = " " + data.get(i).createdDate.substring(0, 10);
 				rowDataReport[i][1] = data.get(i).salesOrder;
-				rowDataReport[i][2] = data.get(i).itemID;
+				rowDataReport[i][2] = data.get(i).BillTo;
 				rowDataReport[i][3] = data.get(i).fg;
 				rowDataReport[i][4] = data.get(i).qty;
 				// rowDataReport[i][5] = data.get(i).Scrapped;
 				rowDataReport[i][5] = data.get(i).trackingNo;
 				rowDataReport[i][6] = data.get(i).shipVia;
 
-				rowDataReport[i][7] = data.get(i).shipState;
-				// rowDataReport[i][9] = data.get(i).Rework;
-				// rowDataReport[i][10] = data.get(i).QC;
-				rowDataReport[i][8] = data.get(i).shipCity;
-				rowDataReport[i][9] = data.get(i).shippingDate.substring(0, 10);
+				rowDataReport[i][7] = data.get(i).shippingDate.substring(0, 10);
 				// }
 			}
 
@@ -225,7 +221,7 @@ public class DailyShippingReport {
 
 		String zone = "";
 
-		Object columnNames[] = { "CreateDate", "SO", "ItemID", "FG", "Qty", "Pro", "ShipVia", "ShipState", "ShipCity",
+		Object columnNames[] = { "CreateDate", "SO", "Customer", "FG", "Qty", "Pro", "ShipVia",
 				"ShippingDate" };
 		Font font = new Font("Verdana", Font.BOLD, 15);
 		final Class[] columnClass = new Class[] { String.class, String.class, Integer.class, Integer.class,
@@ -255,7 +251,7 @@ public class DailyShippingReport {
 		TableColumn modelTitle = table.getColumnModel().getColumn(1);
 		modelTitle.setPreferredWidth(30);
 		TableColumn prevCcolumn = table.getColumnModel().getColumn(2);
-		prevCcolumn.setPreferredWidth(40);
+		prevCcolumn.setPreferredWidth(150);
 		// TableColumn shippingColumn = table.getColumnModel().getColumn(3);
 		// shippingColumn.setPreferredWidth(90);
 		TableColumn receivedColumn = table.getColumnModel().getColumn(3);
@@ -272,7 +268,7 @@ public class DailyShippingReport {
 		TableColumn qCcolumn = table.getColumnModel().getColumn(6);
 		qCcolumn.setPreferredWidth(50);
 		TableColumn showroomcolumn = table.getColumnModel().getColumn(7);
-		showroomcolumn.setPreferredWidth(10);
+		showroomcolumn.setPreferredWidth(50);
 		table.setCellSelectionEnabled(false);
 		table.setColumnSelectionAllowed(false);
 		table.setEnabled(false);
@@ -390,11 +386,11 @@ public class DailyShippingReport {
 								System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
 
 								 ExcelHelper exp = new ExcelHelper();
-									String timeStamp = new SimpleDateFormat("yyyy-MM-dd")
-											.format(Calendar.getInstance().getTime());
+									//String timeStamp = new SimpleDateFormat("yyyy-MM-dd")
+									//		.format(Calendar.getInstance().getTime());
 									
 								 exp.fillDailyShippingData(table,
-											new File(chooser.getSelectedFile() +"\\"+timeStamp + "_ship.xls"));
+											new File(chooser.getSelectedFile() +"\\"+date.getText().toString() + "_ship.xls"));
 
 							}
 
@@ -493,7 +489,7 @@ public class DailyShippingReport {
 					} else {
 						record = map.get(i.salesOrder);
 					}
-
+					
 					record.add(i);
 					map.put(i.salesOrder, record);
 				}
@@ -514,6 +510,7 @@ public class DailyShippingReport {
 					}
 
 					for (Map.Entry<String, DailyShippingReportbean> i : reportItem.entrySet()) {
+						
 						list.add(i.getValue());
 					}
 				}
