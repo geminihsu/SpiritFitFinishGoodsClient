@@ -1117,6 +1117,7 @@ public class ShippingConfirm {
 				String shippToState = salesOrderList.get(0).shipToState;
 				String shippToZip = salesOrderList.get(0).shipToZipCode;
 				String shippToVia = salesOrderList.get(0).shipVia;
+				String custPo = salesOrderList.get(0).customerPO;
 
 				String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
 
@@ -1131,6 +1132,7 @@ public class ShippingConfirm {
 
 					_item.salesOrder = salesOrder;
 					_item.trackingNo = pro;
+					_item.CustPoNo = custPo;
 					_item.billTo = billToTitle;
 					_item.shipCity = shippToCity;
 					_item.shipState = shippToState;
@@ -1684,6 +1686,7 @@ public class ShippingConfirm {
 							palletbean.createdDate = _items.get(0).createdDate;
 							palletbean.billTo = item.bill_to;
 							palletbean.itemID = item.ItemID;
+							palletbean.CustPoNo = item.customerPO;
 							palletbean.description = item.description;
 							palletbean.qty = item.quantity;
 							palletbean.salesOrder = item.salesOrder;
