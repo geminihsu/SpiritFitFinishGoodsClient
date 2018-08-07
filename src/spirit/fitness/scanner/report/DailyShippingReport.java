@@ -206,7 +206,11 @@ public class DailyShippingReport {
 			for (int j = 0; j < 9; j++) {
 				rowDataReport[i][0] = " " + data.get(i).createdDate.substring(0, 10);
 				rowDataReport[i][1] = data.get(i).salesOrder;
-				rowDataReport[i][2] = data.get(i).CustPo;
+				
+				if(data.get(i).CustPo == null)
+					rowDataReport[i][2] = "";
+				else
+					rowDataReport[i][2] = data.get(i).CustPo;
 				rowDataReport[i][3] = data.get(i).BillTo;
 				rowDataReport[i][4] = data.get(i).fg;
 				rowDataReport[i][5] = data.get(i).qty;
