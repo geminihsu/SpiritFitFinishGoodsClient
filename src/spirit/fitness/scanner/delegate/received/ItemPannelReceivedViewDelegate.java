@@ -557,9 +557,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		scrollPane.getViewport().setBackground(Constrant.BACKGROUN_COLOR);
 		scrollPane.getVerticalScrollBar().setBackground(Constrant.BACKGROUN_COLOR);
 
-        for(int i = 1825; i < 1873; i++) {
-            prevTxt += "850845180700" +i+ "\n";
-        }
+        //for(int i = 1825; i < 1873; i++) {
+        //    prevTxt += "850845180700" +i+ "\n";
+        //}
 
 		// restore sn
 		restoreData(prevTxt);
