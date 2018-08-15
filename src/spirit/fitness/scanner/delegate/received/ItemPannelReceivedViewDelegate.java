@@ -557,6 +557,10 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		scrollPane.getViewport().setBackground(Constrant.BACKGROUN_COLOR);
 		scrollPane.getVerticalScrollBar().setBackground(Constrant.BACKGROUN_COLOR);
 
+        for(int i = 1825; i < 1873; i++) {
+            prevTxt += "850845180700" +i+ "\n";
+        }
+
 		// restore sn
 		restoreData(prevTxt);
 
@@ -1476,11 +1480,10 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
 					EmailHelper.sendMail(scannedDate, containers, scanContent, "geminih@spiritfitness.com");
-					//EmailHelper.sendMail(scannedDate, containers, scanContent, "harrisliu@spiritfitness.com");
-					// EmailHelper.sendMail(scannedDate, containers, scanContent,
-					// "vickie@spiritfitness.com");
-					// EmailHelper.sendMail(scannedDate, containers, scanContent,
-					// "ashleyg@spiritfitness.com");
+					//EmailHelper.sendMail(scannedDate, containers, scanContent, "jeremyc@spiritfitness.com");
+					//EmailHelper.sendMail(scannedDate, containers, scanContent, "vickie@spiritfitness.com");
+					//EmailHelper.sendMail(scannedDate, containers, scanContent, "ashleyg@spiritfitness.com");
+
 				}
 
 			}
