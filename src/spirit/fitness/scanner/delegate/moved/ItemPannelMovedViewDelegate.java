@@ -283,6 +283,8 @@ public class ItemPannelMovedViewDelegate extends ItemPannelBaseViewDelegate{
 
 						_item.SN = item;
 						_item.ModelNo = scannedModel;
+						if(_item.Location.equals("881") || _item.Location.equals("891")||_item.Location.equals("901"))
+							_item.date = scannedDate;
 						items.add(_item);
 
 					}
@@ -328,7 +330,7 @@ public class ItemPannelMovedViewDelegate extends ItemPannelBaseViewDelegate{
 					scannedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
 					for (String item : itemList) {
 						Itembean _item = new Itembean();
-
+							
 						_item.SN = item;
 						_item.ModelNo = scannedModel;
 						items.add(_item);
