@@ -556,8 +556,8 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		scrollPane.getVerticalScrollBar().setBackground(Constrant.BACKGROUN_COLOR);
 
 		// restore sn
-		//for(int i = 4858; i < 5508; i++) {
-		//	prevTxt += "115416180600" +i+ "\n";
+		//for(int i = 901; i < 991; i++) {
+		//	prevTxt += "8956771807000" +i+ "\n";
 		//}
 		
 		restoreData(prevTxt);
@@ -1477,14 +1477,14 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 			@Override
 			public void getContainerItems(List<Containerbean> items) {
-				if (!items.isEmpty()) {
+				//if (!items.isEmpty()) {
 					Constrant.serial_list = "";
 					JOptionPane.showMessageDialog(null, "Insert Data Success!");
 					EmailHelper.sendMail(scannedDate, containers, scanContent, "geminih@spiritfitness.com");
 					EmailHelper.sendMail(scannedDate, containers, scanContent, "jeremyc@spiritfitness.com");
 					EmailHelper.sendMail(scannedDate, containers, scanContent, "vickie@spiritfitness.com");
 					EmailHelper.sendMail(scannedDate, containers, scanContent, "ashleyg@spiritfitness.com");
-				}
+				//}
 
 			}
 
