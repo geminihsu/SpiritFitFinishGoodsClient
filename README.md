@@ -1,5 +1,5 @@
 # SpiriFit FGApp
-This user interface used to support work to do daily work at the warehouse. There is eight function includes Receiving, Moving, Search, Picking, Shipping, Daily Report, Replenishment, Daily Shipping.  
+This user interface used to support work to do daily work at the warehouse by windows tablet. There is eight function includes Receiving, Moving, Search, Picking, Shipping, Daily Report, Replenishment, Daily Shipping. 
 * **Receiving** use to received data from the barcode scanner and send data to our database.  
 * **Moving** used to assign each item to another location. 
 * **Search** allows the worker to find how many stocks on the warehouse according to model and location.
