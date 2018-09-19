@@ -17,7 +17,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -457,6 +459,27 @@ public class AppMenu implements ActionListener {
 
 				} catch (Exception e) {
 					e.printStackTrace();
+					BufferedWriter writer = null;
+					try
+					{
+					    writer = new BufferedWriter( new FileWriter("test.log"));
+					    writer.write(e.toString());
+
+					}
+					catch ( IOException k)
+					{
+					}
+					finally
+					{
+					    try
+					    {
+					        if ( writer != null)
+					        writer.close( );
+					    }
+					    catch ( IOException k)
+					    {
+					    }
+					}
 					NetWorkHandler.displayError(loadingframe);
 				}
 			}

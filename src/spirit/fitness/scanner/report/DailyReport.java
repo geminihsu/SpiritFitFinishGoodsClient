@@ -170,7 +170,7 @@ public class DailyReport {
 
 		String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
-		Object rowDataReport[][] = new Object[data.size()][9];
+		Object rowDataReport[][] = new Object[data.size()][11];
 		System.out.println(data.size());
 
 		int prevTotal = 0;
@@ -195,20 +195,30 @@ public class DailyReport {
 			 * rowDataReport[i][8] = showroom; rowDataReport[i][9] = reworkTotal;
 			 * rowDataReport[i][10] = qcTotal; rowDataReport[i][11] = Total; } } else {
 			 */
-			for (int j = 0; j < 9; j++) {
+			for (int j = 0; j < 11; j++) {
 				rowDataReport[i][0] = " " + data.get(i).ModelNo;
 				rowDataReport[i][1] = data.get(i).ModelFG;
-				rowDataReport[i][2] = data.get(i).Previous;
-				rowDataReport[i][3] = data.get(i).Shipped;
-				rowDataReport[i][4] = data.get(i).Received;
+				
+				if(data.get(i).Brand == null)
+					rowDataReport[i][2] = "";
+				else
+					rowDataReport[i][2] = data.get(i).Brand.trim();
+				
+				if(data.get(i).Category == null)
+					rowDataReport[i][3] = "";
+				else
+					rowDataReport[i][3] = data.get(i).Category.trim();
+				rowDataReport[i][4] = data.get(i).Previous;
+				rowDataReport[i][5] = data.get(i).Shipped;
+				rowDataReport[i][6] = data.get(i).Received;
 				//rowDataReport[i][5] = data.get(i).Scrapped;
-				rowDataReport[i][5] = data.get(i).OnHand +data.get(i).ReturnItem ;
-				rowDataReport[i][6] = data.get(i).Rework + data.get(i).QC;
+				rowDataReport[i][7] = data.get(i).OnHand +data.get(i).ReturnItem ;
+				rowDataReport[i][8] = data.get(i).Rework + data.get(i).QC;
 
-				rowDataReport[i][7] = data.get(i).ShowRoom;
+				rowDataReport[i][9] = data.get(i).ShowRoom;
 				//rowDataReport[i][9] = data.get(i).Rework;
 				//rowDataReport[i][10] = data.get(i).QC;
-				rowDataReport[i][8] = data.get(i).Total;
+				rowDataReport[i][10] = data.get(i).Total;
 
 				// }
 			}
@@ -225,10 +235,10 @@ public class DailyReport {
 
 		String zone = "";
 
-		Object columnNames[] = { "Model#", "FG", "Previous", "Shipped", "Received", "OnHand",
+		Object columnNames[] = { "Model#", "FG","Brand","Category", "Previous", "Shipped", "Received", "OnHand",
 				"Unshippable", "ShowRoom", "Total" };
 		Font font = new Font("Verdana", Font.BOLD, 15);
-		final Class[] columnClass = new Class[] { String.class, String.class, Integer.class,
+		final Class[] columnClass = new Class[] { String.class, String.class, String.class, String.class, Integer.class,
 				Integer.class, Integer.class, Integer.class,Integer.class, Integer.class,
 				Integer.class };
 

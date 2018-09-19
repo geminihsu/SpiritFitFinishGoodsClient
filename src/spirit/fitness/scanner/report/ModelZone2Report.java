@@ -309,6 +309,8 @@ public class ModelZone2Report {
 				HashMap<String, ModelZone2bean> map = new HashMap<>();
 				for (ModelZone2bean i : items) {
 
+					if(i.Model.equals("110026"))
+					System.out.println("123");
 					if (!map.containsKey(i.Model)) {
 						map.put(i.Model, i);
 						mapModelCount.put(i.Model, 1);
