@@ -66,11 +66,9 @@ import spirit.fitness.scanner.restful.ModelZoneMapRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.listener.HistoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
-import spirit.fitness.scanner.util.ExcelHelper;
-import spirit.fitness.scanner.util.LoadingFrameHelper;
-import spirit.fitness.scanner.util.LocationHelper;
-//import spirit.fitness.scanner.util.NetWorkHandler;
-import spirit.fitness.scanner.util.PrinterHelper;
+import spirit.fitness.scanner.until.ExcelHelper;
+import spirit.fitness.scanner.until.LoadingFrameHelper;
+import spirit.fitness.scanner.until.LocationHelper;
 import spirit.fitness.scanner.zonepannel.ZoneMenu;
 import spirit.fitness.scanner.model.DailyShippingReportbean;
 import spirit.fitness.scanner.model.Historybean;
@@ -78,6 +76,7 @@ import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.SalesJournal;
+import spirit.fitness.scanner.printer.until.PrinterHelper;
 
 public class DailyShippingReport {
 

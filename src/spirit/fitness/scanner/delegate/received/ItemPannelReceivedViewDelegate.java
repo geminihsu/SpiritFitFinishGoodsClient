@@ -69,10 +69,10 @@ import spirit.fitness.scanner.restful.ModelZoneMapRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.listener.ContainerCallBackFunction;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
-import spirit.fitness.scanner.util.EmailHelper;
-import spirit.fitness.scanner.util.LoadingFrameHelper;
-import spirit.fitness.scanner.util.LocationHelper;
-import spirit.fitness.scanner.util.NetWorkHandler;
+import spirit.fitness.scanner.until.EmailHelper;
+import spirit.fitness.scanner.until.LoadingFrameHelper;
+import spirit.fitness.scanner.until.LocationHelper;
+import spirit.fitness.scanner.until.NetWorkHandler;
 //import spirit.fitness.scanner.util.NetWorkHandler;
 import spirit.fitness.scanner.zonepannel.Zone1Location;
 import spirit.fitness.scanner.zonepannel.ZoneMenu;
@@ -556,9 +556,9 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		scrollPane.getVerticalScrollBar().setBackground(Constrant.BACKGROUN_COLOR);
 
 		// restore sn
-		//for(int i = 2713; i < 2869; i++) {
-		//	prevTxt += "135014180700" +i+ "\n";
-		//}
+		/*for(int i = 4576; i < 5186; i++) {
+			prevTxt += "135416180700" +i+ "\n";
+		}*/
 		
 		restoreData(prevTxt);
 

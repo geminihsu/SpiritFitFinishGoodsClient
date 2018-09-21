@@ -56,18 +56,17 @@ import spirit.fitness.scanner.restful.HttpRestApi;
 import spirit.fitness.scanner.restful.ModelZoneMapRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
-import spirit.fitness.scanner.util.ExcelHelper;
-import spirit.fitness.scanner.util.LoadingFrameHelper;
-import spirit.fitness.scanner.util.LocationHelper;
-//import spirit.fitness.scanner.util.NetWorkHandler;
-import spirit.fitness.scanner.util.PrintJtableUtil;
-import spirit.fitness.scanner.util.PrintTableUtil;
-import spirit.fitness.scanner.util.PrinterHelper;
+import spirit.fitness.scanner.until.ExcelHelper;
+import spirit.fitness.scanner.until.LoadingFrameHelper;
+import spirit.fitness.scanner.until.LocationHelper;
 import spirit.fitness.scanner.zonepannel.ZoneMenu;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.PickUpZoneMap;
+import spirit.fitness.scanner.printer.until.PrintJtableUtil;
+import spirit.fitness.scanner.printer.until.PrintTableUntil;
+import spirit.fitness.scanner.printer.until.PrinterHelper;
 
 
 public class ModelZone2Report {
@@ -386,7 +385,7 @@ public class ModelZone2Report {
 		}
 
 		// String result = PrintTableUtil.printReport(headersList, rowsList);
-		String result = PrintTableUtil.printModelQuantityReport(headersList, rowsList);
+		String result = PrintTableUntil.printModelQuantityReport(headersList, rowsList);
 		// content += result + itemsInfo;
 		System.out.println(result);
 

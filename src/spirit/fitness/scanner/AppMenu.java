@@ -83,11 +83,11 @@ import spirit.fitness.scanner.search.QueryPannel;
 import spirit.fitness.scanner.search.QueryResult;
 import spirit.fitness.scanner.shipping.ShippingConfirm;
 import spirit.fitness.scanner.shipping.ShippingPicking;
-import spirit.fitness.scanner.util.EmailHelper;
-import spirit.fitness.scanner.util.ExcelHelper;
+import spirit.fitness.scanner.until.EmailHelper;
+import spirit.fitness.scanner.until.ExcelHelper;
+import spirit.fitness.scanner.until.LoadingFrameHelper;
+import spirit.fitness.scanner.until.NetWorkHandler;
 import spirit.fitness.scanner.util.InstanceUtil;
-import spirit.fitness.scanner.util.LoadingFrameHelper;
-import spirit.fitness.scanner.util.NetWorkHandler;
 
 public class AppMenu implements ActionListener {
 	private static AppMenu instance = null;

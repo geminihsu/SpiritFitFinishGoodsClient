@@ -46,9 +46,9 @@ import spirit.fitness.scanner.restful.FGRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.ModelZoneMapRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
-import spirit.fitness.scanner.util.LoadingFrameHelper;
-import spirit.fitness.scanner.util.LocationHelper;
-import spirit.fitness.scanner.util.NetWorkHandler;
+import spirit.fitness.scanner.until.LoadingFrameHelper;
+import spirit.fitness.scanner.until.LocationHelper;
+import spirit.fitness.scanner.until.NetWorkHandler;
 import spirit.fitness.scanner.zonepannel.ZoneMenu;
 
 public class ItemPannelMovedViewDelegate extends ItemPannelBaseViewDelegate{

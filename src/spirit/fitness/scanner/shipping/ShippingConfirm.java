@@ -74,21 +74,21 @@ import spirit.fitness.scanner.restful.listener.HistoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.PalletCallBackFunction;
 import spirit.fitness.scanner.search.QueryResult;
-import spirit.fitness.scanner.util.LoadingFrameHelper;
-import spirit.fitness.scanner.util.NetWorkHandler;
-//import spirit.fitness.scanner.util.NetWorkHandler;
-import spirit.fitness.scanner.util.PrintTableUtil;
-import spirit.fitness.scanner.util.PrinterHelper;
-import spirit.fitness.scanner.util.PrinterHelper.PrintTable;
-import spirit.fitness.scanner.util.WeightPlateUtil;
+import spirit.fitness.scanner.until.LoadingFrameHelper;
+import spirit.fitness.scanner.until.NetWorkHandler;
+import spirit.fitness.scanner.until.WeightPlateUtil;
 import spirit.fitness.scanner.model.CustOrderbean;
 import spirit.fitness.scanner.model.Historybean;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.Palletbean;
 import spirit.fitness.scanner.model.PickingItem;
+import spirit.fitness.scanner.printer.until.PrintPreviewUntil;
+import spirit.fitness.scanner.printer.until.PrintTableUntil;
+import spirit.fitness.scanner.printer.until.PrinterHelper;
+import spirit.fitness.scanner.printer.until.PrinterHelper.PrintTable;
 
-import spirit.fitness.scanner.util.PrintPreviewUitl;
+
 
 public class ShippingConfirm {
 
@@ -164,7 +164,7 @@ public class ShippingConfirm {
 	private JLabel lCount;
 	private JLabel lModelError;
 
-	private PrintPreviewUitl printer;
+	private PrintPreviewUntil printer;
 
 	private FGRepositoryImplRetrofit fgRepositoryImplRetrofit;
 	private OrdersRepositoryImplRetrofit ordersRepositoryImplRetrofit;
@@ -1927,7 +1927,7 @@ public class ShippingConfirm {
 			rowsList.add(Arrays.asList(rowdata));
 		}
 
-		String result = PrintTableUtil.printReport(headersList, rowsList);
+		String result = PrintTableUntil.printReport(headersList, rowsList);
 		// String result = PrintTableUtil.noBorad(headersList, rowsList);
 		content += result + "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n" + itemsInfo;
 
@@ -1936,7 +1936,7 @@ public class ShippingConfirm {
 		// PrinterHelper print = new PrinterHelper();
 		// print.printTable(content);
 		if (printer == null)
-			printer = new PrintPreviewUitl(content);
+			printer = new PrintPreviewUntil(content);
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
