@@ -83,6 +83,7 @@ import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.Palletbean;
 import spirit.fitness.scanner.model.PickingItem;
+import spirit.fitness.scanner.model.SerialNoRecord;
 import spirit.fitness.scanner.printer.until.PrintPreviewUntil;
 import spirit.fitness.scanner.printer.until.PrintTableUntil;
 import spirit.fitness.scanner.printer.until.PrinterHelper;
@@ -1762,6 +1763,12 @@ public class ShippingConfirm {
 			public void getDailyShippingItems(List<spirit.fitness.scanner.model.DailyShippingReportbean> items) {
 				// TODO Auto-generated method stub
 
+			}
+
+			@Override
+			public void getSerialNoRecord(List<SerialNoRecord> items) {
+				// TODO Auto-generated method stub
+				
 			}
 
 		});
