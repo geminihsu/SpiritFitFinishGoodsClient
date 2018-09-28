@@ -76,6 +76,7 @@ import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.SalesJournal;
+import spirit.fitness.scanner.model.SerialNoRecord;
 import spirit.fitness.scanner.printer.until.PrinterHelper;
 
 public class DailyShippingReport {
@@ -536,6 +537,12 @@ public class DailyShippingReport {
 			public void exception(String error) {
 				// TODO Auto-generated method stub
 
+			}
+
+			@Override
+			public void getSerialNoRecord(List<SerialNoRecord> items) {
+				// TODO Auto-generated method stub
+				
 			}
 
 		});

@@ -92,6 +92,7 @@ import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.PickingItem;
+import spirit.fitness.scanner.model.SerialNoRecord;
 import spirit.fitness.scanner.printer.until.PrintTableUntil;
 import spirit.fitness.scanner.printer.until.PrinterHelper;
 import spirit.fitness.scanner.report.ModelZone2Report;
@@ -733,6 +734,12 @@ public class ShippingPicking {
 
 			@Override
 			public void getDailyShippingItems(List<DailyShippingReportbean> items) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void getSerialNoRecord(List<SerialNoRecord> items) {
 				// TODO Auto-generated method stub
 				
 			}
