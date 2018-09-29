@@ -54,7 +54,7 @@ import javax.swing.table.TableColumn;
 
 import spirit.fitness.scanner.common.Constrant;
 import spirit.fitness.scanner.common.HttpRequestCode;
-import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.ItemPanelBaseViewDelegate;
 import spirit.fitness.scanner.model.Containerbean;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
@@ -62,7 +62,7 @@ import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.Modelbean;
 import spirit.fitness.scanner.model.PickUpZoneMap;
 import spirit.fitness.scanner.model.SerialNo;
-import spirit.fitness.scanner.receving.ContainerPannel;
+import spirit.fitness.scanner.receving.ContainerPanel;
 import spirit.fitness.scanner.restful.ContainerRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.FGRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.ModelZoneMapRepositoryImplRetrofit;
@@ -72,12 +72,12 @@ import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.until.EmailHelper;
 import spirit.fitness.scanner.until.LoadingFrameHelper;
 import spirit.fitness.scanner.until.LocationHelper;
-import spirit.fitness.scanner.until.NetWorkHandler;
+import spirit.fitness.scanner.until.NetWorkHelper;
 //import spirit.fitness.scanner.util.NetWorkHandler;
-import spirit.fitness.scanner.zonepannel.Zone1Location;
-import spirit.fitness.scanner.zonepannel.ZoneMenu;
+import spirit.fitness.scanner.zonepanel.Zone1Location;
+import spirit.fitness.scanner.zonepanel.ZoneMenu;
 
-public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
+public class ItemPanelReceivedViewDelegate extends ItemPanelBaseViewDelegate {
 
 	private FGRepositoryImplRetrofit fgRepository;
 	private ContainerRepositoryImplRetrofit containerRepository;
@@ -99,12 +99,12 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 	private DefaultTableModel dtm;
 	private JPanel tfPanel;
 
-	public ItemPannelReceivedViewDelegate(List<Containerbean> _container, String content) {
+	public ItemPanelReceivedViewDelegate(List<Containerbean> _container, String content) {
 		getInstance();
 		initial(_container, content);
 	}
 
-	public ItemPannelReceivedViewDelegate(List<Containerbean> _container, String content, String location) {
+	public ItemPanelReceivedViewDelegate(List<Containerbean> _container, String content, String location) {
 		getInstance();
 		initial(_container, content, location);
 	}
@@ -437,7 +437,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 			public void actionPerformed(ActionEvent arg0) {
 				scanResultFrame.dispose();
 				scanResultFrame.setVisible(false);
-				ContainerPannel.getInstance();
+				ContainerPanel.getInstance();
 				destroy();
 			}
 		});
@@ -1230,7 +1230,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			NetWorkHandler.displayError(loadingframe);
+			NetWorkHelper.displayError(loadingframe);
 		}
 	}
 
@@ -1245,7 +1245,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 				} catch (Exception e) {
 					e.printStackTrace();
-					NetWorkHandler.displayError(loadingframe);
+					NetWorkHelper.displayError(loadingframe);
 				}
 			}
 		});
@@ -1263,7 +1263,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 				} catch (Exception e) {
 					e.printStackTrace();
-					NetWorkHandler.displayError(loadingframe);
+					NetWorkHelper.displayError(loadingframe);
 				}
 			}
 		});
@@ -1279,7 +1279,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			NetWorkHandler.displayError(loadingframe);
+			NetWorkHelper.displayError(loadingframe);
 		}
 	}
 
@@ -1456,7 +1456,7 @@ public class ItemPannelReceivedViewDelegate extends ItemPannelBaseViewDelegate {
 
 			@Override
 			public void exception(String error) {
-				NetWorkHandler.displayError(loadingframe);
+				NetWorkHelper.displayError(loadingframe);
 				scanResultFrame.setVisible(true);
 			}
 		});

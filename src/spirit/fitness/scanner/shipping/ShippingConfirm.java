@@ -75,8 +75,8 @@ import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.PalletCallBackFunction;
 import spirit.fitness.scanner.search.QueryResult;
 import spirit.fitness.scanner.until.LoadingFrameHelper;
-import spirit.fitness.scanner.until.NetWorkHandler;
-import spirit.fitness.scanner.until.WeightPlateUtil;
+import spirit.fitness.scanner.until.NetWorkHelper;
+import spirit.fitness.scanner.until.WeightPlateHelper;
 import spirit.fitness.scanner.model.CustOrderbean;
 import spirit.fitness.scanner.model.Historybean;
 import spirit.fitness.scanner.model.Itembean;
@@ -315,7 +315,7 @@ public class ShippingConfirm {
 				scanResultFrame.setVisible(false);
 			}
 			restoreScanPannel(null);
-			NetWorkHandler.displayError(loadingframe);
+			NetWorkHelper.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
 
 		}
@@ -363,7 +363,7 @@ public class ShippingConfirm {
 			}
 			e.printStackTrace();
 			restoreScanPannel(null);
-			NetWorkHandler.displayError(loadingframe);
+			NetWorkHelper.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
 
 		}
@@ -384,7 +384,7 @@ public class ShippingConfirm {
 			}
 			e.printStackTrace();
 			restoreScanPannel(null);
-			NetWorkHandler.displayError(loadingframe);
+			NetWorkHelper.displayError(loadingframe);
 			prevContent = inputSN.getText().toString();
 
 		}
@@ -637,11 +637,11 @@ public class ShippingConfirm {
 					if(salesOrderList.get(rowIndex).ItemID.equals("115816"))
 						salesOrderList.get(rowIndex).ItemID = "450887";
 					
-					if (!WeightPlateUtil.isModelParts(salesOrderList.get(rowIndex).ItemID))
+					if (!WeightPlateHelper.isModelParts(salesOrderList.get(rowIndex).ItemID))
 						orderModelItems[rowIndex][2] = salesOrderList.get(rowIndex).description;
 					else
 						orderModelItems[rowIndex][2] = salesOrderList.get(rowIndex).description
-								+ WeightPlateUtil.modelAppendWithPart(salesOrderList.get(rowIndex).ItemID);
+								+ WeightPlateHelper.modelAppendWithPart(salesOrderList.get(rowIndex).ItemID);
 
 					OrderModelmap.put(salesOrderList.get(rowIndex).ItemID, salesOrderList.get(rowIndex).description);
 				}
@@ -1566,8 +1566,8 @@ public class ShippingConfirm {
 			@Override
 			public void exception(String error) {
 				restoreScanPannel(null);
-				NetWorkHandler.getInstance();
-				NetWorkHandler.displayError(loadingframe);
+				NetWorkHelper.getInstance();
+				NetWorkHelper.displayError(loadingframe);
 				prevContent = inputSN.getText().toString();
 
 			}
@@ -1622,7 +1622,7 @@ public class ShippingConfirm {
 												 * !WeightPlateUtil.isWeightPlate(item.ItemID) &&
 												 * !WeightPlateUtil.isCalfSupport(item.ItemID)
 												 */) {
-							if (WeightPlateUtil.isCheckBoxNoSNitem(item.ItemID) || item.ItemID.contains("PL")
+							if (WeightPlateHelper.isCheckBoxNoSNitem(item.ItemID) || item.ItemID.contains("PL")
 									|| item.ItemID.length() > 6)
 								checkedItemNoSN.add(item);
 							salesOrderList.add(item);
@@ -1754,7 +1754,7 @@ public class ShippingConfirm {
 					scanResultFrame.setVisible(false);
 				}
 				restoreScanPannel(null);
-				NetWorkHandler.displayError(loadingframe);
+				NetWorkHelper.displayError(loadingframe);
 				prevContent = inputSN.getText().toString();
 
 			}
@@ -1829,7 +1829,7 @@ public class ShippingConfirm {
 		String modelQty = "<html>" + "Total : " + curCount + "/" + String.valueOf(orderTotalCount) + " </br>";
 		for (Map.Entry<String, Integer> location : map.entrySet()) {
 
-			if (WeightPlateUtil.isCheckBoxNoSNitem(location.getKey()) || location.getKey().contains("PL")
+			if (WeightPlateHelper.isCheckBoxNoSNitem(location.getKey()) || location.getKey().contains("PL")
 					|| location.getKey().length() > 6)
 				continue;
 

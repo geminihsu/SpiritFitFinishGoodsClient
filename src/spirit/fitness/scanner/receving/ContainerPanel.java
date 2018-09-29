@@ -50,34 +50,34 @@ import javax.swing.text.NumberFormatter;
 
 import spirit.fitness.scanner.common.Constrant;
 import spirit.fitness.scanner.common.HttpRequestCode;
-import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
-import spirit.fitness.scanner.delegate.received.ItemPannelReceivedViewDelegate;
+import spirit.fitness.scanner.delegate.ItemPanelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.received.ItemPanelReceivedViewDelegate;
 import spirit.fitness.scanner.model.Containerbean;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.Modelbean;
 import spirit.fitness.scanner.model.PickingItem;
-import spirit.fitness.scanner.report.ModelZone2Report;
+import spirit.fitness.scanner.report.ReplenimentReport;
 import spirit.fitness.scanner.restful.ContainerRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.FGRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.ModelZoneMapRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.listener.ContainerCallBackFunction;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
-import spirit.fitness.scanner.search.QueryPannel;
+import spirit.fitness.scanner.search.QueryPanel;
 import spirit.fitness.scanner.until.LoadingFrameHelper;
 import spirit.fitness.scanner.until.LocationHelper;
-import spirit.fitness.scanner.until.WeightPlateUtil;
-import spirit.fitness.scanner.zonepannel.RTSLocation;
-import spirit.fitness.scanner.zonepannel.Zone1Location;
-import spirit.fitness.scanner.zonepannel.Zone2Location;
-import spirit.fitness.scanner.zonepannel.ZoneMenu;
-import spirit.fitness.scanner.zonepannel.RTSLocation.ZoneCodeReturnCallBackFunction;
+import spirit.fitness.scanner.until.WeightPlateHelper;
+import spirit.fitness.scanner.zonepanel.RTSLocation;
+import spirit.fitness.scanner.zonepanel.Zone1Location;
+import spirit.fitness.scanner.zonepanel.Zone2Location;
+import spirit.fitness.scanner.zonepanel.ZoneMenu;
+import spirit.fitness.scanner.zonepanel.RTSLocation.ZoneCodeReturnCallBackFunction;
 
-public class ContainerPannel implements ActionListener {
+public class ContainerPanel implements ActionListener {
 
-	private static ContainerPannel receivingPannel = null;
+	private static ContainerPanel receivingPannel = null;
 
 	public JFrame frame;
 	private LoadingFrameHelper loadingframe;
@@ -90,11 +90,11 @@ public class ContainerPannel implements ActionListener {
 
 	private List<Containerbean> curContainers;
 	
-	private ItemPannelBaseViewDelegate itemPannelBaseViewDelegate;
+	private ItemPanelBaseViewDelegate itemPannelBaseViewDelegate;
 
-	public static ContainerPannel getInstance() {
+	public static ContainerPanel getInstance() {
 		if (receivingPannel == null) {
-			receivingPannel = new ContainerPannel();
+			receivingPannel = new ContainerPanel();
 		}
 		return receivingPannel;
 	}
@@ -107,7 +107,7 @@ public class ContainerPannel implements ActionListener {
 		receivingPannel = null;
 	}
 
-	public ContainerPannel() {
+	public ContainerPanel() {
 		loadingframe = new LoadingFrameHelper("Loading Data from Server...");
 		loading = loadingframe.loadingSample("Loading Data from Server...");
 		initialCallback();
@@ -334,7 +334,7 @@ public class ContainerPannel implements ActionListener {
 					frame.setVisible(false);
 					receivingPannel = null;
 					//ItemsPannel.getInstance(curContainers, "",ItemsPannel.RECEVING);
-					itemPannelBaseViewDelegate = new ItemPannelReceivedViewDelegate(curContainers,"");
+					itemPannelBaseViewDelegate = new ItemPanelReceivedViewDelegate(curContainers,"");
 
 				}else
 					JOptionPane.showMessageDialog(null, "Please select one container before scan.");

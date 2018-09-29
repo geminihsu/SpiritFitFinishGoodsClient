@@ -59,7 +59,7 @@ import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.until.ExcelHelper;
 import spirit.fitness.scanner.until.LoadingFrameHelper;
 import spirit.fitness.scanner.until.LocationHelper;
-import spirit.fitness.scanner.zonepannel.ZoneMenu;
+import spirit.fitness.scanner.zonepanel.ZoneMenu;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
@@ -69,9 +69,9 @@ import spirit.fitness.scanner.printer.until.PrintTableUntil;
 import spirit.fitness.scanner.printer.until.PrinterHelper;
 
 
-public class ModelZone2Report {
+public class ReplenimentReport {
 
-	private static ModelZone2Report modelZone2Report = null;
+	private static ReplenimentReport modelZone2Report = null;
 
 	public final static int REPORT = 0;
 	public final static int MIN_QUANTITY = 1;
@@ -86,9 +86,9 @@ public class ModelZone2Report {
 
 	private ModelZoneMapRepositoryImplRetrofit fgModelZone2;
 
-	public static ModelZone2Report getInstance(List<ModelZone2bean> data) {
+	public static ReplenimentReport getInstance(List<ModelZone2bean> data) {
 		if (modelZone2Report == null) {
-			modelZone2Report = new ModelZone2Report(data);
+			modelZone2Report = new ReplenimentReport(data);
 		}
 		return modelZone2Report;
 	}
@@ -97,7 +97,7 @@ public class ModelZone2Report {
 		return modelZone2Report != null;
 	}
 
-	public ModelZone2Report(List<ModelZone2bean> data) {
+	public ReplenimentReport(List<ModelZone2bean> data) {
 		resultModelItem = new ArrayList<String>();
 		loadingframe = new LoadingFrameHelper("Loading Data from Server...");
 		loading = loadingframe.loadingSample("Loading Data from Server...");

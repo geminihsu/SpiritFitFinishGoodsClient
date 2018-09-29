@@ -30,12 +30,12 @@ import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.until.EmailHelper;
 import spirit.fitness.scanner.until.LoadingFrameHelper;
-import spirit.fitness.scanner.zonepannel.ZoneMenu;
+import spirit.fitness.scanner.zonepanel.ZoneMenu;
 
-public class ItemPannelBaseViewDelegate {
+public class ItemPanelBaseViewDelegate {
 	protected static final String TEXT_SUBMIT = "text-submit";
 	protected static final String INSERT_BREAK = "insert-break";
-	protected static ItemPannelBaseViewDelegate itemPanel;
+	protected static ItemPanelBaseViewDelegate itemPanel;
 	protected ModelZoneMapRepositoryImplRetrofit fgModelZone2;
 	private ContainerRepositoryImplRetrofit containerRepository;
 
@@ -63,15 +63,15 @@ public class ItemPannelBaseViewDelegate {
 	// Key:modelID, value:total quality
 	protected LinkedHashMap<String, Integer> modelTotalCurMap;
 	
-	public ItemPannelBaseViewDelegate() 
+	public ItemPanelBaseViewDelegate() 
 	{
 		
 	}
 	
 
-	public static ItemPannelBaseViewDelegate getInstance() {
+	public static ItemPanelBaseViewDelegate getInstance() {
 		if (itemPanel == null) {
-			itemPanel = new ItemPannelBaseViewDelegate();
+			itemPanel = new ItemPanelBaseViewDelegate();
 		}
 		return itemPanel;
 	}

@@ -58,19 +58,19 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import spirit.fitness.scanner.common.Constrant;
 import spirit.fitness.scanner.common.HttpRequestCode;
-import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
-import spirit.fitness.scanner.delegate.moved.ItemPannelMovedViewDelegate;
-import spirit.fitness.scanner.delegate.received.ItemPannelReturnViewDelegate;
+import spirit.fitness.scanner.delegate.ItemPanelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.moved.ItemPanelMovedViewDelegate;
+import spirit.fitness.scanner.delegate.received.ItemPanelReturnViewDelegate;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.Modelbean;
 import spirit.fitness.scanner.model.PickUpZoneMap;
-import spirit.fitness.scanner.receving.ContainerPannel;
-import spirit.fitness.scanner.report.DailyReport;
+import spirit.fitness.scanner.receving.ContainerPanel;
+import spirit.fitness.scanner.report.DailyInventoryReport;
 import spirit.fitness.scanner.report.DailyShippingReport;
-import spirit.fitness.scanner.report.ModelZone2Report;
+import spirit.fitness.scanner.report.ReplenimentReport;
 import spirit.fitness.scanner.restful.FGRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.LocationRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.ModelRepositoryImplRetrofit;
@@ -79,14 +79,14 @@ import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.LocationCallBackFunction;
 import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.restful.listener.ModelsCallBackFunction;
-import spirit.fitness.scanner.search.QueryPannel;
+import spirit.fitness.scanner.search.QueryPanel;
 import spirit.fitness.scanner.search.QueryResult;
 import spirit.fitness.scanner.shipping.ShippingConfirm;
 import spirit.fitness.scanner.shipping.ShippingPicking;
 import spirit.fitness.scanner.until.EmailHelper;
 import spirit.fitness.scanner.until.ExcelHelper;
 import spirit.fitness.scanner.until.LoadingFrameHelper;
-import spirit.fitness.scanner.until.NetWorkHandler;
+import spirit.fitness.scanner.until.NetWorkHelper;
 import spirit.fitness.scanner.util.InstanceUtil;
 
 public class AppMenu implements ActionListener {
@@ -103,7 +103,7 @@ public class AppMenu implements ActionListener {
 	private ModelZoneMapRepositoryImplRetrofit fgModelZone2;
 	private ModelRepositoryImplRetrofit fgModels;
 	private LocationRepositoryImplRetrofit localModels;
-	private ItemPannelBaseViewDelegate itemPannelBaseViewDelegate;
+	private ItemPanelBaseViewDelegate itemPannelBaseViewDelegate;
 
 
 	public static boolean isExistInstance = false;
@@ -117,7 +117,7 @@ public class AppMenu implements ActionListener {
 		loadingframe = new LoadingFrameHelper("Loading Data from Server...");
 		loading = loadingframe.loadingSample("Loading Data from Server...");
 		initialize();
-		NetWorkHandler.getInstance();
+		NetWorkHelper.getInstance();
 		// loadReport();
 		loadModelMapZone2();
 		loadModel();
@@ -211,8 +211,8 @@ public class AppMenu implements ActionListener {
 				int result = JOptionPane.showConfirmDialog(frame, "Do you want to close the app?",
 						"The app will be close", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (result == JOptionPane.YES_OPTION) {
-					NetWorkHandler.getInstance();
-					NetWorkHandler.backUpSerialNo(loadingframe);
+					NetWorkHelper.getInstance();
+					NetWorkHelper.backUpSerialNo(loadingframe);
 					System.exit(0);
 				}
 			}
@@ -241,7 +241,7 @@ public class AppMenu implements ActionListener {
 				isExistInstance = false;
 				receivedFrame.dispose();
 				receivedFrame.setVisible(false);
-				ContainerPannel.getInstance();
+				ContainerPanel.getInstance();
 			}
 		});
 		btnNew.setFont(font);
@@ -254,7 +254,7 @@ public class AppMenu implements ActionListener {
 				receivedFrame.dispose();
 				receivedFrame.setVisible(false);
 				//ItemsPannel.getInstance("", ItemsPannel.RECEVING);
-				itemPannelBaseViewDelegate = new ItemPannelReturnViewDelegate("");
+				itemPannelBaseViewDelegate = new ItemPanelReturnViewDelegate("");
 				
 			
 			}
@@ -291,18 +291,18 @@ public class AppMenu implements ActionListener {
 				receiviedMenu();
 			} else if (e.getSource() == btnMoving) {
 				
-				itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate("");
+				itemPannelBaseViewDelegate = new ItemPanelMovedViewDelegate("");
 				
 			} else if (e.getSource() == btnInQuiry) {
 				
-				QueryPannel.getInstance();
+				QueryPanel.getInstance();
 			} else if (e.getSource() == btnShipping) {
 				
 				ShippingConfirm.getInstance();
 			} else if (e.getSource() == btnReport) {
 
 				
-				DailyReport.getInstance(Constrant.dailyReport);
+				DailyInventoryReport.getInstance(Constrant.dailyReport);
 
 			} else if (e.getSource() == btnPickingList) {
 
@@ -310,7 +310,7 @@ public class AppMenu implements ActionListener {
 				ShippingPicking.getInstance();
 			} else if (e.getSource() == btnReplenishment) {
 
-				ModelZone2Report.getInstance(Constrant.modelZone2List);
+				ReplenimentReport.getInstance(Constrant.modelZone2List);
 				// window.frame.setVisible(true);
 			}else if (e.getSource() == btnDailyShipping) {
 				
@@ -480,7 +480,7 @@ public class AppMenu implements ActionListener {
 					    {
 					    }
 					}
-					NetWorkHandler.displayError(loadingframe);
+					NetWorkHelper.displayError(loadingframe);
 				}
 			}
 		});
@@ -516,7 +516,7 @@ public class AppMenu implements ActionListener {
 
 				} catch (Exception e) {
 					e.printStackTrace();
-					NetWorkHandler.displayError(loadingframe);
+					NetWorkHelper.displayError(loadingframe);
 				}
 			}
 		});
@@ -528,7 +528,7 @@ public class AppMenu implements ActionListener {
 		} catch (Exception x) {
 			// TODO Auto-generated catch block
 			x.printStackTrace();
-			NetWorkHandler.displayError(loadingframe);
+			NetWorkHelper.displayError(loadingframe);
 		}
 	}
 

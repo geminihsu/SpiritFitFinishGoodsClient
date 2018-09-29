@@ -1,4 +1,4 @@
-package spirit.fitness.scanner.zonepannel;
+package spirit.fitness.scanner.zonepanel;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -21,11 +21,11 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import spirit.fitness.scanner.common.Constrant;
-import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
-import spirit.fitness.scanner.delegate.moved.ItemPannelMovedViewDelegate;
+import spirit.fitness.scanner.delegate.ItemPanelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.moved.ItemPanelMovedViewDelegate;
 import spirit.fitness.scanner.model.Containerbean;
-import spirit.fitness.scanner.zonepannel.Zone1Location.Zone1CodeCallBackFunction;
-import spirit.fitness.scanner.zonepannel.Zone2Location.Zone2CodeCallBackFunction;
+import spirit.fitness.scanner.zonepanel.Zone1Location.Zone1CodeCallBackFunction;
+import spirit.fitness.scanner.zonepanel.Zone2Location.Zone2CodeCallBackFunction;
 
 public class RTSLocation implements ActionListener {
 
@@ -165,7 +165,7 @@ public class RTSLocation implements ActionListener {
 				// assignType);
 				// window.frame.setVisible(true);
 
-				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, btnReturn1.getText().toString());
+				ItemPanelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPanelMovedViewDelegate(items, btnReturn1.getText().toString());
 			}
 		} else if (e.getSource() == btnReturn2) {
 			if (zoneCodeReturnCallBackFunction != null) {
@@ -174,7 +174,7 @@ public class RTSLocation implements ActionListener {
 				// ItemsPannel window = new ItemsPannel(items, btnReturn2.getText().toString(),
 				// assignType);
 				// window.frame.setVisible(true);
-				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, btnReturn2.getText().toString());
+				ItemPanelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPanelMovedViewDelegate(items, btnReturn2.getText().toString());
 			}
 
 		} else if (e.getSource() == btnReturn3) {
@@ -184,7 +184,7 @@ public class RTSLocation implements ActionListener {
 				// ItemsPannel window = new ItemsPannel(items, btnReturn3.getText().toString(),
 				// assignType);
 				// window.frame.setVisible(true);
-				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, btnReturn3.getText().toString());
+				ItemPanelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPanelMovedViewDelegate(items, btnReturn3.getText().toString());
 			}
 		}
 

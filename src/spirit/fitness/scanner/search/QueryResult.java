@@ -50,7 +50,7 @@ import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.restful.FGRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
-import spirit.fitness.scanner.zonepannel.ZoneMenu;
+import spirit.fitness.scanner.zonepanel.ZoneMenu;
 
 public class QueryResult {
 
@@ -461,7 +461,7 @@ public class QueryResult {
 					resultFrame.dispose();
 					resultFrame.setVisible(false);
 
-					QueryPannel window = new QueryPannel();
+					QueryPanel window = new QueryPanel();
 					window.frame.setVisible(true);
 				}
 
@@ -474,7 +474,7 @@ public class QueryResult {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!isQueryRepeat)
-					QueryPannel.destory();
+					QueryPanel.destory();
 				if (!isQueryRepeat && resultFrame != null) {
 					resultFrame.dispose();
 					resultFrame.setVisible(false);
@@ -632,7 +632,7 @@ public class QueryResult {
 					resultFrame.dispose();
 					resultFrame.setVisible(false);
 
-					QueryPannel window = new QueryPannel();
+					QueryPanel window = new QueryPanel();
 					window.frame.setVisible(true);
 				}
 				isQueryRepeat = false;
@@ -646,7 +646,7 @@ public class QueryResult {
 			public void actionPerformed(ActionEvent e) {
 
 				if (!isQueryRepeat)
-					QueryPannel.destory();
+					QueryPanel.destory();
 
 				if (!isQueryRepeat && resultFrame != null) {
 					resultFrame.dispose();

@@ -65,7 +65,7 @@ import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.until.ExcelHelper;
 import spirit.fitness.scanner.until.LoadingFrameHelper;
 import spirit.fitness.scanner.until.LocationHelper;
-import spirit.fitness.scanner.zonepannel.ZoneMenu;
+import spirit.fitness.scanner.zonepanel.ZoneMenu;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
@@ -73,9 +73,9 @@ import spirit.fitness.scanner.model.PickUpZoneMap;
 import spirit.fitness.scanner.printer.until.PrinterHelper;
 
 
-public class DailyReport {
+public class DailyInventoryReport {
 
-	private static DailyReport dailyReport = null;
+	private static DailyInventoryReport dailyReport = null;
 
 	public final static int REPORT = 0;
 	public final static int MIN_QUANTITY = 1;
@@ -95,9 +95,9 @@ public class DailyReport {
 	private String choosertitle;
 
 
-	public static DailyReport getInstance(HashMap<String,ModelDailyReportbean> data) {
+	public static DailyInventoryReport getInstance(HashMap<String,ModelDailyReportbean> data) {
 		if (dailyReport == null) {
-			dailyReport = new DailyReport(data);
+			dailyReport = new DailyInventoryReport(data);
 		}
 		return dailyReport;
 	}
@@ -107,7 +107,7 @@ public class DailyReport {
 		 return dailyReport != null;
 	 }
 
-	public DailyReport(HashMap<String,ModelDailyReportbean> data) {
+	public DailyInventoryReport(HashMap<String,ModelDailyReportbean> data) {
 
 		loadingframe = new LoadingFrameHelper("Loading Data from Server...");
 		loading = loadingframe.loadingSample("Loading Data from Server...");

@@ -43,18 +43,18 @@ import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.Locationbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.Modelbean;
-import spirit.fitness.scanner.report.ModelZone2Report;
+import spirit.fitness.scanner.report.ReplenimentReport;
 import spirit.fitness.scanner.restful.FGRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
-import spirit.fitness.scanner.zonepannel.RTSLocation;
-import spirit.fitness.scanner.zonepannel.Zone1Location;
-import spirit.fitness.scanner.zonepannel.Zone2Location;
-import spirit.fitness.scanner.zonepannel.ZoneMenu;
-import spirit.fitness.scanner.zonepannel.RTSLocation.ZoneCodeReturnCallBackFunction;
+import spirit.fitness.scanner.zonepanel.RTSLocation;
+import spirit.fitness.scanner.zonepanel.Zone1Location;
+import spirit.fitness.scanner.zonepanel.Zone2Location;
+import spirit.fitness.scanner.zonepanel.ZoneMenu;
+import spirit.fitness.scanner.zonepanel.RTSLocation.ZoneCodeReturnCallBackFunction;
 
-public class QueryPannel implements ActionListener {
+public class QueryPanel implements ActionListener {
 
-	private static QueryPannel queryPannel = null;
+	private static QueryPanel queryPannel = null;
 
 	
 	public JFrame frame;
@@ -74,9 +74,9 @@ public class QueryPannel implements ActionListener {
 
 	private FGRepositoryImplRetrofit fgRepository;
 
-	public static QueryPannel getInstance() {
+	public static QueryPanel getInstance() {
 		if (queryPannel == null) {
-			queryPannel = new QueryPannel();
+			queryPannel = new QueryPanel();
 		}
 		return queryPannel;
 	}
@@ -89,7 +89,7 @@ public class QueryPannel implements ActionListener {
 		queryPannel = null;
 	}
 
-	public QueryPannel() {
+	public QueryPanel() {
 		QueryResult.isQueryRepeat = false;
 		initialZoneCodeCallback();
 		initialize();

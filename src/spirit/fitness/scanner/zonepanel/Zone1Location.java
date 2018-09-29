@@ -1,4 +1,4 @@
-package spirit.fitness.scanner.zonepannel;
+package spirit.fitness.scanner.zonepanel;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -21,11 +21,11 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import spirit.fitness.scanner.common.Constrant;
-import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
-import spirit.fitness.scanner.delegate.moved.ItemPannelMovedViewDelegate;
-import spirit.fitness.scanner.delegate.received.ItemPannelReceivedViewDelegate;
+import spirit.fitness.scanner.delegate.ItemPanelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.moved.ItemPanelMovedViewDelegate;
+import spirit.fitness.scanner.delegate.received.ItemPanelReceivedViewDelegate;
 import spirit.fitness.scanner.model.Containerbean;
-import spirit.fitness.scanner.zonepannel.RTSLocation.ZoneCodeReturnCallBackFunction;
+import spirit.fitness.scanner.zonepanel.RTSLocation.ZoneCodeReturnCallBackFunction;
 
 public class Zone1Location{
 
@@ -109,11 +109,11 @@ public class Zone1Location{
 					} else {
 						frame.dispose();
 						frame.setVisible(false);
-						ItemPannelBaseViewDelegate itemPannelBaseViewDelegate;
+						ItemPanelBaseViewDelegate itemPannelBaseViewDelegate;
 						if (assignType == 0)
-							itemPannelBaseViewDelegate = new ItemPannelReceivedViewDelegate(containers, items, content);
+							itemPannelBaseViewDelegate = new ItemPanelReceivedViewDelegate(containers, items, content);
 						else if (assignType == 1)
-							itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, content);
+							itemPannelBaseViewDelegate = new ItemPanelMovedViewDelegate(items, content);
 					}
 
 				}
@@ -131,11 +131,11 @@ public class Zone1Location{
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				frame.setVisible(false);
-				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = null;
+				ItemPanelBaseViewDelegate itemPannelBaseViewDelegate = null;
 				// ZoneMenu window = new ZoneMenu(items, assignType);
 				// window.frame.setVisible(true);
 				if (containers != null)
-					itemPannelBaseViewDelegate = new ItemPannelReceivedViewDelegate(containers,items);
+					itemPannelBaseViewDelegate = new ItemPanelReceivedViewDelegate(containers,items);
 				else
 					ZoneMenu.getInstance(items, ZoneMenu.MOVE);
 			}

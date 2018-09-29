@@ -1,4 +1,4 @@
-package spirit.fitness.scanner.zonepannel;
+package spirit.fitness.scanner.zonepanel;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -20,10 +20,10 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import spirit.fitness.scanner.common.Constrant;
-import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
-import spirit.fitness.scanner.delegate.moved.ItemPannelMovedViewDelegate;
+import spirit.fitness.scanner.delegate.ItemPanelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.moved.ItemPanelMovedViewDelegate;
 
-import spirit.fitness.scanner.zonepannel.Zone1Location.Zone1CodeCallBackFunction;
+import spirit.fitness.scanner.zonepanel.Zone1Location.Zone1CodeCallBackFunction;
 
 public class Zone2Location {
 
@@ -100,7 +100,7 @@ public class Zone2Location {
 						//ItemsPannel window = new ItemsPannel(items, content, assignType);
 						//window.frame.setVisible(true);
 						//ItemsPannel.getInstance(items, content, assignType);
-						ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, content);
+						ItemPanelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPanelMovedViewDelegate(items, content);
 					}
 				}
 			});
@@ -131,7 +131,7 @@ public class Zone2Location {
 				//ZoneMenu window = new ZoneMenu(items, assignType);
 				//window.frame.setVisible(true);
 				//ZoneMenu.getInstance(items, assignType);
-				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items);
+				ItemPanelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPanelMovedViewDelegate(items);
 			}
 		});
 		

@@ -69,7 +69,7 @@ import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.until.ExcelHelper;
 import spirit.fitness.scanner.until.LoadingFrameHelper;
 import spirit.fitness.scanner.until.LocationHelper;
-import spirit.fitness.scanner.zonepannel.ZoneMenu;
+import spirit.fitness.scanner.zonepanel.ZoneMenu;
 import spirit.fitness.scanner.model.DailyShippingReportbean;
 import spirit.fitness.scanner.model.Historybean;
 import spirit.fitness.scanner.model.Itembean;

@@ -35,7 +35,7 @@ import javax.swing.WindowConstants;
 
 import spirit.fitness.scanner.common.Constrant;
 import spirit.fitness.scanner.common.HttpRequestCode;
-import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.ItemPanelBaseViewDelegate;
 import spirit.fitness.scanner.model.Containerbean;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
@@ -48,21 +48,21 @@ import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.until.LoadingFrameHelper;
 import spirit.fitness.scanner.until.LocationHelper;
-import spirit.fitness.scanner.until.NetWorkHandler;
-import spirit.fitness.scanner.zonepannel.ZoneMenu;
+import spirit.fitness.scanner.until.NetWorkHelper;
+import spirit.fitness.scanner.zonepanel.ZoneMenu;
 
-public class ItemPannelMovedViewDelegate extends ItemPannelBaseViewDelegate{
+public class ItemPanelMovedViewDelegate extends ItemPanelBaseViewDelegate{
 
 	private FGRepositoryImplRetrofit fgRepository;
 	private boolean repMove;
 	private ModelZone2bean modelzone2;
 	
-	public ItemPannelMovedViewDelegate(String content) 
+	public ItemPanelMovedViewDelegate(String content) 
 	{
 		getInstance();
 		initial(content);
 	}
-	public ItemPannelMovedViewDelegate(String content,String location) {
+	public ItemPanelMovedViewDelegate(String content,String location) {
 		getInstance();
 		initial(content,location);
 	}
@@ -925,7 +925,7 @@ public class ItemPannelMovedViewDelegate extends ItemPannelBaseViewDelegate{
 
 			@Override
 			public void exception(String error) {
-				NetWorkHandler.displayError(loadingframe);
+				NetWorkHelper.displayError(loadingframe);
 				scanResultFrame.setVisible(true);
 			}
 		});
@@ -938,7 +938,7 @@ public class ItemPannelMovedViewDelegate extends ItemPannelBaseViewDelegate{
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			NetWorkHandler.displayError(loadingframe);
+			NetWorkHelper.displayError(loadingframe);
 		}
 	}
 	
@@ -950,7 +950,7 @@ public class ItemPannelMovedViewDelegate extends ItemPannelBaseViewDelegate{
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			NetWorkHandler.displayError(loadingframe);
+			NetWorkHelper.displayError(loadingframe);
 		}
 	}
 }

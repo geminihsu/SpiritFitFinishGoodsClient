@@ -1,4 +1,4 @@
-package spirit.fitness.scanner.zonepannel;
+package spirit.fitness.scanner.zonepanel;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -23,12 +23,12 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import spirit.fitness.scanner.common.Constrant;
-import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
-import spirit.fitness.scanner.delegate.moved.ItemPannelMovedViewDelegate;
-import spirit.fitness.scanner.delegate.received.ItemPannelReturnViewDelegate;
+import spirit.fitness.scanner.delegate.ItemPanelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.moved.ItemPanelMovedViewDelegate;
+import spirit.fitness.scanner.delegate.received.ItemPanelReturnViewDelegate;
 import spirit.fitness.scanner.model.Containerbean;
-import spirit.fitness.scanner.search.QueryPannel;
-import spirit.fitness.scanner.zonepannel.Zone2Location.Zone2CodeCallBackFunction;
+import spirit.fitness.scanner.search.QueryPanel;
+import spirit.fitness.scanner.zonepanel.Zone2Location.Zone2CodeCallBackFunction;
 
 public class ZoneMenu implements ActionListener {
 
@@ -162,7 +162,7 @@ public class ZoneMenu implements ActionListener {
 					//ItemsPannel window = new ItemsPannel(ItemsPannel.MOVING);
 					//window.frame.setVisible(true);
 					//ItemsPannel.getInstance(content,ItemsPannel.MOVING);
-				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(content);
+				ItemPanelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPanelMovedViewDelegate(content);
 				
 			}
 		});
@@ -255,7 +255,7 @@ public class ZoneMenu implements ActionListener {
 
 				
 				//ItemsPannel.getInstance(items, "555", assignType);
-				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, "555");
+				ItemPanelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPanelMovedViewDelegate(items, "555");
 			}
 			
 
@@ -272,7 +272,7 @@ public class ZoneMenu implements ActionListener {
 				//ItemsPannel window = new ItemsPannel(items, "888", assignType);
 				//window.dialogFrame.setVisible(true);
 				//ItemsPannel.getInstance(items, "888", assignType);
-				ItemPannelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPannelMovedViewDelegate(items, "888");
+				ItemPanelBaseViewDelegate itemPannelBaseViewDelegate = new ItemPanelMovedViewDelegate(items, "888");
 			}
 
 		}/*else if (e.getSource() == btnRework) {

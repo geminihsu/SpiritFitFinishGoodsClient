@@ -83,8 +83,8 @@ import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.search.QueryResult;
 import spirit.fitness.scanner.until.LoadingFrameHelper;
 import spirit.fitness.scanner.until.LocationHelper;
-import spirit.fitness.scanner.until.WeightPlateUtil;
-import spirit.fitness.scanner.zonepannel.ZoneMenu;
+import spirit.fitness.scanner.until.WeightPlateHelper;
+import spirit.fitness.scanner.zonepanel.ZoneMenu;
 import spirit.fitness.scanner.model.CustOrderbean;
 import spirit.fitness.scanner.model.DailyShippingReportbean;
 import spirit.fitness.scanner.model.Historybean;
@@ -95,7 +95,7 @@ import spirit.fitness.scanner.model.PickingItem;
 import spirit.fitness.scanner.model.SerialNoRecord;
 import spirit.fitness.scanner.printer.until.PrintTableUntil;
 import spirit.fitness.scanner.printer.until.PrinterHelper;
-import spirit.fitness.scanner.report.ModelZone2Report;
+import spirit.fitness.scanner.report.ReplenimentReport;
 
 public class ShippingPicking {
 
@@ -397,11 +397,11 @@ public class ShippingPicking {
 					orderModelItems[rowIndex][1] = item.modelID;
 
 				
-					if (!WeightPlateUtil.isModelParts(item.modelID))
+					if (!WeightPlateHelper.isModelParts(item.modelID))
 						orderModelItems[rowIndex][2] = item.modelDes;
 					else
 						orderModelItems[rowIndex][2] = item.modelDes
-								+ WeightPlateUtil.modelAppendWithPart(item.modelDes);
+								+ WeightPlateHelper.modelAppendWithPart(item.modelDes);
 					orderModelItems[rowIndex][3] = "  ["
 							+ LocationHelper.DisplayZoneCode(LocationHelper.MapZoneCode(item.location)) + "] "
 							+ item.location;
@@ -640,7 +640,7 @@ public class ShippingPicking {
 							if (map.containsKey(item.ItemID)) {
 
 								if (!item.ItemID.contains("PL") && item.ItemID.length() == 6
-										&& !WeightPlateUtil.isWeightPlate(item.ItemID) && !WeightPlateUtil.isCalfSupport(item.ItemID)) {
+										&& !WeightPlateHelper.isWeightPlate(item.ItemID) && !WeightPlateHelper.isCalfSupport(item.ItemID)) {
 									count += map.get(item.ItemID);
 									map.put(item.ItemID, count);
 									orderTotalCount += count;
@@ -648,7 +648,7 @@ public class ShippingPicking {
 							} else {
 
 								if (!item.ItemID.contains("PL") && item.ItemID.length() == 6
-										&& !WeightPlateUtil.isWeightPlate(item.ItemID)&& !WeightPlateUtil.isCalfSupport(item.ItemID)) {
+										&& !WeightPlateHelper.isWeightPlate(item.ItemID)&& !WeightPlateHelper.isCalfSupport(item.ItemID)) {
 									orderTotalCount += count;
 									map.put(item.ItemID, count);
 									OrderModelmap.put(item.ItemID, item.description);
@@ -669,7 +669,7 @@ public class ShippingPicking {
 									for (CustOrderbean _order : orders) {
 										if (_order.ItemID == null || _order.ItemID.indexOf("PL") != -1
 												|| _order.ItemID.length() != 6
-												|| WeightPlateUtil.isWeightPlate(_order.ItemID))
+												|| WeightPlateHelper.isWeightPlate(_order.ItemID))
 											continue;
 										else
 											queryByModelAndCount(_order.ItemID, map.get(_order.ItemID));
@@ -770,11 +770,11 @@ public class ShippingPicking {
 					pickItem.quantity = 1;
 					pickItem.modelID = item.ModelNo;
 
-					if (!WeightPlateUtil.isModelParts(item.ModelNo))
+					if (!WeightPlateHelper.isModelParts(item.ModelNo))
 						pickItem.modelDes = OrderModelmap.get(pickItem.modelID);
 					else
 						pickItem.modelDes = OrderModelmap.get(pickItem.modelID)
-								+ WeightPlateUtil.modelAppendWithPart(pickItem.modelID);
+								+ WeightPlateHelper.modelAppendWithPart(pickItem.modelID);
 					pickItem.location = item.Location;
 					pickingItems.add(pickItem);
 					System.out.println(location.getKey());

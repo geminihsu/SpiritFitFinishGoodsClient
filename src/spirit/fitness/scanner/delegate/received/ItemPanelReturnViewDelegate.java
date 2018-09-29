@@ -35,14 +35,14 @@ import javax.swing.WindowConstants;
 
 import spirit.fitness.scanner.common.Constrant;
 import spirit.fitness.scanner.common.HttpRequestCode;
-import spirit.fitness.scanner.delegate.ItemPannelBaseViewDelegate;
+import spirit.fitness.scanner.delegate.ItemPanelBaseViewDelegate;
 import spirit.fitness.scanner.model.Containerbean;
 import spirit.fitness.scanner.model.Itembean;
 import spirit.fitness.scanner.model.ModelDailyReportbean;
 import spirit.fitness.scanner.model.ModelZone2bean;
 import spirit.fitness.scanner.model.Modelbean;
 import spirit.fitness.scanner.model.PickUpZoneMap;
-import spirit.fitness.scanner.receving.ContainerPannel;
+import spirit.fitness.scanner.receving.ContainerPanel;
 import spirit.fitness.scanner.restful.ContainerRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.FGRepositoryImplRetrofit;
 import spirit.fitness.scanner.restful.ModelZoneMapRepositoryImplRetrofit;
@@ -50,16 +50,16 @@ import spirit.fitness.scanner.restful.listener.InventoryCallBackFunction;
 import spirit.fitness.scanner.restful.listener.ModelZone2CallBackFunction;
 import spirit.fitness.scanner.until.LoadingFrameHelper;
 import spirit.fitness.scanner.until.LocationHelper;
-import spirit.fitness.scanner.until.NetWorkHandler;
-import spirit.fitness.scanner.zonepannel.ZoneMenu;
+import spirit.fitness.scanner.until.NetWorkHelper;
+import spirit.fitness.scanner.zonepanel.ZoneMenu;
 
-public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
+public class ItemPanelReturnViewDelegate extends ItemPanelBaseViewDelegate {
 
 	private FGRepositoryImplRetrofit fgRepository;
 
 	private String containerNo;
 
-	public ItemPannelReturnViewDelegate(String content) {
+	public ItemPanelReturnViewDelegate(String content) {
 		getInstance();
 		initial(content);
 	}
@@ -641,7 +641,7 @@ public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			NetWorkHandler.displayError(loadingframe);
+			NetWorkHelper.displayError(loadingframe);
 		}
 	}
 
@@ -652,7 +652,7 @@ public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			NetWorkHandler.displayError(loadingframe);
+			NetWorkHelper.displayError(loadingframe);
 		}
 	}
 
@@ -823,7 +823,7 @@ public class ItemPannelReturnViewDelegate extends ItemPannelBaseViewDelegate {
 
 			@Override
 			public void exception(String error) {
-				NetWorkHandler.displayError(loadingframe);
+				NetWorkHelper.displayError(loadingframe);
 				scanResultFrame.setVisible(true);
 			}
 		});
